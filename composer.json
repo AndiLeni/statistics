@@ -1,0 +1,5 @@
+{
+    "require": {
+        "matomo/device-detector": "^4.2"
+    }
+}

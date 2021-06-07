@@ -1,0 +1,11 @@
+package: stats
+version: '1.0.0'
+
+page:
+  title: 'Statistiken'
+  icon: rex-icon fa-line-chart
+  subpages:
+    stats:
+      title: Statistiken
+    pages: 
+      title: Seiten
