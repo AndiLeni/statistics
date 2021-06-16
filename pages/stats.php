@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 function get_data($column, $table, $order)
 {
@@ -33,23 +33,39 @@ function get_data_array($column, $table, $order)
     return $result;
 }
 
-// sum per day
+
 $sql = rex_sql::factory();
-$sum_per_day = $sql->setQuery('SELECT date, SUM(count) AS "count" from ' . rex::getTable('pagestats_views') . ' GROUP BY date ORDER BY date desc');
+$max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable('pagestats_views'));
+$max_date = $max_date->getValue('date');
+$max_date = new DateTime($max_date);
+$max_date->modify('+1 day');
+$max_date = $max_date->format('d.m.Y');
 
-$sum_per_day_labels = [];
-foreach ($sum_per_day as $row) {
-    $sum_per_day_labels[] = $row->getValue('date');
+
+$min_date = $sql->setQuery('SELECT MIN(date) AS "date" from ' . rex::getTable('pagestats_views'));
+$min_date = $min_date->getValue('date');
+
+$period = new DatePeriod(
+    new DateTime($min_date),
+    new DateInterval('P1D'),
+    new DateTime($max_date)
+);
+
+foreach ($period as $value) {
+    $array[$value->format("d.m.Y")] = "0";
 }
-$sum_per_day_labels = json_encode($sum_per_day_labels);
 
-$sum_per_day_values = [];
+
+$sum_per_day = $sql->setQuery('SELECT date, SUM(count) AS "count" from ' . rex::getTable('pagestats_views') . ' GROUP BY date ORDER BY date ASC');
+
 foreach ($sum_per_day as $row) {
-    $sum_per_day_values[] = $row->getValue('count');
+    $arr2[$row->getValue('date')] = $row->getValue('count');
 }
-$sum_per_day_values = json_encode($sum_per_day_values);
 
+$data = array_merge($array, $arr2);
 
+$sum_per_day_labels = json_encode(array_keys($data));
+$sum_per_day_values = json_encode(array_values($data));
 
 ?>
 

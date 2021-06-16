@@ -41,20 +41,20 @@ $result = $sql->select();
 
 
 // sum per day
-$sql = rex_sql::factory();
-$sum_per_day = $sql->setQuery('SELECT date, SUM(count) AS "count" from ' . rex::getTable('pagestats_views') . ' GROUP BY date ORDER BY date desc');
+// $sql = rex_sql::factory();
+// $sum_per_day = $sql->setQuery('SELECT date, SUM(count) AS "count" from ' . rex::getTable('pagestats_views') . ' GROUP BY date ORDER BY date desc');
 
-$sum_per_day_labels = [];
-foreach ($sum_per_day as $row) {
-    $sum_per_day_labels[] = $row->getValue('date');
-}
-$sum_per_day_labels = json_encode($sum_per_day_labels);
+// $sum_per_day_labels = [];
+// foreach ($sum_per_day as $row) {
+//     $sum_per_day_labels[] = $row->getValue('date');
+// }
+// $sum_per_day_labels = json_encode($sum_per_day_labels);
 
-$sum_per_day_values = [];
-foreach ($sum_per_day as $row) {
-    $sum_per_day_values[] = $row->getValue('count');
-}
-$sum_per_day_values = json_encode($sum_per_day_values);
+// $sum_per_day_values = [];
+// foreach ($sum_per_day as $row) {
+//     $sum_per_day_values[] = $row->getValue('count');
+// }
+// $sum_per_day_values = json_encode($sum_per_day_values);
 
 
 // sum per page
@@ -85,7 +85,7 @@ $total_per_date = $sql->setQuery('SELECT date, SUM(count) AS "count" from ' . re
 <script src="https://cdn.plot.ly/plotly-2.0.0-rc.3.min.js"></script>
 
 
-<h3>Summe pro Tag:</h3>
+<!-- <h3>Summe pro Tag:</h3>
 
 <div id="chart_visits"></div>
 
@@ -105,7 +105,7 @@ $total_per_date = $sql->setQuery('SELECT date, SUM(count) AS "count" from ' . re
     }
 
     ?>
-</table>
+</table> -->
 
 
 <h3>Summe pro Seite:</h3>
