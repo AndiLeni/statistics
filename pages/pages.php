@@ -1,73 +1,19 @@
 <?php
 
 
-// echo rex_view::title('Seiten');
-
-function get_data($column, $table, $order)
-{
-    $sql = rex_sql::factory();
-    // $sql->setDebug(true);
-    $result = $sql->setQuery('SELECT ' . $column . ' FROM ' . rex::getTable($table) . ' ORDER BY ' . $order . ' ASC');
-
-    $array = [];
-
-    while ($result->hasNext()) {
-
-        $array[] = $result->getValue($column);
-
-        $result->next();
-
-    }
-
-    $array = json_encode($array);
-
-    return $array;
-}
-
-function get_data_array($column, $table, $order)
-{
-    $sql = rex_sql::factory();
-    // $sql->setDebug(true);
-    $result = $sql->setQuery('SELECT * FROM ' . rex::getTable($table) . ' ORDER BY ' . $order . ' DESC');
-
-    return $result;
-}
-
-
-$sql = rex_sql::factory();
-$sql->setTable(rex::getTable('pagestats_views'));
-$result = $sql->select();
-
-
-
-// sum per day
-// $sql = rex_sql::factory();
-// $sum_per_day = $sql->setQuery('SELECT date, SUM(count) AS "count" from ' . rex::getTable('pagestats_views') . ' GROUP BY date ORDER BY date desc');
-
-// $sum_per_day_labels = [];
-// foreach ($sum_per_day as $row) {
-//     $sum_per_day_labels[] = $row->getValue('date');
-// }
-// $sum_per_day_labels = json_encode($sum_per_day_labels);
-
-// $sum_per_day_values = [];
-// foreach ($sum_per_day as $row) {
-//     $sum_per_day_values[] = $row->getValue('count');
-// }
-// $sum_per_day_values = json_encode($sum_per_day_values);
-
-
 // sum per page
 $sql = rex_sql::factory();
 $sum_per_page = $sql->setQuery('SELECT url, SUM(count) AS "count" from ' . rex::getTable('pagestats_views') . ' GROUP BY url ORDER BY url asc');
 
 $sum_per_page_labels = [];
+$sum_per_page_values = [];
+
 foreach ($sum_per_page as $row) {
     $sum_per_page_labels[] = $row->getValue('url');
 }
 $sum_per_page_labels = json_encode($sum_per_page_labels);
 
-$sum_per_page_values = [];
+
 foreach ($sum_per_page as $row) {
     $sum_per_page_values[] = $row->getValue('count');
 }
@@ -76,81 +22,88 @@ $sum_per_page_values = json_encode($sum_per_page_values);
 
 
 
-
-$sql = rex_sql::factory();
-$total_per_date = $sql->setQuery('SELECT date, SUM(count) AS "count" from ' . rex::getTable('pagestats_views') . ' GROUP BY date ORDER BY date DESC');
-
 ?>
 
 <script src="https://cdn.plot.ly/plotly-2.0.0-rc.3.min.js"></script>
 
 
-<!-- <h3>Summe pro Tag:</h3>
+<?php
 
-<div id="chart_visits"></div>
+$request_url = rex_request('url', 'array', []);
 
-<table class="table">
-    <tr>
-        <th>Datum</th>
-        <th>Aufrufe</th>
-    </tr>
 
-    <?php
+if ($request_url != []) {
 
-    foreach ($sum_per_day as $row) {
-        echo '<tr>';
-        echo '<td>' . $row->getValue('date') . '</td>';
-        echo '<td>' . $row->getValue('count') . '</td>';
-        echo '</tr>';
+    $request_url = $request_url[0];
+
+    echo '<h3>Details für: ' . $request_url . '</h3>';
+
+    echo '<div id="chart_details"></div>';
+
+    $sql = rex_sql::factory();
+    $details = $sql->setQuery('SELECT date, SUM(count) AS "count" FROM ' . rex::getTable('pagestats_views') . '  WHERE url = :url GROUP BY url ORDER BY url asc', ['url' => $request_url]);
+
+    $details_labels = [];
+    $details_values = [];
+
+    foreach ($details as $row) {
+        $details_labels[] = $row->getValue('date');
     }
+    $details_labels = json_encode($details_labels);
 
-    ?>
-</table> -->
+
+    foreach ($details as $row) {
+        $details_values[] = $row->getValue('count');
+    }
+    $details_values = json_encode($details_values);
+
+    $list = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_views') . ' WHERE url = "' . $request_url . '" GROUP BY url ORDER BY url ASC');
+    $list->setColumnLabel('date', 'Datum');
+    $list->setColumnLabel('count', 'Anzahl');
+    $list->setColumnSortable('date', $direction = 'asc');
+    $list->setColumnSortable('count', $direction = 'asc');
+    $list->setColumnParams('url', ['url' => '###url###']);
+    $list->show();
+
+
+    echo '<hr>';
+}
+
+
+
+
+?>
+
 
 
 <h3>Summe pro Seite:</h3>
 
 <div id="chart_visits_per_page"></div>
+<?php
 
-<table class="table">
-    <tr>
-        <th>URL</th>
-        <th>Aufrufe</th>
-    </tr>
+$list = rex_list::factory('SELECT url, SUM(count) AS "count" from ' . rex::getTable('pagestats_views') . ' GROUP BY url ORDER BY url ASC');
+$list->setColumnLabel('url', 'Url');
+$list->setColumnLabel('count', 'Anzahl');
+$list->setColumnSortable('url', $direction = 'asc');
+$list->setColumnSortable('count', $direction = 'asc');
+$list->setColumnParams('url', ['url' => '###url###']);
+$list->show();
 
-    <?php
-
-    foreach ($sum_per_page as $row) {
-        echo '<tr>';
-        echo '<td>' . $row->getValue('url') . '</td>';
-        echo '<td>' . $row->getValue('count') . '</td>';
-        echo '</tr>';
-    }
-
-    ?>
-</table>
+?>
 
 <h3>Aufrufe pro Tag pro Seite:</h3>
+<?php
 
-<table class="table">
-    <tr>
-        <th>URL</th>
-        <th>Datum</th>
-        <th>Aufrufe</th>
-    </tr>
+$list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_views'));
+$list->setColumnLabel('url', 'Url');
+$list->setColumnLabel('date', 'Datum');
+$list->setColumnLabel('count', 'Anzahl');
+$list->setColumnSortable('url', $direction = 'asc');
+$list->setColumnSortable('date', $direction = 'asc');
+$list->setColumnSortable('count', $direction = 'asc');
+$list->show();
 
-    <?php
-
-    foreach ($result as $row) {
-        echo '<tr>';
-        echo '<td>' . $row->getValue('url') . '</td>';
-        echo '<td>' . $row->getValue('date') . '</td>';
-        echo '<td>' . $row->getValue('count') . '</td>';
-        echo '</tr>';
-    }
-
-    ?>
-</table>
+?>
 
 <script>
     var config = {
@@ -174,17 +127,15 @@ $total_per_date = $sql->setQuery('SELECT date, SUM(count) AS "count" from ' . re
     }
 
 
-    chart_visits = Plotly.newPlot('chart_visits', [{
-        type: 'line',
-        x: <?php echo $sum_per_day_labels ?>,
-        y: <?php echo $sum_per_day_values ?>,
-    }], layout, config);
-
     chart_visits_per_page = Plotly.newPlot('chart_visits_per_page', [{
         type: 'bar',
         x: <?php echo $sum_per_page_labels ?>,
         y: <?php echo $sum_per_page_values ?>,
     }], layout, config);
 
-
+    chart_details = Plotly.newPlot('chart_details', [{
+        type: 'line',
+        x: <?php echo $details_labels ?>,
+        y: <?php echo $details_values ?>,
+    }], layout, config);
 </script>
