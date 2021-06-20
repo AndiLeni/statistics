@@ -21,7 +21,6 @@ if (!rex::isBackend()) {
         $botproducer = $botInfo['producer']['name'];
 
         $sql = rex_sql::factory();
-        $sql->setDebug(true);
         $result = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_bot') . ' SET count = count + 1 WHERE name = :name AND category = :category AND producer = :producer', ['name' => $botname, 'category' => $botcategory, 'producer' => $botproducer]);
 
         if ($result->getRows() === 0) {
@@ -51,7 +50,6 @@ if (!rex::isBackend()) {
         $url = $_SERVER['REQUEST_URI'];
 
         $sql = rex_sql::factory();
-        $sql->setDebug(true);
         $sql->setTable(rex::getTable('pagestats_dump'));
         $sql->setValue('browser', $browser);
         $sql->setValue('os', $os . " " . $osVer);
