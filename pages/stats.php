@@ -64,12 +64,12 @@ $sum_per_day_labels = json_encode(array_keys($data));
 $sum_per_day_values = json_encode(array_values($data));
 
 
-
 ?>
 
 <!-- html begin -->
 
-<script src="https://cdn.plot.ly/plotly-2.0.0-rc.3.min.js"></script>
+
+<script src="<?php echo rex_addon::get('stats')->getAssetsUrl('plotly-2.0.0.min.js') ?>"></script>
 
 
 

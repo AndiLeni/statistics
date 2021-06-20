@@ -20,11 +20,9 @@ foreach ($sum_per_page as $row) {
 $sum_per_page_values = json_encode($sum_per_page_values);
 
 
-
-
 ?>
 
-<script src="https://cdn.plot.ly/plotly-2.0.0-rc.3.min.js"></script>
+<script src="<?php echo rex_addon::get('stats')->getAssetsUrl('plotly-2.0.0.min.js') ?>"></script>
 
 
 <?php
@@ -34,14 +32,11 @@ $request_url = rex_request('url', 'array', []);
 
 if ($request_url != []) {
 
-    $request_url = $request_url[0];
+    $request_url = rex_escape($request_url[0]);
 
-    echo '<h3>Details für: ' . $request_url . '</h3>';
-
-    echo '<div id="chart_details"></div>';
 
     $sql = rex_sql::factory();
-    $details = $sql->setQuery('SELECT date, SUM(count) AS "count" FROM ' . rex::getTable('pagestats_views') . '  WHERE url = :url GROUP BY url ORDER BY url asc', ['url' => $request_url]);
+    $details = $sql->setQuery('SELECT date, count FROM ' . rex::getTable('pagestats_views') . '  WHERE url = :url ORDER BY url asc', ['url' => $request_url]);
 
     $details_labels = [];
     $details_values = [];
@@ -57,23 +52,32 @@ if ($request_url != []) {
     }
     $details_values = json_encode($details_values);
 
-    $list = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_views') . ' WHERE url = "' . $request_url . '" GROUP BY url ORDER BY url ASC');
+
+    $list = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_views') . ' WHERE url = "' . $request_url . '" ORDER BY url ASC');
     $list->setColumnLabel('date', 'Datum');
     $list->setColumnLabel('count', 'Anzahl');
     $list->setColumnSortable('date', $direction = 'asc');
     $list->setColumnSortable('count', $direction = 'asc');
     $list->setColumnParams('url', ['url' => '###url###']);
+
+
+    echo '<div class="panel panel-edit">';
+    echo '<header class="panel-heading">';
+    echo '<div class="panel-title">Details für:</div>' . $request_url;
+    echo '</header>';
+
+    echo '<div class="panel-body">';
+    echo '<div id="chart_details"></div>';
     $list->show();
+    echo '</div>';
+    echo '</div>';
 
 
     echo '<hr>';
 }
 
 
-
-
 ?>
-
 
 
 <h3>Summe pro Seite:</h3>
@@ -133,9 +137,18 @@ $list->show();
         y: <?php echo $sum_per_page_values ?>,
     }], layout, config);
 
-    chart_details = Plotly.newPlot('chart_details', [{
-        type: 'line',
-        x: <?php echo $details_labels ?>,
-        y: <?php echo $details_values ?>,
-    }], layout, config);
+    <?php 
+
+    if ($request_url != []) {
+        echo 'chart_details = Plotly.newPlot("chart_details", [{
+            type: "line",
+            x:' . $details_labels . ',
+            y:' . $details_values . ',
+        }], layout, config);';
+    }
+
+
+    ?>
+
+
 </script>

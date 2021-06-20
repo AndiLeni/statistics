@@ -1,9 +1,6 @@
 <?php
 
-// $addon = rex_addon::get('stats');
-
 require_once __DIR__ . '/vendor/autoload.php';
-
 
 use DeviceDetector\DeviceDetector;
 
@@ -12,30 +9,18 @@ use DeviceDetector\DeviceDetector;
 function save_data($column, $table, $data)
 {
     $sql = rex_sql::factory();
-    // $sql->setDebug(true);
-    $result = $sql->setQuery('SELECT * FROM ' . rex::getTable($table) . ' WHERE ' . $column . ' = :data', ['data' => $data]);
+    $sql->setDebug(true);
+    $res = $sql->setQuery('UPDATE ' . rex::getTable($table) . ' SET count = count + 1 WHERE ' . $column . ' = :data', ['data' => $data]);
 
-    if ($result->getRows() === 0) {
 
-        $sql->setDBQuery('INSERT INTO ' . rex::getTable($table) . ' (' . $column . ',count) VALUES (:data, :count)', ['data' => $data, 'count' => 1]);
-    } else {
-
-        foreach ($sql as $row) {
-            $count = $row->getValue('count');
-        }
-
-        $sql->setDBQuery('UPDATE ' . rex::getTable($table) . ' SET count = :count WHERE ' . $column . ' = :data', ['data' => $data, 'count' => $count + 1]);
+    if ($res->getRows() === 0) {
+        $sql->setTable(rex::getTable($table));
+        $sql->setValue($column, $data);
+        $sql->setValue('count', 1);
+        $sql->insert();
     }
 }
 
-function def_or_undefined($data)
-{
-    if ($data == NULL or trim($data) == "") {
-        return "Undefiniert";
-    } else {
-        return ucfirst($data);
-    }
-}
 
 
 
@@ -91,12 +76,12 @@ if (!rex::isBackend()) {
         $brand = $dd->getBrandName();
         $model = $dd->getModel();
 
-        $browser = def_or_undefined($clientInfo['name']);
-        $os = def_or_undefined($osInfo['name']);
-        $osVer = def_or_undefined($osInfo['version']);
-        $device_type = def_or_undefined($device);
-        $brand = def_or_undefined($brand);
-        $model = def_or_undefined($model);
+        $browser = $clientInfo['name'] ?? 'Undefiniert';
+        $os = $osInfo['name'] ?? 'Undefiniert';
+        $osVer = $osInfo['version'] ?? 'Undefiniert';
+        $device_type = $device ?? 'Undefiniert';
+        $brand = $brand ?? 'Undefiniert';
+        $model = $model ?? 'Undefiniert';
 
         // save_visit();
         // save_data('date', 'pagestats_views', date('d.m.Y'));
@@ -121,25 +106,26 @@ if (!rex::isBackend()) {
         $url = $_SERVER['REQUEST_URI'];
 
         $sql = rex_sql::factory();
-        $sql->setTable(rex::getTable('pagestats_views'));
-        $sql->setWhere(['url' => $url, 'date' => date('d.m.Y')]);
-        $sql->select();
+        $sql->setDebug(true);
+        $res = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_views') . ' SET count = count + 1 WHERE url = :url AND date = :date', ['url' => $url, 'date' => date('d.m.Y')]);
 
-
-        if ($sql->getRows() === 0) {
-            $sql = rex_sql::factory();
+        if ($res->getRows() === 0) {
             $sql->setTable(rex::getTable('pagestats_views'));
             $sql->setValue('url', $url);
             $sql->setValue('date', date('d.m.Y'));
             $sql->setValue('count', 1);
             $sql->insert();
-        } else {
-            $count = $sql->getValue('count');
-            $sql = rex_sql::factory();
-            $sql->setTable(rex::getTable('pagestats_views'));
-            $sql->setWhere(['url' => $url, 'date' => date('d.m.Y')]);
-            $sql->setValue('count', $count + 1);
-            $sql->update();
         }
+
+
+
+
+
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('pagestats_views'));
+        $sql->setValue('url', $url);
+        $sql->setValue('date', date('d.m.Y'));
+        $sql->setValue('count', 1);
+        $sql->insert();
     }
 }
