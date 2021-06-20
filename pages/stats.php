@@ -1,24 +1,5 @@
 <?php
 
-// function get_data_as_string_array($column, $table, $order)
-// {
-//     $sql = rex_sql::factory();
-//     $result = $sql->setQuery('SELECT ' . $column . ' FROM ' . rex::getTable($table) . ' ORDER BY ' . $order . ' ASC');
-
-//     foreach ($result as $row) {
-//         $data[] = $row->getValue($column);
-//     }
-
-//     return json_encode($data);
-// }
-
-// function get_data_as_sql($table, $order)
-// {
-//     $sql = rex_sql::factory();
-//     $result = $sql->setQuery('SELECT * FROM ' . rex::getTable($table) . ' ORDER BY ' . $order . ' DESC');
-
-//     return $result;
-// }
 
 function get_labels($column) {
     $sql = rex_sql::factory();
@@ -42,46 +23,9 @@ function get_values($column) {
     return json_encode($data);
 }
 
-// $processed = [
-//     'browser' => [],
-//     'os' => [],
-//     'browsertype' => [],
-//     'brand' => [],
-//     'model' => [],
-// ];
-
-// // process dump table
-// $sql = rex_sql::factory();
-// $sql->setDebug(true);
-// $sql->setTable(rex::getTable('pagestats_dump'));
-// $result = $sql->select();
-
-// foreach ($result as $row) {
-//     $b = $row->getValue('browser');
-//     $processed['browser'][$b] += 1;
-
-//     $b = $row->getValue('os');
-//     $processed['os'][$b] += 1;
-
-//     $b = $row->getValue('browsertype');
-//     $processed['browsertype'][$b] += 1;
-
-//     $b = $row->getValue('brand');
-//     $processed['brand'][$b] += 1;
-
-//     $b = $row->getValue('model');
-//     $processed['model'][$b] += 1;
-// }
-
-
-// dump($processed);
-
-
-
 
 
 $sql = rex_sql::factory();
-// $sql->setDebug(true);
 $max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable('pagestats_dump'));
 $max_date = $max_date->getValue('date');
 $max_date = new DateTime($max_date);
@@ -155,13 +99,6 @@ if (!isset($sum_per_day_labels)) {
         $list->setColumnSortable('count', $direction = 'asc');
         $list->show();
 
-        // $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_browser') . ' ORDER BY count ASC');
-        // $list->setColumnLabel('name', 'Name');
-        // $list->setColumnLabel('count', 'Anzahl');
-        // $list->setColumnSortable('name', $direction = 'asc');
-        // $list->setColumnSortable('count', $direction = 'asc');
-        // $list->show();
-
         ?>
 
     </div>
@@ -177,13 +114,6 @@ if (!isset($sum_per_day_labels)) {
         $list->setColumnSortable('browsertype', $direction = 'asc');
         $list->setColumnSortable('count', $direction = 'desc');
         $list->show();
-
-        // $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_browsertype') . ' ORDER BY count ASC');
-        // $list->setColumnLabel('name', 'Name');
-        // $list->setColumnLabel('count', 'Anzahl');
-        // $list->setColumnSortable('name', $direction = 'asc');
-        // $list->setColumnSortable('count', $direction = 'asc');
-        // $list->show();
 
         ?>
 
@@ -203,13 +133,6 @@ if (!isset($sum_per_day_labels)) {
         $list->setColumnSortable('os', $direction = 'asc');
         $list->setColumnSortable('count', $direction = 'asc');
         $list->show();
-
-        // $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_os') . ' ORDER BY count ASC');
-        // $list->setColumnLabel('name', 'Name');
-        // $list->setColumnLabel('count', 'Anzahl');
-        // $list->setColumnSortable('name', $direction = 'asc');
-        // $list->setColumnSortable('count', $direction = 'asc');
-        // $list->show();
 
         ?>
 
@@ -234,13 +157,6 @@ if (!isset($sum_per_day_labels)) {
         $list->setColumnSortable('count', $direction = 'asc');
         $list->show();
 
-        // $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_brand') . ' ORDER BY count ASC');
-        // $list->setColumnLabel('name', 'Name');
-        // $list->setColumnLabel('count', 'Anzahl');
-        // $list->setColumnSortable('name', $direction = 'asc');
-        // $list->setColumnSortable('count', $direction = 'asc');
-        // $list->show();
-
         ?>
 
     </div>
@@ -256,13 +172,6 @@ if (!isset($sum_per_day_labels)) {
         $list->setColumnSortable('model', $direction = 'asc');
         $list->setColumnSortable('count', $direction = 'asc');
         $list->show();
-
-        // $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_model') . ' ORDER BY count ASC');
-        // $list->setColumnLabel('name', 'Name');
-        // $list->setColumnLabel('count', 'Anzahl');
-        // $list->setColumnSortable('name', $direction = 'asc');
-        // $list->setColumnSortable('count', $direction = 'asc');
-        // $list->show();
 
         ?>
 

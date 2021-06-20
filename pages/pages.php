@@ -1,5 +1,27 @@
 <?php
 
+function get_labels($column, $request_url) {
+    $sql = rex_sql::factory();
+    $result = $sql->setQuery('SELECT '. $column .' FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url GROUP BY '. $column .' ORDER BY '. $column .' ASC', ['url' => $request_url]);
+
+    foreach ($result as $row) {
+        $data[] = $row->getValue($column);
+    }
+
+    return json_encode($data);
+}
+
+function get_values($column, $request_url) {
+    $sql = rex_sql::factory();
+    $result = $sql->setQuery('SELECT COUNT('. $column .') as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url GROUP BY '. $column .' ORDER BY '. $column .' ASC', ['url' => $request_url]);
+
+    foreach ($result as $row) {
+        $data[] = $row->getValue('count');
+    }
+
+    return json_encode($data);
+}
+
 
 // sum per page
 $sql = rex_sql::factory();
@@ -30,6 +52,7 @@ $sum_per_page_values = json_encode($sum_per_page_values);
 $request_url = rex_request('url', 'array', []);
 
 
+// details section for single page
 if ($request_url != []) {
 
     $request_url = rex_escape($request_url[0]);
@@ -80,12 +103,41 @@ if ($request_url != []) {
     $list->setColumnParams('url', ['url' => '###url###']);
 
 
+    $details_page_total = rex_sql::factory();
+    $details_page_total->setQuery('SELECT COUNT(url) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url', ['url' => $request_url]);
+    $details_page_total = $details_page_total->getValue('count');
+
+
     echo '<div class="panel panel-edit">';
     echo '<header class="panel-heading">';
     echo '<div class="panel-title">Details für:</div>' . $request_url;
     echo '</header>';
 
     echo '<div class="panel-body">';
+    echo '<h5>Aufrufe insgesamt: <b>' . $details_page_total . '</b></h5>';
+    echo '<div class="row">';
+    echo '<div class="col-md-4">';
+    echo '<div class="panel panel-default">
+            <div class="panel-body">
+                <div id="chart_details_devicetype"></div>
+            </div>
+        </div>';
+    echo '</div>';
+    echo '<div class="col-md-4">';
+    echo '<div class="panel panel-default">
+            <div class="panel-body">
+                <div id="chart_details_browser"></div>
+            </div>
+        </div>';
+    echo '</div>';
+    echo '<div class="col-md-4">';
+    echo '<div class="panel panel-default">
+            <div class="panel-body">
+                <div id="chart_details_os"></div>
+            </div>
+        </div>';
+    echo '</div>';
+    echo '</div>';
     echo '<div id="chart_details"></div>';
     $list->show();
     echo '</div>';
@@ -150,6 +202,26 @@ $list->show();
             x:' . $sum_per_day_labels . ',
             y:' . $sum_per_day_values . ',
         }], layout, config);';
+
+        echo 'chart_details_devicetype = Plotly.newPlot("chart_details_devicetype", [{
+            type: "pie",
+            labels:' . get_labels('browsertype', $request_url) . ',
+            values:' . get_values('browsertype', $request_url) . ',
+        }], layout, config);';
+
+        echo 'chart_details_browser = Plotly.newPlot("chart_details_browser", [{
+            type: "pie",
+            labels:' . get_labels('browser', $request_url) . ',
+            values:' . get_values('browser', $request_url) . ',
+        }], layout, config);';
+
+        echo 'chart_details_os = Plotly.newPlot("chart_details_os", [{
+            type: "pie",
+            labels:' . get_labels('os', $request_url) . ',
+            values:' . get_values('os', $request_url) . ',
+        }], layout, config);';
+
+        
     }
 
 
