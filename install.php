@@ -45,5 +45,5 @@ rex_sql_table::get(rex::getTable('pagestats_dump'))
     ->ensureColumn(new rex_sql_column('brand', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('model', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('url', 'varchar(255)'))
-    ->ensureColumn(new rex_sql_column('date', 'varchar(255)'))
+    ->ensureColumn(new rex_sql_column('date', 'date'))
     ->ensure();

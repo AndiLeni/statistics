@@ -1,9 +1,28 @@
 <?php
 
-function get_data_as_string_array($column, $table, $order)
-{
+// function get_data_as_string_array($column, $table, $order)
+// {
+//     $sql = rex_sql::factory();
+//     $result = $sql->setQuery('SELECT ' . $column . ' FROM ' . rex::getTable($table) . ' ORDER BY ' . $order . ' ASC');
+
+//     foreach ($result as $row) {
+//         $data[] = $row->getValue($column);
+//     }
+
+//     return json_encode($data);
+// }
+
+// function get_data_as_sql($table, $order)
+// {
+//     $sql = rex_sql::factory();
+//     $result = $sql->setQuery('SELECT * FROM ' . rex::getTable($table) . ' ORDER BY ' . $order . ' DESC');
+
+//     return $result;
+// }
+
+function get_labels($column) {
     $sql = rex_sql::factory();
-    $result = $sql->setQuery('SELECT ' . $column . ' FROM ' . rex::getTable($table) . ' ORDER BY ' . $order . ' ASC');
+    $result = $sql->setQuery('SELECT '. $column .' FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY '. $column .' ORDER BY '. $column .' ASC');
 
     foreach ($result as $row) {
         $data[] = $row->getValue($column);
@@ -12,28 +31,68 @@ function get_data_as_string_array($column, $table, $order)
     return json_encode($data);
 }
 
-function get_data_as_sql($table, $order)
-{
+function get_values($column) {
     $sql = rex_sql::factory();
-    $result = $sql->setQuery('SELECT * FROM ' . rex::getTable($table) . ' ORDER BY ' . $order . ' DESC');
+    $result = $sql->setQuery('SELECT COUNT('. $column .') as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY '. $column .' ORDER BY '. $column .' ASC');
 
-    return $result;
+    foreach ($result as $row) {
+        $data[] = $row->getValue('count');
+    }
+
+    return json_encode($data);
 }
+
+// $processed = [
+//     'browser' => [],
+//     'os' => [],
+//     'browsertype' => [],
+//     'brand' => [],
+//     'model' => [],
+// ];
+
+// // process dump table
+// $sql = rex_sql::factory();
+// $sql->setDebug(true);
+// $sql->setTable(rex::getTable('pagestats_dump'));
+// $result = $sql->select();
+
+// foreach ($result as $row) {
+//     $b = $row->getValue('browser');
+//     $processed['browser'][$b] += 1;
+
+//     $b = $row->getValue('os');
+//     $processed['os'][$b] += 1;
+
+//     $b = $row->getValue('browsertype');
+//     $processed['browsertype'][$b] += 1;
+
+//     $b = $row->getValue('brand');
+//     $processed['brand'][$b] += 1;
+
+//     $b = $row->getValue('model');
+//     $processed['model'][$b] += 1;
+// }
+
+
+// dump($processed);
+
 
 
 
 
 $sql = rex_sql::factory();
 // $sql->setDebug(true);
-$max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable('pagestats_views'));
+$max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable('pagestats_dump'));
 $max_date = $max_date->getValue('date');
 $max_date = new DateTime($max_date);
 $max_date->modify('+1 day');
 $max_date = $max_date->format('d.m.Y');
 
 
-$min_date = $sql->setQuery('SELECT MIN(date) AS "date" from ' . rex::getTable('pagestats_views'));
+$min_date = $sql->setQuery('SELECT MIN(date) AS "date" from ' . rex::getTable('pagestats_dump'));
 $min_date = $min_date->getValue('date');
+$min_date = new DateTime($min_date);
+$min_date = $min_date->format('d.m.Y');
 
 $period = new DatePeriod(
     new DateTime($min_date),
@@ -45,16 +104,14 @@ foreach ($period as $value) {
     $array[$value->format("d.m.Y")] = "0";
 }
 
-
-
-
-$sum_per_day = $sql->setQuery('SELECT date, SUM(count) AS "count" from ' . rex::getTable('pagestats_views') . ' GROUP BY date ORDER BY date ASC');
+$sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY date ORDER BY date ASC');
 
 $data = [];
 
 if ($sum_per_day->getRows() != 0) {
     foreach ($sum_per_day as $row) {
-        $arr2[$row->getValue('date')] = $row->getValue('count');
+        $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
+        $arr2[$date] = $row->getValue('count');
     }
 
     $data = array_merge($array, $arr2);
@@ -91,12 +148,19 @@ if (!isset($sum_per_day_labels)) {
 
         <?php
 
-        $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_browser') . ' ORDER BY count ASC');
-        $list->setColumnLabel('name', 'Name');
+        $list = rex_list::factory('SELECT browser, COUNT(browser) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY browser ORDER BY count DESC');
+        $list->setColumnLabel('browser', 'Name');
         $list->setColumnLabel('count', 'Anzahl');
-        $list->setColumnSortable('name', $direction = 'asc');
+        $list->setColumnSortable('browser', $direction = 'asc');
         $list->setColumnSortable('count', $direction = 'asc');
         $list->show();
+
+        // $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_browser') . ' ORDER BY count ASC');
+        // $list->setColumnLabel('name', 'Name');
+        // $list->setColumnLabel('count', 'Anzahl');
+        // $list->setColumnSortable('name', $direction = 'asc');
+        // $list->setColumnSortable('count', $direction = 'asc');
+        // $list->show();
 
         ?>
 
@@ -107,12 +171,19 @@ if (!isset($sum_per_day_labels)) {
 
         <?php
 
-        $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_browsertype') . ' ORDER BY count ASC');
-        $list->setColumnLabel('name', 'Name');
+        $list = rex_list::factory('SELECT browsertype, COUNT(browsertype) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY browsertype ORDER BY count DESC');
+        $list->setColumnLabel('browsertype', 'Name');
         $list->setColumnLabel('count', 'Anzahl');
-        $list->setColumnSortable('name', $direction = 'asc');
-        $list->setColumnSortable('count', $direction = 'asc');
+        $list->setColumnSortable('browsertype', $direction = 'asc');
+        $list->setColumnSortable('count', $direction = 'desc');
         $list->show();
+
+        // $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_browsertype') . ' ORDER BY count ASC');
+        // $list->setColumnLabel('name', 'Name');
+        // $list->setColumnLabel('count', 'Anzahl');
+        // $list->setColumnSortable('name', $direction = 'asc');
+        // $list->setColumnSortable('count', $direction = 'asc');
+        // $list->show();
 
         ?>
 
@@ -126,12 +197,19 @@ if (!isset($sum_per_day_labels)) {
 
         <?php
 
-        $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_os') . ' ORDER BY count ASC');
-        $list->setColumnLabel('name', 'Name');
+        $list = rex_list::factory('SELECT os, COUNT(os) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY os ORDER BY count DESC');
+        $list->setColumnLabel('os', 'Name');
         $list->setColumnLabel('count', 'Anzahl');
-        $list->setColumnSortable('name', $direction = 'asc');
+        $list->setColumnSortable('os', $direction = 'asc');
         $list->setColumnSortable('count', $direction = 'asc');
         $list->show();
+
+        // $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_os') . ' ORDER BY count ASC');
+        // $list->setColumnLabel('name', 'Name');
+        // $list->setColumnLabel('count', 'Anzahl');
+        // $list->setColumnSortable('name', $direction = 'asc');
+        // $list->setColumnSortable('count', $direction = 'asc');
+        // $list->show();
 
         ?>
 
@@ -149,12 +227,19 @@ if (!isset($sum_per_day_labels)) {
 
         <?php
 
-        $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_brand') . ' ORDER BY count ASC');
-        $list->setColumnLabel('name', 'Name');
+        $list = rex_list::factory('SELECT brand, COUNT(brand) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY brand ORDER BY count DESC');
+        $list->setColumnLabel('brand', 'Name');
         $list->setColumnLabel('count', 'Anzahl');
-        $list->setColumnSortable('name', $direction = 'asc');
+        $list->setColumnSortable('brand', $direction = 'asc');
         $list->setColumnSortable('count', $direction = 'asc');
         $list->show();
+
+        // $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_brand') . ' ORDER BY count ASC');
+        // $list->setColumnLabel('name', 'Name');
+        // $list->setColumnLabel('count', 'Anzahl');
+        // $list->setColumnSortable('name', $direction = 'asc');
+        // $list->setColumnSortable('count', $direction = 'asc');
+        // $list->show();
 
         ?>
 
@@ -165,12 +250,19 @@ if (!isset($sum_per_day_labels)) {
 
         <?php
 
-        $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_model') . ' ORDER BY count ASC');
-        $list->setColumnLabel('name', 'Name');
+        $list = rex_list::factory('SELECT model, COUNT(model) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY model ORDER BY count DESC');
+        $list->setColumnLabel('model', 'Name');
         $list->setColumnLabel('count', 'Anzahl');
-        $list->setColumnSortable('name', $direction = 'asc');
+        $list->setColumnSortable('model', $direction = 'asc');
         $list->setColumnSortable('count', $direction = 'asc');
         $list->show();
+
+        // $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_model') . ' ORDER BY count ASC');
+        // $list->setColumnLabel('name', 'Name');
+        // $list->setColumnLabel('count', 'Anzahl');
+        // $list->setColumnSortable('name', $direction = 'asc');
+        // $list->setColumnSortable('count', $direction = 'asc');
+        // $list->show();
 
         ?>
 
@@ -181,7 +273,7 @@ if (!isset($sum_per_day_labels)) {
 <h3>Bots:</h3>
 <?php
 
-$list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_bot') . ' ORDER BY count ASC');
+$list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_bot') . ' ORDER BY count DESC');
 $list->setColumnLabel('name', 'Name');
 $list->setColumnLabel('count', 'Anzahl');
 $list->setColumnLabel('category', 'Kategorie');
@@ -225,31 +317,31 @@ $list->show();
 
     chart_browser = Plotly.newPlot('chart_browser', [{
         type: 'pie',
-        labels: <?php echo get_data_as_string_array('name', 'pagestats_browser', 'count') ?>,
-        values: <?php echo get_data_as_string_array('count', 'pagestats_browser', 'count') ?>,
+        labels: <?php echo get_labels('browser') ?>,
+        values: <?php echo get_values('browser') ?>,
     }], layout, config);
 
     chart_browsertype = Plotly.newPlot('chart_browsertype', [{
         type: 'pie',
-        labels: <?php echo get_data_as_string_array('name', 'pagestats_browsertype', 'count') ?>,
-        values: <?php echo get_data_as_string_array('count', 'pagestats_browsertype', 'count') ?>,
+        labels: <?php echo get_labels('browsertype') ?>,
+        values: <?php echo get_values('browsertype') ?>,
     }], layout, config);
 
     chart_os = Plotly.newPlot('chart_os', [{
         type: 'pie',
-        labels: <?php echo get_data_as_string_array('name', 'pagestats_os', 'count') ?>,
-        values: <?php echo get_data_as_string_array('count', 'pagestats_os', 'count') ?>,
+        labels: <?php echo get_labels('os') ?>,
+        values: <?php echo get_values('os') ?>,
     }], layout, config);
 
     chart_brand = Plotly.newPlot('chart_brand', [{
         type: 'pie',
-        labels: <?php echo get_data_as_string_array('name', 'pagestats_brand', 'count') ?>,
-        values: <?php echo get_data_as_string_array('count', 'pagestats_brand', 'count') ?>,
+        labels: <?php echo get_labels('brand') ?>,
+        values: <?php echo get_values('brand') ?>,
     }], layout, config);
 
     chart_model = Plotly.newPlot('chart_model', [{
         type: 'pie',
-        labels: <?php echo get_data_as_string_array('name', 'pagestats_model', 'count') ?>,
-        values: <?php echo get_data_as_string_array('count', 'pagestats_model', 'count') ?>,
+        labels: <?php echo get_labels('model') ?>,
+        values: <?php echo get_values('model') ?>,
     }], layout, config);
 </script>

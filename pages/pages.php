@@ -3,7 +3,7 @@
 
 // sum per page
 $sql = rex_sql::factory();
-$sum_per_page = $sql->setQuery('SELECT url, SUM(count) AS "count" from ' . rex::getTable('pagestats_views') . ' GROUP BY url ORDER BY url asc');
+$sum_per_page = $sql->setQuery('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY url ASC');
 
 $sum_per_page_labels = [];
 $sum_per_page_values = [];
@@ -36,28 +36,47 @@ if ($request_url != []) {
 
 
     $sql = rex_sql::factory();
-    $details = $sql->setQuery('SELECT date, count FROM ' . rex::getTable('pagestats_views') . '  WHERE url = :url ORDER BY url asc', ['url' => $request_url]);
+    $max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable('pagestats_dump') . ' WHERE url = :url', ['url' => $request_url]);
+    $max_date = $max_date->getValue('date');
+    $max_date = new DateTime($max_date);
+    $max_date->modify('+1 day');
+    $max_date = $max_date->format('d.m.Y');
 
-    $details_labels = [];
-    $details_values = [];
+    $min_date = $sql->setQuery('SELECT MIN(date) AS "date" from ' . rex::getTable('pagestats_dump') . ' WHERE url = :url', ['url' => $request_url]);
+    $min_date = $min_date->getValue('date');
 
-    foreach ($details as $row) {
-        $details_labels[] = $row->getValue('date');
+    $period = new DatePeriod(
+        new DateTime($min_date),
+        new DateInterval('P1D'),
+        new DateTime($max_date)
+    );
+
+    foreach ($period as $value) {
+        $array[$value->format("d.m.Y")] = "0";
     }
-    $details_labels = json_encode($details_labels);
 
+    $sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url = :url GROUP BY date ORDER BY date ASC', ['url' => $request_url]);
 
-    foreach ($details as $row) {
-        $details_values[] = $row->getValue('count');
+    $data = [];
+
+    if ($sum_per_day->getRows() != 0) {
+        foreach ($sum_per_day as $row) {
+            $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
+            $arr2[$date] = $row->getValue('count');
+        }
+
+        $data = array_merge($array, $arr2);
     }
-    $details_values = json_encode($details_values);
+
+    $sum_per_day_labels = json_encode(array_keys($data));
+    $sum_per_day_values = json_encode(array_values($data));
 
 
-    $list = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_views') . ' WHERE url = "' . $request_url . '" ORDER BY url ASC');
+    $list = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = "' . $request_url . '" GROUP BY date ORDER BY url DESC');
     $list->setColumnLabel('date', 'Datum');
     $list->setColumnLabel('count', 'Anzahl');
-    $list->setColumnSortable('date', $direction = 'asc');
-    $list->setColumnSortable('count', $direction = 'asc');
+    $list->setColumnSortable('date', $direction = 'desc');
+    $list->setColumnSortable('count', $direction = 'desc');
     $list->setColumnParams('url', ['url' => '###url###']);
 
 
@@ -85,26 +104,12 @@ if ($request_url != []) {
 <div id="chart_visits_per_page"></div>
 <?php
 
-$list = rex_list::factory('SELECT url, SUM(count) AS "count" from ' . rex::getTable('pagestats_views') . ' GROUP BY url ORDER BY url ASC');
+$list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY url ASC');
 $list->setColumnLabel('url', 'Url');
 $list->setColumnLabel('count', 'Anzahl');
-$list->setColumnSortable('url', $direction = 'asc');
-$list->setColumnSortable('count', $direction = 'asc');
+// $list->setColumnSortable('url', $direction = 'asc'); needs fix, "url" url-param not set when reorderung
+// $list->setColumnSortable('count', $direction = 'asc'); needs fix, "url" url-param not set when reorderung
 $list->setColumnParams('url', ['url' => '###url###']);
-$list->show();
-
-?>
-
-<h3>Aufrufe pro Tag pro Seite:</h3>
-<?php
-
-$list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_views'));
-$list->setColumnLabel('url', 'Url');
-$list->setColumnLabel('date', 'Datum');
-$list->setColumnLabel('count', 'Anzahl');
-$list->setColumnSortable('url', $direction = 'asc');
-$list->setColumnSortable('date', $direction = 'asc');
-$list->setColumnSortable('count', $direction = 'asc');
 $list->show();
 
 ?>
@@ -137,18 +142,16 @@ $list->show();
         y: <?php echo $sum_per_page_values ?>,
     }], layout, config);
 
-    <?php 
+    <?php
 
     if ($request_url != []) {
         echo 'chart_details = Plotly.newPlot("chart_details", [{
             type: "line",
-            x:' . $details_labels . ',
-            y:' . $details_values . ',
+            x:' . $sum_per_day_labels . ',
+            y:' . $sum_per_day_values . ',
         }], layout, config);';
     }
 
 
     ?>
-
-
 </script>

@@ -6,20 +6,28 @@ use DeviceDetector\DeviceDetector;
 
 
 
-function save_data($column, $table, $data)
-{
-    $sql = rex_sql::factory();
-    $sql->setDebug(true);
-    $res = $sql->setQuery('UPDATE ' . rex::getTable($table) . ' SET count = count + 1 WHERE ' . $column . ' = :data', ['data' => $data]);
+// function save_data($column, $table, $data)
+// {
+//     $sql = rex_sql::factory();
+//     $res = $sql->setQuery('UPDATE ' . rex::getTable($table) . ' SET count = count + 1 WHERE ' . $column . ' = :data', ['data' => $data]);
 
 
-    if ($res->getRows() === 0) {
-        $sql->setTable(rex::getTable($table));
-        $sql->setValue($column, $data);
-        $sql->setValue('count', 1);
-        $sql->insert();
-    }
-}
+//     if ($res->getRows() === 0) {
+//         $sql->setTable(rex::getTable($table));
+//         $sql->setValue($column, $data);
+//         $sql->setValue('count', 1);
+//         $sql->insert();
+//     }
+// }
+
+// function def_or_undefined($data)
+// {
+//     if ($data == NULL or trim($data) == "") {
+//         return "Undefiniert";
+//     } else {
+//         return ucfirst($data);
+//     }
+// }
 
 
 
@@ -76,56 +84,62 @@ if (!rex::isBackend()) {
         $brand = $dd->getBrandName();
         $model = $dd->getModel();
 
+
         $browser = $clientInfo['name'] ?? 'Undefiniert';
         $os = $osInfo['name'] ?? 'Undefiniert';
         $osVer = $osInfo['version'] ?? 'Undefiniert';
-        $device_type = $device ?? 'Undefiniert';
-        $brand = $brand ?? 'Undefiniert';
-        $model = $model ?? 'Undefiniert';
+        $device_type = trim($device) != '' ? ucfirst($device) : 'Undefiniert';
+        $brand = trim($brand) != '' ? ucfirst($brand) : 'Undefiniert';
+        $model = trim($model) != '' ? ucfirst($model) : 'Undefiniert';
+
 
         // save_visit();
         // save_data('date', 'pagestats_views', date('d.m.Y'));
 
         // save_browser($browser);
-        save_data('name', 'pagestats_browser', $browser);
+        // save_data('name', 'pagestats_browser', $browser);
 
-        // save_os($os . " " . $osVer);
-        save_data('name', 'pagestats_os', $os . " " . $osVer);
+        // // save_os($os . " " . $osVer);
+        // save_data('name', 'pagestats_os', $os . " " . $osVer);
 
-        // save device type
-        save_data('name', 'pagestats_browsertype', $device_type);
+        // // save device type
+        // save_data('name', 'pagestats_browsertype', $device_type);
 
-        // save_brand($brand);
-        save_data('name', 'pagestats_brand', $brand);
+        // // save_brand($brand);
+        // save_data('name', 'pagestats_brand', $brand);
 
-        // save_model($model);
-        save_data('name', 'pagestats_model', $model);
+        // // save_model($model);
+        // save_data('name', 'pagestats_model', $model);
 
 
 
         $url = $_SERVER['REQUEST_URI'];
 
+        // $sql = rex_sql::factory();
+        // $res = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_views') . ' SET count = count + 1 WHERE url = :url AND date = :date', ['url' => $url, 'date' => date('d.m.Y')]);
+
+        // if ($res->getRows() === 0) {
+        //     $sql->setTable(rex::getTable('pagestats_views'));
+        //     $sql->setValue('url', $url);
+        //     $sql->setValue('date', date('d.m.Y'));
+        //     $sql->setValue('count', 1);
+        //     $sql->insert();
+        // }
+
+
+
+
+
         $sql = rex_sql::factory();
         $sql->setDebug(true);
-        $res = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_views') . ' SET count = count + 1 WHERE url = :url AND date = :date', ['url' => $url, 'date' => date('d.m.Y')]);
-
-        if ($res->getRows() === 0) {
-            $sql->setTable(rex::getTable('pagestats_views'));
-            $sql->setValue('url', $url);
-            $sql->setValue('date', date('d.m.Y'));
-            $sql->setValue('count', 1);
-            $sql->insert();
-        }
-
-
-
-
-
-        $sql = rex_sql::factory();
-        $sql->setTable(rex::getTable('pagestats_views'));
+        $sql->setTable(rex::getTable('pagestats_dump'));
+        $sql->setValue('browser', $browser);
+        $sql->setValue('os', $os . " " . $osVer);
+        $sql->setValue('browsertype', $device_type);
+        $sql->setValue('brand', $brand);
+        $sql->setValue('model', $model);
         $sql->setValue('url', $url);
         $sql->setValue('date', date('d.m.Y'));
-        $sql->setValue('count', 1);
         $sql->insert();
     }
 }
