@@ -1,9 +1,10 @@
 <?php
 
 
-function get_labels($column) {
+function get_labels($column)
+{
     $sql = rex_sql::factory();
-    $result = $sql->setQuery('SELECT '. $column .' FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY '. $column .' ORDER BY '. $column .' ASC');
+    $result = $sql->setQuery('SELECT ' . $column . ' FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY ' . $column . ' ORDER BY ' . $column . ' ASC');
 
     foreach ($result as $row) {
         $data[] = $row->getValue($column);
@@ -12,9 +13,10 @@ function get_labels($column) {
     return json_encode($data);
 }
 
-function get_values($column) {
+function get_values($column)
+{
     $sql = rex_sql::factory();
-    $result = $sql->setQuery('SELECT COUNT('. $column .') as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY '. $column .' ORDER BY '. $column .' ASC');
+    $result = $sql->setQuery('SELECT COUNT(' . $column . ') as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY ' . $column . ' ORDER BY ' . $column . ' ASC');
 
     foreach ($result as $row) {
         $data[] = $row->getValue('count');
@@ -25,18 +27,32 @@ function get_values($column) {
 
 
 
+
+$request_date_start = rex_escape(rex_request('date_start', 'string', ''));
+$request_date_end = rex_escape(rex_request('date_end', 'string', ''));
+
 $sql = rex_sql::factory();
-$max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable('pagestats_dump'));
-$max_date = $max_date->getValue('date');
-$max_date = new DateTime($max_date);
-$max_date->modify('+1 day');
-$max_date = $max_date->format('d.m.Y');
+
+if ($request_date_end == '' || $request_date_start == '') {
+    $max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable('pagestats_dump'));
+    $max_date = $max_date->getValue('date');
+    $max_date = new DateTime($max_date);
+    $max_date->modify('+1 day');
+    $max_date = $max_date->format('d.m.Y');
 
 
-$min_date = $sql->setQuery('SELECT MIN(date) AS "date" from ' . rex::getTable('pagestats_dump'));
-$min_date = $min_date->getValue('date');
-$min_date = new DateTime($min_date);
-$min_date = $min_date->format('d.m.Y');
+    $min_date = $sql->setQuery('SELECT MIN(date) AS "date" from ' . rex::getTable('pagestats_dump'));
+    $min_date = $min_date->getValue('date');
+    $min_date = new DateTime($min_date);
+    $min_date = $min_date->format('d.m.Y');
+} else {
+    $max_date = new DateTime($request_date_end);
+    $max_date = $max_date->format('d.m.Y');
+    $min_date = new DateTime($request_date_start);
+    $min_date = $min_date->format('d.m.Y');
+}
+
+
 
 $period = new DatePeriod(
     new DateTime($min_date),
@@ -72,6 +88,24 @@ $sum_per_day_values = json_encode(array_values($data));
 
 <script src="<?php echo rex_addon::get('stats')->getAssetsUrl('plotly-2.0.0.min.js') ?>"></script>
 
+
+<div class="panel panel-default">
+    <div class="panel-heading">Zeitraum filtern</div>
+    <div class="panel-body">
+        <form class="form-inline" action="http://redaxo.test/redaxo/index.php?page=stats/stats" method="GET">
+            <input type="hidden" value="stats/stats" name="page">
+            <div class="form-group">
+                <label for="exampleInputName2">Startdatum:</label>
+                <input style="line-height: normal;" type="date" class="form-control" name="date_start">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail2">Enddatum:</label>
+                <input style="line-height: normal;" value="<?php echo date('Y-m-d') ?>" type="date" class="form-control" name="date_end">
+            </div>
+            <button type="submit" class="btn btn-default">Filtern</button>
+        </form>
+    </div>
+</div>
 
 
 <h3>Aufrufe pro Tag:</h3>

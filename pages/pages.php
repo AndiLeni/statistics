@@ -1,8 +1,9 @@
 <?php
 
-function get_labels($column, $request_url) {
+function get_labels($column, $request_url)
+{
     $sql = rex_sql::factory();
-    $result = $sql->setQuery('SELECT '. $column .' FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url GROUP BY '. $column .' ORDER BY '. $column .' ASC', ['url' => $request_url]);
+    $result = $sql->setQuery('SELECT ' . $column . ' FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url GROUP BY ' . $column . ' ORDER BY ' . $column . ' ASC', ['url' => $request_url]);
 
     foreach ($result as $row) {
         $data[] = $row->getValue($column);
@@ -11,9 +12,10 @@ function get_labels($column, $request_url) {
     return json_encode($data);
 }
 
-function get_values($column, $request_url) {
+function get_values($column, $request_url)
+{
     $sql = rex_sql::factory();
-    $result = $sql->setQuery('SELECT COUNT('. $column .') as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url GROUP BY '. $column .' ORDER BY '. $column .' ASC', ['url' => $request_url]);
+    $result = $sql->setQuery('SELECT COUNT(' . $column . ') as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url GROUP BY ' . $column . ' ORDER BY ' . $column . ' ASC', ['url' => $request_url]);
 
     foreach ($result as $row) {
         $data[] = $row->getValue('count');
@@ -220,8 +222,6 @@ $list->show();
             labels:' . get_labels('os', $request_url) . ',
             values:' . get_values('os', $request_url) . ',
         }], layout, config);';
-
-        
     }
 
 
