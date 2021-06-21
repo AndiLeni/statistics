@@ -1,7 +1,6 @@
 {
     "require": {
         "matomo/device-detector": "^4.2",
-        "fakerphp/faker": "^1.14",
         "vectorface/whip": "^0.4.0"
     }
 }

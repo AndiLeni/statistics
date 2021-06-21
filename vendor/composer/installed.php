@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '6a11787187ab408af63dab5311250b815d2c8379',
+    'reference' => 'de7e51477fb037e08adb2d5926017f5fcf8a9e77',
     'name' => '__root__',
   ),
   'versions' => 
@@ -18,16 +18,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '6a11787187ab408af63dab5311250b815d2c8379',
-    ),
-    'fakerphp/faker' => 
-    array (
-      'pretty_version' => 'v1.14.1',
-      'version' => '1.14.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'ed22aee8d17c7b396f74a58b1e7fefa4f90d5ef1',
+      'reference' => 'de7e51477fb037e08adb2d5926017f5fcf8a9e77',
     ),
     'matomo/device-detector' => 
     array (
@@ -54,15 +45,6 @@
         0 => '4.2.3',
       ),
     ),
-    'psr/container' => 
-    array (
-      'pretty_version' => '1.1.1',
-      'version' => '1.1.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '8622567409010282b7aeebe4bb841fe98b58dcaf',
-    ),
     'psr/http-message' => 
     array (
       'pretty_version' => '1.0.1',
@@ -71,15 +53,6 @@
       array (
       ),
       'reference' => 'f6561bf28d520154e4b0ec72be95418abe6d9363',
-    ),
-    'symfony/deprecation-contracts' => 
-    array (
-      'pretty_version' => 'v2.4.0',
-      'version' => '2.4.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '5f38c8804a9e97d23e0c8d63341088cd8a22d627',
     ),
     'vectorface/whip' => 
     array (
