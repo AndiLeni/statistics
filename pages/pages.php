@@ -156,7 +156,7 @@ if ($request_url != []) {
 <div id="chart_visits_per_page"></div>
 <?php
 
-$list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY url ASC');
+$list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC');
 $list->setColumnLabel('url', 'Url');
 $list->setColumnLabel('count', 'Anzahl');
 // $list->setColumnSortable('url', $direction = 'asc'); needs fix, "url" url-param not set when reorderung
@@ -183,7 +183,7 @@ $list->show();
             r: 25,
             l: 25,
             t: 25,
-            b: 25,
+            b: 90,
         },
     }
 

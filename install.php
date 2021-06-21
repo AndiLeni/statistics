@@ -16,3 +16,8 @@ rex_sql_table::get(rex::getTable('pagestats_bot'))
     ->ensureColumn(new rex_sql_column('producer', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->ensure();
+
+    rex_sql_table::get(rex::getTable('pagestats_hash'))
+    ->ensureColumn(new rex_sql_column('hash', 'varchar(255)'))
+    ->ensureColumn(new rex_sql_column('datetime', 'datetime'))
+    ->ensure();
