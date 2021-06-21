@@ -5,6 +5,18 @@ require_once __DIR__ . '/vendor/autoload.php';
 use DeviceDetector\DeviceDetector;
 use Vectorface\Whip\Whip;
 
+$value = $this->getConfig('pagestats_ignored_paths');
+$value = explode("\n", str_replace("\r", "", $value));
+dump($value);
+dump($_SERVER['REQUEST_URI']);
+
+
+foreach ($value as $el) {
+    if (str_starts_with($_SERVER['REQUEST_URI'], $el)) {
+        echo 'ignore: ' . $el;
+    }
+}
+
 
 
 // Track only frontend requests
