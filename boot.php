@@ -5,22 +5,24 @@ require_once __DIR__ . '/vendor/autoload.php';
 use DeviceDetector\DeviceDetector;
 use Vectorface\Whip\Whip;
 
-$value = $this->getConfig('pagestats_ignored_paths');
-$value = explode("\n", str_replace("\r", "", $value));
-dump($value);
-dump($_SERVER['REQUEST_URI']);
 
+function ignore_visit($addon)
+{
+    // check if visit should be ignored
+    $ignored_paths = $addon->getConfig('pagestats_ignored_paths');
+    $ignored_paths = explode("\n", str_replace("\r", "", $ignored_paths));
 
-foreach ($value as $el) {
-    if (str_starts_with($_SERVER['REQUEST_URI'], $el)) {
-        echo 'ignore: ' . $el;
+    foreach ($ignored_paths as $path) {
+        if (str_starts_with($_SERVER['REQUEST_URI'], $path)) {
+            return true;
+        }
     }
+    return false;
 }
 
 
-
-// Track only frontend requests
-if (!rex::isBackend()) {
+// Track only frontend requests if page url should not be ignored
+if (!rex::isBackend() && !ignore_visit($this)) {
 
     $userAgent = $_SERVER['HTTP_USER_AGENT'];
     $dd = new DeviceDetector($userAgent);
@@ -79,15 +81,16 @@ if (!rex::isBackend()) {
             $sql->setWhere(['hash' => $hash]);
             $sql->select();
 
-            // if hash is found check if last visit < 30 minutes then save visit, else dont save visit
+            // if hash is found check if last visit < 'pagestats_visit_duration' minutes then save visit, else dont save visit
             if ($sql->getRows() == 1) {
                 $origin = new DateTime($sql->getValue('datetime'));
                 $target = new DateTime();
                 $interval = $origin->diff($target);
                 $minute_diff = $interval->i + ($interval->h * 60) + ($interval->d * 3600) + ($interval->m * 43800) + ($interval->y * 525599);
 
-                // hash was found, if last visit < 30 min save visit
-                if ($minute_diff > 30) {
+                // hash was found, if last visit < 'pagestats_visit_duration' min save visit
+                $max_visit_length = intval($this->getConfig('pagestats_visit_duration'));
+                if ($minute_diff > $max_visit_length) {
                     // update set last visit to now
                     $sql->setQuery('UPDATE ' . rex::getTable('pagestats_hash') . ' SET datetime = :datetime WHERE hash = :hash ', ['hash' => $hash, 'datetime' => $datetime_now->format('Y-m-d H:i:s')]);
 
