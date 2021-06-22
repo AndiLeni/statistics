@@ -27,7 +27,7 @@ function get_values($column, $request_url)
 
 // sum per page
 $sql = rex_sql::factory();
-$sum_per_page = $sql->setQuery('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY url ASC');
+$sum_per_page = $sql->setQuery('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC');
 
 $sum_per_page_labels = [];
 $sum_per_page_values = [];
@@ -97,7 +97,7 @@ if ($request_url != []) {
     $sum_per_day_values = json_encode(array_values($data));
 
 
-    $list = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = "' . $request_url . '" GROUP BY date ORDER BY url DESC');
+    $list = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = "' . $request_url . '" GROUP BY date ORDER BY count DESC');
     $list->setColumnLabel('date', 'Datum');
     $list->setColumnLabel('count', 'Anzahl');
     $list->setColumnSortable('date', $direction = 'desc');

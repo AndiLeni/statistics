@@ -11,29 +11,28 @@ $brand_array = ["LG", "Apple", "Samsung", "Huawei", "Xioami", "Nokia", "Oppo", "
 $model_array = ["Lorem", "ipsum", "dolor", "sit", "amet", "consetetur", "sadipscing", "elitr", "sed", "diam", "nonumy", "eirmod", "tempor", "invidunt", "ut", "labore", "et", "olore", "magna", "aliquyam", "erat", "sed", "diam", "voluptua", "At", "vero", "eos", "et", "accusam", "et"];
 
 
-$faker = Faker\Factory::create();
-
-
-
-for ($i = 0; $i < 250000; $i++) {
-    $date = $faker->dateTimeBetween('-5 years', 'now')->format('Y-m-d');
-
-    $page = $page_array[array_rand($page_array)]; 
-    $browser = $browser_array[array_rand($browser_array)]; 
-    $os = $os_array[array_rand($os_array)]; 
-    $dt = $dt_array[array_rand($dt_array)]; 
-    $brand = $brand_array[array_rand($brand_array)]; 
-    $model = $model_array[array_rand($model_array)]; 
-
-    $sql = "INSERT INTO rex_pagestats_dump (browser,os,browsertype,brand,model,url,date) VALUES ('". $browser ."','". $os ."','". $dt ."','". $brand ."','". $model ."','". $page ."','". $date ."');" . PHP_EOL;
-
-    file_put_contents(__DIR__ . '/data.sql', $sql, FILE_APPEND);
-
+$start = new DateTime('12.06.2021');
+$end = new DateTime('22.06.2021');
+function randomDateInRange(DateTime $start, DateTime $end)
+{
+    $randomTimestamp = mt_rand($start->getTimestamp(), $end->getTimestamp());
+    $randomDate = new DateTime();
+    $randomDate->setTimestamp($randomTimestamp);
+    return $randomDate;
 }
 
 
+for ($i = 0; $i < 5000; $i++) {
+    $date = randomDateInRange($start, $end)->format('Y-m-d');
 
+    $page = $page_array[array_rand($page_array)];
+    $browser = $browser_array[array_rand($browser_array)];
+    $os = $os_array[array_rand($os_array)];
+    $dt = $dt_array[array_rand($dt_array)];
+    $brand = $brand_array[array_rand($brand_array)];
+    $model = $model_array[array_rand($model_array)];
 
+    $sql = "INSERT INTO rex_pagestats_dump (browser,os,browsertype,brand,model,url,date) VALUES ('" . $browser . "','" . $os . "','" . $dt . "','" . $brand . "','" . $model . "','" . $page . "','" . $date . "');" . PHP_EOL;
 
-
-
+    file_put_contents(__DIR__ . '/data.sql', $sql, FILE_APPEND);
+}
