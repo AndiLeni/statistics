@@ -21,6 +21,28 @@ function ignore_visit($addon)
 }
 
 
+rex_dashboard::addItem(
+    rex_dashboard_views_total::factory('stats_views_total', 'Seitenaufrufe gesamt')
+);
+rex_dashboard::addItem(
+    rex_dashboard_browser::factory('stats_browser', 'Browser')
+);
+rex_dashboard::addItem(
+    rex_dashboard_browsertype::factory('stats_browsertype', 'Gerätetypen')
+);
+rex_dashboard::addItem(
+    rex_dashboard_os::factory('stats_os', 'Betriebssysteme')
+);
+rex_dashboard::addItem(
+    rex_dashboard_hour::factory('stats_hour', 'Uhrzeiten')
+);
+rex_dashboard::addItem(
+    rex_dashboard_weekday::factory('stats_weekday', 'Wochentage')
+);
+
+// dump(rex_dashboard_weekday::getChartData());
+
+
 // Track only frontend requests if page url should not be ignored
 if (!rex::isBackend() && !ignore_visit($this)) {
 
