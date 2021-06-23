@@ -25,6 +25,57 @@ function get_values($column)
     return json_encode($data);
 }
 
+function get_labels_weekday($column)
+{
+    $sql = rex_sql::factory();
+    $result = $sql->setQuery('SELECT ' . $column . ' FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY ' . $column . ' ORDER BY ' . $column . ' ASC');
+
+    foreach ($result as $row) {
+        $data[] = get_weekday_string(['value' => $row->getValue($column)]);
+    }
+
+    return json_encode($data);
+}
+
+function get_values_weekday($column)
+{
+    $sql = rex_sql::factory();
+    $result = $sql->setQuery('SELECT COUNT(' . $column . ') as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY ' . $column . ' ORDER BY ' . $column . ' ASC');
+
+    foreach ($result as $row) {
+        $data[] = $row->getValue('count');
+    }
+
+    return json_encode($data);
+}
+
+function get_weekday_string($weekday)
+{
+    switch ($weekday["value"]) {
+        case 1:
+            return "Montag";
+            break;
+        case 2:
+            return "Dienstag";
+            break;
+        case 3:
+            return "Mittwoch";
+            break;
+        case 4:
+            return "Donnerstag";
+            break;
+        case 5:
+            return "Freitag";
+            break;
+        case 6:
+            return "Samstag";
+            break;
+        case 7:
+            return "Sonntag";
+            break;
+    }
+}
+
 
 
 
@@ -108,22 +159,23 @@ $sum_per_day_values = json_encode(array_values($data));
 </div>
 
 
-<h3>Aufrufe pro Tag:</h3>
+
 <?php
 if (!isset($sum_per_day_labels)) {
     echo '<div class="alert alert-danger">';
     echo '<p>Es sind noch keine Daten vorhanden.</p>';
     echo '</div>';
 }
+
+$fragment = new rex_fragment();
+$fragment->setVar('title', 'Aufrufe pro Tag:');
+$fragment->setVar('content', '<div id="chart_visits"></div>', false);
+echo $fragment->parse('core/page/section.php');
 ?>
-<div id="chart_visits"></div>
 
 
 <div class="row">
     <div class="col-12 col-md-6">
-        <h3>Browser:</h3>
-        <div id="chart_browser"></div>
-
         <?php
 
         $list = rex_list::factory('SELECT browser, COUNT(browser) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY browser ORDER BY count DESC');
@@ -131,15 +183,16 @@ if (!isset($sum_per_day_labels)) {
         $list->setColumnLabel('count', 'Anzahl');
         $list->setColumnSortable('browser', $direction = 'asc');
         $list->setColumnSortable('count', $direction = 'asc');
-        $list->show();
+
+        $fragment = new rex_fragment();
+        $fragment->setVar('title', 'Browser:');
+        $fragment->setVar('content', '<div id="chart_browser"></div>' . $list->get(), false);
+        echo $fragment->parse('core/page/section.php');
 
         ?>
 
     </div>
     <div class="col-12 col-md-6">
-        <h3>Gerätetyp:</h3>
-        <div id="chart_browsertype"></div>
-
         <?php
 
         $list = rex_list::factory('SELECT browsertype, COUNT(browsertype) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY browsertype ORDER BY count DESC');
@@ -147,8 +200,11 @@ if (!isset($sum_per_day_labels)) {
         $list->setColumnLabel('count', 'Anzahl');
         $list->setColumnSortable('browsertype', $direction = 'asc');
         $list->setColumnSortable('count', $direction = 'desc');
-        $list->show();
 
+        $fragment = new rex_fragment();
+        $fragment->setVar('title', 'Gerätetyp:');
+        $fragment->setVar('content', '<div id="chart_browsertype"></div>' . $list->get(), false);
+        echo $fragment->parse('core/page/section.php');
         ?>
 
     </div>
@@ -156,9 +212,6 @@ if (!isset($sum_per_day_labels)) {
 
 <div class="row">
     <div class="col-12 col-md-6">
-        <h3>Betriebssystem:</h3>
-        <div id="chart_os"></div>
-
         <?php
 
         $list = rex_list::factory('SELECT os, COUNT(os) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY os ORDER BY count DESC');
@@ -166,8 +219,11 @@ if (!isset($sum_per_day_labels)) {
         $list->setColumnLabel('count', 'Anzahl');
         $list->setColumnSortable('os', $direction = 'asc');
         $list->setColumnSortable('count', $direction = 'asc');
-        $list->show();
 
+        $fragment = new rex_fragment();
+        $fragment->setVar('title', 'Betriebssystem:');
+        $fragment->setVar('content', '<div id="chart_os"></div>' . $list->get(), false);
+        echo $fragment->parse('core/page/section.php');
         ?>
 
     </div>
@@ -179,9 +235,6 @@ if (!isset($sum_per_day_labels)) {
 
 <div class="row">
     <div class="col-12 col-md-6">
-        <h3>Marke:</h3>
-        <div id="chart_brand"></div>
-
         <?php
 
         $list = rex_list::factory('SELECT brand, COUNT(brand) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY brand ORDER BY count DESC');
@@ -189,15 +242,15 @@ if (!isset($sum_per_day_labels)) {
         $list->setColumnLabel('count', 'Anzahl');
         $list->setColumnSortable('brand', $direction = 'asc');
         $list->setColumnSortable('count', $direction = 'asc');
-        $list->show();
 
+        $fragment = new rex_fragment();
+        $fragment->setVar('title', 'Marke:');
+        $fragment->setVar('content', '<div id="chart_brand"></div>' . $list->get(), false);
+        echo $fragment->parse('core/page/section.php');
         ?>
 
     </div>
     <div class="col-12 col-md-6">
-        <h3>Modell:</h3>
-        <div id="chart_model"></div>
-
         <?php
 
         $list = rex_list::factory('SELECT model, COUNT(model) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY model ORDER BY count DESC');
@@ -205,7 +258,45 @@ if (!isset($sum_per_day_labels)) {
         $list->setColumnLabel('count', 'Anzahl');
         $list->setColumnSortable('model', $direction = 'asc');
         $list->setColumnSortable('count', $direction = 'asc');
-        $list->show();
+
+        $fragment = new rex_fragment();
+        $fragment->setVar('title', 'Modell:');
+        $fragment->setVar('content', '<div id="chart_model"></div>' . $list->get(), false);
+        echo $fragment->parse('core/page/section.php');
+        ?>
+
+    </div>
+    <div class="col-12 col-md-6">
+        <?php
+
+        $list = rex_list::factory('SELECT weekday, COUNT(weekday) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY weekday ORDER BY count DESC');
+        $list->setColumnLabel('weekday', 'Name');
+        $list->setColumnLabel('count', 'Anzahl');
+        $list->setColumnSortable('weekday', $direction = 'asc');
+        $list->setColumnSortable('count', $direction = 'asc');
+        $list->setColumnFormat('weekday', 'custom', 'get_weekday_string');
+
+        $fragment = new rex_fragment();
+        $fragment->setVar('title', 'Wochentage:');
+        $fragment->setVar('content', '<div id="chart_weekday"></div>' . $list->get(), false);
+        echo $fragment->parse('core/page/section.php');
+        ?>
+
+    </div>
+    <div class="col-12 col-md-6">
+        <?php
+
+        $list = rex_list::factory('SELECT hour, COUNT(hour) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY hour ORDER BY count DESC');
+        $list->setColumnLabel('hour', 'Name');
+        $list->setColumnLabel('count', 'Anzahl');
+        $list->setColumnSortable('hour', $direction = 'asc');
+        $list->setColumnSortable('count', $direction = 'asc');
+        $list->setColumnFormat('hour', 'sprintf', '###hour### Uhr');
+
+        $fragment = new rex_fragment();
+        $fragment->setVar('title', 'Uhrzeiten:');
+        $fragment->setVar('content', '<div id="chart_hour"></div>' . $list->get(), false);
+        echo $fragment->parse('core/page/section.php');
 
         ?>
 
@@ -213,7 +304,6 @@ if (!isset($sum_per_day_labels)) {
 </div>
 
 
-<h3>Bots:</h3>
 <?php
 
 $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_bot') . ' ORDER BY count DESC');
@@ -225,7 +315,11 @@ $list->setColumnSortable('name', $direction = 'asc');
 $list->setColumnSortable('count', $direction = 'asc');
 $list->setColumnSortable('category', $direction = 'asc');
 $list->setColumnSortable('producer', $direction = 'asc');
-$list->show();
+
+$fragment = new rex_fragment();
+$fragment->setVar('title', 'Bots:');
+$fragment->setVar('content', '<div id="chart_hour"></div>' . $list->get(), false);
+echo $fragment->parse('core/page/section.php');
 
 ?>
 
@@ -286,5 +380,17 @@ $list->show();
         type: 'pie',
         labels: <?php echo get_labels('model') ?>,
         values: <?php echo get_values('model') ?>,
+    }], layout, config);
+
+    chart_weekday = Plotly.newPlot('chart_weekday', [{
+        type: 'bar',
+        x: <?php echo get_labels_weekday('weekday') ?>,
+        y: <?php echo get_values_weekday('weekday') ?>,
+    }], layout, config);
+
+    chart_hour = Plotly.newPlot('chart_hour', [{
+        type: 'bar',
+        x: <?php echo get_labels('hour') ?>,
+        y: <?php echo get_values('hour') ?>,
     }], layout, config);
 </script>

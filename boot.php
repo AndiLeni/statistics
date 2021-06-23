@@ -104,6 +104,8 @@ if (!rex::isBackend() && !ignore_visit($this)) {
                     $sql->setValue('model', $model);
                     $sql->setValue('url', $url);
                     $sql->setValue('date', $datetime_now->format('Y-m-d'));
+                    $sql->setValue('hour', $datetime_now->format('H'));
+                    $sql->setValue('weekday', $datetime_now->format('N'));
                     $sql->insert();
                 }
             } else {
@@ -125,6 +127,8 @@ if (!rex::isBackend() && !ignore_visit($this)) {
                 $sql->setValue('model', $model);
                 $sql->setValue('url', $url);
                 $sql->setValue('date', $datetime_now->format('Y-m-d'));
+                $sql->setValue('hour', $datetime_now->format('H'));
+                $sql->setValue('weekday', $datetime_now->format('N'));
                 $sql->insert();
             }
         }

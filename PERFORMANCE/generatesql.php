@@ -9,6 +9,8 @@ $os_array = ["Windows 10", "Ubuntu", "MacOS", "iOS 14", "Android 10", "Android 9
 $dt_array = ["Mobile", "Desktop", "Tablet", "Phablet"];
 $brand_array = ["LG", "Apple", "Samsung", "Huawei", "Xioami", "Nokia", "Oppo", "Sony"];
 $model_array = ["Lorem", "ipsum", "dolor", "sit", "amet", "consetetur", "sadipscing", "elitr", "sed", "diam", "nonumy", "eirmod", "tempor", "invidunt", "ut", "labore", "et", "olore", "magna", "aliquyam", "erat", "sed", "diam", "voluptua", "At", "vero", "eos", "et", "accusam", "et"];
+$hour_array = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
+$weekday_array = ["1", "2", "3", "4", "5", "6", "7"];
 
 
 $start = new DateTime('12.06.2021');
@@ -31,8 +33,10 @@ for ($i = 0; $i < 5000; $i++) {
     $dt = $dt_array[array_rand($dt_array)];
     $brand = $brand_array[array_rand($brand_array)];
     $model = $model_array[array_rand($model_array)];
+    $hour = $hour_array[array_rand($hour_array)];
+    $weekday = $weekday_array[array_rand($weekday_array)];
 
-    $sql = "INSERT INTO rex_pagestats_dump (browser,os,browsertype,brand,model,url,date) VALUES ('" . $browser . "','" . $os . "','" . $dt . "','" . $brand . "','" . $model . "','" . $page . "','" . $date . "');" . PHP_EOL;
+    $sql = "INSERT INTO rex_pagestats_dump (browser,os,browsertype,brand,model,url,date,hour,weekday) VALUES ('" . $browser . "','" . $os . "','" . $dt . "','" . $brand . "','" . $model . "','" . $page . "','" . $date . "','" . $hour . "','" . $weekday . "');" . PHP_EOL;
 
     file_put_contents(__DIR__ . '/data.sql', $sql, FILE_APPEND);
 }

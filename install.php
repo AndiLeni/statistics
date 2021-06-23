@@ -8,6 +8,8 @@ rex_sql_table::get(rex::getTable('pagestats_dump'))
     ->ensureColumn(new rex_sql_column('model', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('url', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('date', 'date'))
+    ->ensureColumn(new rex_sql_column('hour', 'int'))
+    ->ensureColumn(new rex_sql_column('weekday', 'int'))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_bot'))
@@ -17,7 +19,7 @@ rex_sql_table::get(rex::getTable('pagestats_bot'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->ensure();
 
-    rex_sql_table::get(rex::getTable('pagestats_hash'))
+rex_sql_table::get(rex::getTable('pagestats_hash'))
     ->ensureColumn(new rex_sql_column('hash', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('datetime', 'datetime'))
     ->ensure();

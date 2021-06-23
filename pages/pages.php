@@ -153,9 +153,7 @@ if ($request_url != []) {
 ?>
 
 
-<h3>Summe pro Seite:</h3>
 
-<div id="chart_visits_per_page"></div>
 <?php
 
 $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC');
@@ -164,7 +162,11 @@ $list->setColumnLabel('count', 'Anzahl');
 // $list->setColumnSortable('url', $direction = 'asc'); needs fix, "url" url-param not set when reorderung
 // $list->setColumnSortable('count', $direction = 'asc'); needs fix, "url" url-param not set when reorderung
 $list->setColumnParams('url', ['url' => '###url###']);
-$list->show();
+
+$fragment = new rex_fragment();
+$fragment->setVar('title', 'Summe pro Seite:');
+$fragment->setVar('content', '<div id="chart_visits_per_page"></div>' . $list->get(), false);
+echo $fragment->parse('core/page/section.php');
 
 ?>
 
