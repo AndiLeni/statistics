@@ -37,7 +37,7 @@ rex_dashboard::addItem(
     rex_dashboard_hour::factory('stats_hour', 'Uhrzeiten')
 );
 rex_dashboard::addItem(
-    rex_dashboard_weekday::factory('stats_weekday', 'Wochentage')
+    stats_weekday_dashboard::factory('stats_weekday', 'Wochentage')
 );
 
 // dump(rex_dashboard_weekday::getChartData());
