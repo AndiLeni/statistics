@@ -25,28 +25,32 @@ function get_values($column)
     return json_encode($data);
 }
 
-function get_labels_weekday($column)
+function get_values_hour()
 {
     $sql = rex_sql::factory();
-    $result = $sql->setQuery('SELECT ' . $column . ' FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY ' . $column . ' ORDER BY ' . $column . ' ASC');
+    $result = $sql->setQuery('SELECT hour, COUNT(hour) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY hour ORDER BY hour ASC');
+
+    $data = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0, 8 => 0, 9 => 0, 10 => 0, 11 => 0, 12 => 0, 13 => 0, 14 => 0, 15 => 0, 16 => 0, 17 => 0, 18 => 0, 19 => 0, 20 => 0, 21 => 0, 22 => 0, 23 => 0];
 
     foreach ($result as $row) {
-        $data[] = get_weekday_string(['value' => $row->getValue($column)]);
+        $data[$row->getValue('hour')] = $row->getValue('count');
     }
 
-    return json_encode($data);
+    return json_encode(array_values($data));
 }
 
 function get_values_weekday($column)
 {
     $sql = rex_sql::factory();
-    $result = $sql->setQuery('SELECT COUNT(' . $column . ') as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY ' . $column . ' ORDER BY ' . $column . ' ASC');
+    $result = $sql->setQuery('SELECT weekday, COUNT(' . $column . ') as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY ' . $column . ' ORDER BY ' . $column . ' ASC');
+
+    $data = ["1" => 0, "2" => 0, "3" => 0, "4" => 0, "5" => 0, "6" => 0, "7" => 0];
 
     foreach ($result as $row) {
-        $data[] = $row->getValue('count');
+        $data[$row->getValue('weekday')] = $row->getValue('count');
     }
 
-    return json_encode($data);
+    return json_encode(array_values($data));
 }
 
 function get_weekday_string($weekday)
@@ -384,13 +388,13 @@ echo $fragment->parse('core/page/section.php');
 
     chart_weekday = Plotly.newPlot('chart_weekday', [{
         type: 'bar',
-        x: <?php echo get_labels_weekday('weekday') ?>,
+        x: ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"],
         y: <?php echo get_values_weekday('weekday') ?>,
     }], layout, config);
 
     chart_hour = Plotly.newPlot('chart_hour', [{
         type: 'bar',
-        x: <?php echo get_labels('hour') ?>,
-        y: <?php echo get_values('hour') ?>,
+        x: ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"],
+        y: <?php echo get_values_hour('hour') ?>,
     }], layout, config);
 </script>
