@@ -1,36 +1,10 @@
 <?php
 
-function get_labels($column, $request_url)
-{
-    $sql = rex_sql::factory();
-    $result = $sql->setQuery('SELECT ' . $column . ' FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url GROUP BY ' . $column . ' ORDER BY ' . $column . ' ASC', ['url' => $request_url]);
 
-    foreach ($result as $row) {
-        $data[] = $row->getValue($column);
-    }
-
-    return json_encode($data);
-}
-
-function get_values($column, $request_url)
-{
-    $sql = rex_sql::factory();
-    $result = $sql->setQuery('SELECT COUNT(' . $column . ') as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url GROUP BY ' . $column . ' ORDER BY ' . $column . ' ASC', ['url' => $request_url]);
-
-    foreach ($result as $row) {
-        $data[] = $row->getValue('count');
-    }
-
-    return json_encode($data);
-}
-
-
-// sum per page
+// sum per page, bar chart
 $sql = rex_sql::factory();
 $sum_per_page = $sql->setQuery('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC');
 
-$sum_per_page_labels = [];
-$sum_per_page_values = [];
 
 foreach ($sum_per_page as $row) {
     $sum_per_page_labels[] = $row->getValue('url');
@@ -44,117 +18,59 @@ foreach ($sum_per_page as $row) {
 $sum_per_page_values = json_encode($sum_per_page_values);
 
 
-?>
 
-<script src="<?php echo rex_addon::get('stats')->getAssetsUrl('plotly-2.0.0.min.js') ?>"></script>
-
-
-<?php
-
-$request_url = rex_request('url', 'array', []);
+$request_url = rex_request('url', 'string', '');
 
 
 // details section for single page
-if ($request_url != []) {
-
-    $request_url = rex_escape($request_url[0]);
+if ($request_url != '') {
 
 
-    $sql = rex_sql::factory();
-    $max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable('pagestats_dump') . ' WHERE url = :url', ['url' => $request_url]);
-    $max_date = $max_date->getValue('date');
-    $max_date = new DateTime($max_date);
-    $max_date->modify('+1 day');
-    $max_date = $max_date->format('d.m.Y');
+    $request_url = rex_escape($request_url);
 
-    $min_date = $sql->setQuery('SELECT MIN(date) AS "date" from ' . rex::getTable('pagestats_dump') . ' WHERE url = :url', ['url' => $request_url]);
-    $min_date = $min_date->getValue('date');
-
-    $period = new DatePeriod(
-        new DateTime($min_date),
-        new DateInterval('P1D'),
-        new DateTime($max_date)
-    );
-
-    foreach ($period as $value) {
-        $array[$value->format("d.m.Y")] = "0";
-    }
-
-    $sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url = :url GROUP BY date ORDER BY date ASC', ['url' => $request_url]);
-
-    $data = [];
-
-    if ($sum_per_day->getRows() != 0) {
-        foreach ($sum_per_day as $row) {
-            $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
-            $arr2[$date] = $row->getValue('count');
-        }
-
-        $data = array_merge($array, $arr2);
-    }
-
-    $sum_per_day_labels = json_encode(array_keys($data));
-    $sum_per_day_values = json_encode(array_values($data));
+    $pagedetails = new stats_pagedetails($request_url);
+    $browsertype_data = $pagedetails->get_browsertype();
+    $browser_data = $pagedetails->get_browser();
+    $os_data = $pagedetails->get_os();
+    $sum_data = $pagedetails->get_sum_per_day();
 
 
-    $list = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = "' . $request_url . '" GROUP BY date ORDER BY count DESC');
-    $list->setColumnLabel('date', 'Datum');
-    $list->setColumnLabel('count', 'Anzahl');
-    $list->setColumnSortable('date', $direction = 'desc');
-    $list->setColumnSortable('count', $direction = 'desc');
-    $list->setColumnParams('url', ['url' => '###url###']);
-
-
-    $details_page_total = rex_sql::factory();
-    $details_page_total->setQuery('SELECT COUNT(url) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url', ['url' => $request_url]);
-    $details_page_total = $details_page_total->getValue('count');
-
-
-    echo '<div class="panel panel-edit">';
-    echo '<header class="panel-heading">';
-    echo '<div class="panel-title">Details für:</div>' . $request_url;
-    echo '</header>';
-
-    echo '<div class="panel-body">';
-    echo '<h5>Aufrufe insgesamt: <b>' . $details_page_total . '</b></h5>';
-    echo '<div class="row">';
-    echo '<div class="col-md-4">';
-    echo '<div class="panel panel-default">
+    $content = '<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default">
             <div class="panel-body">
                 <div id="chart_details_devicetype"></div>
             </div>
-        </div>';
-    echo '</div>';
-    echo '<div class="col-md-4">';
-    echo '<div class="panel panel-default">
-            <div class="panel-body">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class=" panel-body">
                 <div id="chart_details_browser"></div>
             </div>
-        </div>';
-    echo '</div>';
-    echo '<div class="col-md-4">';
-    echo '<div class="panel panel-default">
-            <div class="panel-body">
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class=" panel-body">
                 <div id="chart_details_os"></div>
             </div>
-        </div>';
-    echo '</div>';
-    echo '</div>';
-    echo '<div id="chart_details"></div>';
-    $list->show();
-    echo '</div>';
-    echo '</div>';
+        </div>
+    </div>
+    </div>
+    <div id="chart_details"></div>
+    ' . $pagedetails->get_list();
 
+    $fragment = new rex_fragment();
+    $fragment->setVar('class', 'info', false);
+    $fragment->setVar('title', 'Details für:');
+    $fragment->setVar('heading', $request_url);
+    $fragment->setVar('body', '<h4>Aufrufe insgesamt: <b>' . $pagedetails->get_page_total() . '</b></h4>', false);
+    $fragment->setVar('content', $content, false);
+    echo $fragment->parse('core/page/section.php');
 
-    echo '<hr>';
 }
 
-
-?>
-
-
-
-<?php
 
 $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC');
 $list->setColumnLabel('url', 'Url');
@@ -169,6 +85,8 @@ $fragment->setVar('content', '<div id="chart_visits_per_page"></div>' . $list->g
 echo $fragment->parse('core/page/section.php');
 
 ?>
+
+<script src="<?php echo rex_addon::get('stats')->getAssetsUrl('plotly-2.0.0.min.js') ?>"></script>
 
 <script>
     var config = {
@@ -200,29 +118,29 @@ echo $fragment->parse('core/page/section.php');
 
     <?php
 
-    if ($request_url != []) {
+    if ($request_url != '') {
         echo 'chart_details = Plotly.newPlot("chart_details", [{
             type: "line",
-            x:' . $sum_per_day_labels . ',
-            y:' . $sum_per_day_values . ',
+            x:' . $sum_data['labels'] . ',
+            y:' . $sum_data['values'] . ',
         }], layout, config);';
 
         echo 'chart_details_devicetype = Plotly.newPlot("chart_details_devicetype", [{
             type: "pie",
-            labels:' . get_labels('browsertype', $request_url) . ',
-            values:' . get_values('browsertype', $request_url) . ',
+            labels:' . $browsertype_data['labels'] . ',
+            values:' . $browsertype_data['values'] . ',
         }], layout, config);';
 
         echo 'chart_details_browser = Plotly.newPlot("chart_details_browser", [{
             type: "pie",
-            labels:' . get_labels('browser', $request_url) . ',
-            values:' . get_values('browser', $request_url) . ',
+            labels:' . $browser_data['labels'] . ',
+            values:' . $browser_data['values'] . ',
         }], layout, config);';
 
         echo 'chart_details_os = Plotly.newPlot("chart_details_os", [{
             type: "pie",
-            labels:' . get_labels('os', $request_url) . ',
-            values:' . get_values('os', $request_url) . ',
+            labels:' . $os_data['labels'] . ',
+            values:' . $os_data['values'] . ',
         }], layout, config);';
     }
 
