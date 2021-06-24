@@ -22,16 +22,16 @@ function ignore_visit($addon)
 
 
 rex_dashboard::addItem(
-    rex_dashboard_views_total::factory('stats_views_total', 'Seitenaufrufe gesamt')
+    rex_dashboard_views_total::factory('stats_views_total', 'Seitenaufrufe')
 );
 rex_dashboard::addItem(
-    rex_dashboard_browser::factory('stats_browser', 'Browser')
+    rex_dashboard_browser::factory('stats_browser', 'Browser')->setDonut()
 );
 rex_dashboard::addItem(
-    rex_dashboard_browsertype::factory('stats_browsertype', 'Gerätetypen')
+    rex_dashboard_browsertype::factory('stats_browsertype', 'Gerätetypen')->setDonut()
 );
 rex_dashboard::addItem(
-    rex_dashboard_os::factory('stats_os', 'Betriebssysteme')
+    rex_dashboard_os::factory('stats_os', 'Betriebssysteme')->setDonut()
 );
 rex_dashboard::addItem(
     rex_dashboard_hour::factory('stats_hour', 'Uhrzeiten')

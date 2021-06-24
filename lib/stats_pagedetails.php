@@ -53,19 +53,6 @@ class stats_pagedetails
         ];
     }
 
-    private function get_sql()
-    {
-        $sql = rex_sql::factory();
-        $result = $sql->setQuery('SELECT browsertype, COUNT(browsertype) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url GROUP BY browsertype ORDER BY count DESC', ['url' => $this->url]);
-
-        foreach ($result as $row) {
-            $data[$row->getValue('browsertype')] = $row->getValue('count');
-        }
-
-        return $data;
-    }
-
-
     public function get_list()
     {
         $list = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = "' . $this->url . '" GROUP BY date ORDER BY count DESC');

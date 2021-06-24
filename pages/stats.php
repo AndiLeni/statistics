@@ -90,7 +90,7 @@ $hour_data = $hour->get_data();
 <div class="panel panel-default">
     <div class="panel-heading">Zeitraum filtern</div>
     <div class="panel-body">
-        <form class="form-inline" action="http://redaxo.test/redaxo/index.php?page=stats/stats" method="GET">
+        <form class="form-inline" action="/redaxo/index.php" method="GET">
             <input type="hidden" value="stats/stats" name="page">
             <div class="form-group">
                 <label for="exampleInputName2">Startdatum:</label>
