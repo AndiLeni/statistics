@@ -1,5 +1,5 @@
 package: stats
-version: '1.0.0'
+version: dev
 
 page:
   title: 'Statistiken'
@@ -11,3 +11,8 @@ page:
       title: Seiten
     settings: 
       title: Einstellungen
+
+requires:
+  redaxo: '^5.12'
+  php:
+    version: '>=7.1'
