@@ -6,6 +6,8 @@ class stats_browsertype
         $sql = rex_sql::factory();
         $result = $sql->setQuery('SELECT browsertype, COUNT(browsertype) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY browsertype ORDER BY count DESC');
 
+        $data = [];
+
         foreach ($result as $row) {
             $data[$row->getValue('browsertype')] = $row->getValue('count');
         }

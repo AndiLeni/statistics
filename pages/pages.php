@@ -5,6 +5,8 @@
 $sql = rex_sql::factory();
 $sum_per_page = $sql->setQuery('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC');
 
+$sum_per_page_labels = [];
+$sum_per_page_values = [];
 
 foreach ($sum_per_page as $row) {
     $sum_per_page_labels[] = $row->getValue('url');

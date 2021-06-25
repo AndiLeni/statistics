@@ -6,6 +6,8 @@ class stats_model
         $sql = rex_sql::factory();
         $result = $sql->setQuery('SELECT model, COUNT(model) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY model ORDER BY count DESC');
 
+        $data = [];
+
         foreach ($result as $row) {
             $data[$row->getValue('model')] = $row->getValue('count');
         }

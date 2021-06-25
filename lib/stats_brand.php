@@ -6,6 +6,7 @@ class stats_brand
         $sql = rex_sql::factory();
         $result = $sql->setQuery('SELECT brand, COUNT(brand) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY brand ORDER BY count DESC');
 
+        $data = [];
 
         foreach ($result as $row) {
             $data[$row->getValue('brand')] = $row->getValue('count');

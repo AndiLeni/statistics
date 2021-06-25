@@ -6,6 +6,8 @@ class stats_os
         $sql = rex_sql::factory();
         $result = $sql->setQuery('SELECT os, COUNT(os) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY os ORDER BY count DESC');
 
+        $data = [];
+
         foreach ($result as $row) {
             $data[$row->getValue('os')] = $row->getValue('count');
         }

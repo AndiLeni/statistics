@@ -6,6 +6,8 @@ class stats_browser
         $sql = rex_sql::factory();
         $result = $sql->setQuery('SELECT browser, COUNT(browser) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY browser ORDER BY count DESC');
 
+        $data = [];
+
         foreach ($result as $row) {
             $data[$row->getValue('browser')] = $row->getValue('count');
         }

@@ -1,10 +1,11 @@
 <?php
 
-require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/vendor/device-detector-4.2.3/autoload.php';
+require_once __DIR__ . '/vendors/autoload.php';
+
 
 use DeviceDetector\DeviceDetector;
 use Vectorface\Whip\Whip;
+
 
 $addon = rex_addon::get('stats');
 
@@ -109,7 +110,6 @@ if (!rex::isBackend() && !ignore_visit($addon)) {
             $datetime_now = new DateTime();
 
             $sql = rex_sql::factory();
-            $sql->setDebug(true);
             $sql->setTable(rex::getTable('pagestats_hash'));
             $sql->setWhere(['hash' => $hash]);
             $sql->select();
@@ -128,7 +128,6 @@ if (!rex::isBackend() && !ignore_visit($addon)) {
                     $sql->setQuery('UPDATE ' . rex::getTable('pagestats_hash') . ' SET datetime = :datetime WHERE hash = :hash ', ['hash' => $hash, 'datetime' => $datetime_now->format('Y-m-d H:i:s')]);
 
                     $sql = rex_sql::factory();
-                    $sql->setDebug(true);
                     $sql->setTable(rex::getTable('pagestats_dump'));
                     $sql->setValue('browser', $browser);
                     $sql->setValue('os', $os . " " . $osVer);
@@ -144,14 +143,12 @@ if (!rex::isBackend() && !ignore_visit($addon)) {
             } else {
                 // hash was not found, save hash with current datetime, then save visit
                 $sql = rex_sql::factory();
-                $sql->setDebug(true);
                 $sql->setTable(rex::getTable('pagestats_hash'));
                 $sql->setValue('hash', $hash);
                 $sql->setValue('datetime', date('Y-m-d H:i:s'));
                 $sql->insert();
 
                 $sql = rex_sql::factory();
-                $sql->setDebug(true);
                 $sql->setTable(rex::getTable('pagestats_dump'));
                 $sql->setValue('browser', $browser);
                 $sql->setValue('os', $os . " " . $osVer);

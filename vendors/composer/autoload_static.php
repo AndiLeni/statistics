@@ -4,8 +4,12 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite7c034f5d73b5e27caf161a83a59d936
+class ComposerStaticInit1dbb347e52a40c763807f7b666d28699
 {
+    public static $files = array (
+        '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'V' => 
         array (
@@ -14,6 +18,10 @@ class ComposerStaticInite7c034f5d73b5e27caf161a83a59d936
         'P' => 
         array (
             'Psr\\Http\\Message\\' => 17,
+        ),
+        'D' => 
+        array (
+            'DeviceDetector\\' => 15,
         ),
     );
 
@@ -26,6 +34,10 @@ class ComposerStaticInite7c034f5d73b5e27caf161a83a59d936
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
+        'DeviceDetector\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/matomo/device-detector',
+        ),
     );
 
     public static $classMap = array (
@@ -35,9 +47,9 @@ class ComposerStaticInite7c034f5d73b5e27caf161a83a59d936
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite7c034f5d73b5e27caf161a83a59d936::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite7c034f5d73b5e27caf161a83a59d936::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInite7c034f5d73b5e27caf161a83a59d936::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit1dbb347e52a40c763807f7b666d28699::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit1dbb347e52a40c763807f7b666d28699::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit1dbb347e52a40c763807f7b666d28699::$classMap;
 
         }, null, ClassLoader::class);
     }
