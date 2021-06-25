@@ -13,6 +13,10 @@ page:
       title: Einstellungen
 
 requires:
-  redaxo: '^5.12'
+  redaxo: '^5.11'
   php:
     version: '>=7.1'
+
+default_config:
+    pagestats_ignored_paths: ''
+    pagestats_visit_duration: 30

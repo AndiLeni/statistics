@@ -1,15 +1,24 @@
 <?php
 
 require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/device-detector-4.2.3/autoload.php';
 
 use DeviceDetector\DeviceDetector;
 use Vectorface\Whip\Whip;
+
+$addon = rex_addon::get('stats');
+
 
 
 function ignore_visit($addon)
 {
     // check if visit should be ignored
     $ignored_paths = $addon->getConfig('pagestats_ignored_paths');
+
+    if ($ignored_paths == '') {
+        return false;
+    }
+
     $ignored_paths = explode("\n", str_replace("\r", "", $ignored_paths));
 
     foreach ($ignored_paths as $path) {
@@ -21,30 +30,32 @@ function ignore_visit($addon)
 }
 
 
-rex_dashboard::addItem(
-    rex_dashboard_views_total::factory('stats_views_total', 'Seitenaufrufe')
-);
-rex_dashboard::addItem(
-    rex_dashboard_browser::factory('stats_browser', 'Browser')->setDonut()
-);
-rex_dashboard::addItem(
-    rex_dashboard_browsertype::factory('stats_browsertype', 'Gerätetypen')->setDonut()
-);
-rex_dashboard::addItem(
-    rex_dashboard_os::factory('stats_os', 'Betriebssysteme')->setDonut()
-);
-rex_dashboard::addItem(
-    rex_dashboard_hour::factory('stats_hour', 'Uhrzeiten')
-);
-rex_dashboard::addItem(
-    stats_weekday_dashboard::factory('stats_weekday', 'Wochentage')
-);
 
-// dump(rex_dashboard_weekday::getChartData());
+
+if (rex::isBackend() && rex_addon::get('dashboard')->isAvailable()) {
+    rex_dashboard::addItem(
+        rex_dashboard_views_total::factory('stats_views_total', 'Seitenaufrufe')
+    );
+    rex_dashboard::addItem(
+        rex_dashboard_browser::factory('stats_browser', 'Browser')->setDonut()
+    );
+    rex_dashboard::addItem(
+        rex_dashboard_browsertype::factory('stats_browsertype', 'Gerätetypen')->setDonut()
+    );
+    rex_dashboard::addItem(
+        rex_dashboard_os::factory('stats_os', 'Betriebssysteme')->setDonut()
+    );
+    rex_dashboard::addItem(
+        rex_dashboard_hour::factory('stats_hour', 'Uhrzeiten')
+    );
+    rex_dashboard::addItem(
+        stats_weekday_dashboard::factory('stats_weekday', 'Wochentage')
+    );
+}
 
 
 // Track only frontend requests if page url should not be ignored
-if (!rex::isBackend() && !ignore_visit($this)) {
+if (!rex::isBackend() && !ignore_visit($addon)) {
 
     $userAgent = $_SERVER['HTTP_USER_AGENT'];
     $dd = new DeviceDetector($userAgent);
