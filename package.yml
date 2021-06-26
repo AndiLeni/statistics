@@ -9,6 +9,8 @@ page:
       title: Statistiken
     pages: 
       title: Seiten
+    media: 
+      title: Medien
     settings: 
       title: Einstellungen
 
@@ -19,4 +21,5 @@ requires:
 
 default_config:
     pagestats_ignored_paths: ''
+    pagestats_ignored_ips: ''
     pagestats_visit_duration: 30
