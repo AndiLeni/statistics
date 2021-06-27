@@ -142,7 +142,7 @@ class stats_visit
             $sql = rex_sql::factory();
             $sql->setTable(rex::getTable('pagestats_hash'));
             $sql->setValue('hash', $hash);
-            $sql->setValue('datetime', date('Y-m-d H:i:s'));
+            $sql->setValue('datetime', $this->datetime_now->format('Y-m-d H:i:s'));
             $sql->insert();
 
             return true;
@@ -158,7 +158,7 @@ class stats_visit
             $bot = rex_sql::factory();
             $bot->setTable(rex::getTable('pagestats_media'));
             $bot->setValue('url', $this->url);
-            $bot->setValue('date', date('Y-m-d'));
+            $bot->setValue('date', $this->datetime_now->format('Y-m-d'));
             $bot->setValue('count', 1);
             $bot->insert();
         }

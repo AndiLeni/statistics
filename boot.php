@@ -48,12 +48,12 @@ $visit = new stats_visit($clientAddress, $url, $userAgent);
 
 
 
-
 // Track only frontend requests if page url should not be ignoredm
 if (!rex::isBackend() && !$visit->ignore_visit()) {
 
 
     if ($visit->is_media()) {
+
         // request is a media request and should not be logged to the page-visits
         $visit->save_media();
     } else {
@@ -64,10 +64,13 @@ if (!rex::isBackend() && !$visit->ignore_visit()) {
         $visit->parse_ua();
 
         if ($visit->DeviceDetector->isBot()) {
+
             // visitor is a bot
             $visit->save_bot();
         } else {
+
             if ($visit->save_visit()) {
+
                 // visitor is human
                 // check hash with save_visit, if true then save visit
                 $visit->persist();
