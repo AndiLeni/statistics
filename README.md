@@ -39,14 +39,17 @@ Es können folgende Einstellungen getroffen werden:
 
 Preview:
 
-Startseite des Addons mit den wichtigsten Metriken:
+### Startseite des Addons mit den wichtigsten Metriken:
 ![Preview](./preview/1.png "Preview")
 
-Seite für Details über eine URL:
+### Seite für Details über eine URL:
 ![Preview](./preview/2.png "Preview")
 
-Einstellungen:
+### Statistiken über Medien Aufrufe:
+![Preview](./preview/5.png "Preview")
+
+### Einstellungen:
 ![Preview](./preview/3.png "Preview")
 
-Integration in das Addon https://github.com/yakamara/dashboard
+### Integration in das Addon https://github.com/yakamara/dashboard
 ![Preview](./preview/4.png "Preview")
