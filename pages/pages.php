@@ -22,13 +22,24 @@ $sum_per_page_values = json_encode($sum_per_page_values);
 
 
 $request_url = rex_request('url', 'string', '');
+$request_url = rex_escape($request_url);
+$ignore_page = rex_request('ignore_page', 'boolean', false);
 
 
-// details section for single page
-if ($request_url != '') {
+// check if request is for ignoring a url
+// if yes, add url to addon settings and delete all database entries of this url 
+if ($request_url != '' && $ignore_page === true) {
+    $addon = rex_addon::get('stats');
+    $ignored_paths = $addon->getConfig('pagestats_ignored_paths');
+    $addon->setConfig('pagestats_ignored_paths', $ignored_paths . PHP_EOL . $request_url);
+    
+    $sql = rex_sql::factory();
+    $sql->setQuery('delete from ' . rex::getTable('pagestats_dump') . ' where url = :url', ['url' => $request_url]);
+    echo '<div class="alert alert-success">Es wurden ' . $sql->getRows() . ' Einträge gelöscht. Die Url <code>' . $request_url . '</code> wird zukünftig ignoriert.</div>';
+}
 
-
-    $request_url = rex_escape($request_url);
+if ($request_url != '' && !$ignore_page) {
+    // details section for single page
 
     $pagedetails = new stats_pagedetails($request_url);
     $browsertype_data = $pagedetails->get_browsertype();
@@ -70,7 +81,6 @@ if ($request_url != '') {
     $fragment->setVar('body', '<h4>Aufrufe insgesamt: <b>' . $pagedetails->get_page_total() . '</b></h4>', false);
     $fragment->setVar('content', $content, false);
     echo $fragment->parse('core/page/section.php');
-
 }
 
 
@@ -80,6 +90,12 @@ $list->setColumnLabel('count', 'Anzahl');
 // $list->setColumnSortable('url', $direction = 'asc'); needs fix, "url" url-param not set when reorderung
 // $list->setColumnSortable('count', $direction = 'asc'); needs fix, "url" url-param not set when reorderung
 $list->setColumnParams('url', ['url' => '###url###']);
+
+$list->addColumn('edit', 'Ignorieren & löschen');
+$list->setColumnLabel('edit', 'Diese URL in Ignorier-Liste verschieben');
+$list->addLinkAttribute('edit', 'data-confirm', 'Dieser Eintrag wird aus der Datenbank gelöscht und zukünftig ignoriert. Sind Sie sicher?');
+$list->setColumnParams('edit', ['url' => '###url###', 'ignore_page' => true]);
+
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', 'Summe pro Seite:');
@@ -120,7 +136,7 @@ echo $fragment->parse('core/page/section.php');
 
     <?php
 
-    if ($request_url != '') {
+    if ($request_url != '' && !$ignore_page) {
         echo 'chart_details = Plotly.newPlot("chart_details", [{
             type: "line",
             x:' . $sum_data['labels'] . ',

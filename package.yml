@@ -1,5 +1,7 @@
 package: stats
 version: dev
+author: Andreas Lenhardt
+supportpage: https://github.com/AndiLeni/redaxo_analytics
 
 page:
   title: 'Statistiken'
@@ -13,6 +15,7 @@ page:
       title: Medien
     settings: 
       title: Einstellungen
+      perm: admin
 
 requires:
   redaxo: '^5.11'
