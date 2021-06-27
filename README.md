@@ -32,8 +32,9 @@ Danach den Ordner `redaxo_analytics-main` in `stats` umbenennen.
 
 ## Einstellungen:
 Es können folgende Einstellungen getroffen werden:
-- Besuchsdauer, bestimmt innerhalb welches Zeitraumes ein Benutzer nur einmal pro Url erfasst werde soll.
-- Ignore-Liste, hier kann eine Reihe an Urls angegeben werden welche nicht der Statistik erfasst werden sollen
+- Besuchsdauer, bestimmt innerhalb welches Zeitraumes ein Benutzer nur einmal pro Url erfasst werden soll
+- Ignore-Liste für URLs, hier kann eine Reihe an Urls angegeben werden welche nicht in der Statistik erfasst werden sollen
+- Ignore-Liste für IPs, hier kann eine Reihe an IP Adressen angegeben werden von denen Besuche nicht erfasst werden sollen
 
 
 Preview:
