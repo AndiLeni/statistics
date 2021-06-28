@@ -7,6 +7,7 @@ $request_date_end = rex_escape(rex_request('date_end', 'string', ''));
 
 $sql = rex_sql::factory();
 
+
 if ($request_date_end == '' || $request_date_start == '') {
     $max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable('pagestats_dump'));
     $max_date = $max_date->getValue('date');
@@ -19,13 +20,16 @@ if ($request_date_end == '' || $request_date_start == '') {
     $min_date = $min_date->getValue('date');
     $min_date = new DateTime($min_date);
     $min_date = $min_date->format('d.m.Y');
+
+    $sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY date ORDER BY date ASC');
 } else {
     $max_date = new DateTime($request_date_end);
     $max_date = $max_date->format('d.m.Y');
     $min_date = new DateTime($request_date_start);
     $min_date = $min_date->format('d.m.Y');
-}
 
+    $sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY date ORDER BY date ASC', ['start' => $request_date_start, ':end' => $request_date_end]);
+}
 
 
 $period = new DatePeriod(
@@ -38,7 +42,7 @@ foreach ($period as $value) {
     $array[$value->format("d.m.Y")] = "0";
 }
 
-$sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY date ORDER BY date ASC');
+
 
 $data = [];
 
@@ -90,7 +94,7 @@ $hour_data = $hour->get_data();
 <div class="panel panel-default">
     <div class="panel-heading">Zeitraum filtern</div>
     <div class="panel-body">
-        <form class="form-inline" action="/redaxo/index.php" method="GET">
+        <form class="form-inline" action="<?php echo rex_url::backendPage('stats/settings') ?>" method="GET">
             <input type="hidden" value="stats/stats" name="page">
             <div class="form-group">
                 <label for="exampleInputName2">Startdatum:</label>

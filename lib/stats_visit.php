@@ -12,6 +12,11 @@ class stats_visit
     const MEDIA_URLS = [
         '/index.php?rex_media_type',
         '/media',
+        '/favicon.ico',
+    ];
+
+    const IGNORE_WHEN_CONTAINS = [
+        'rex_version=1',
     ];
 
     private DateTime $datetime_now;
@@ -66,6 +71,13 @@ class stats_visit
                 }
             }
         }
+
+        foreach (self::IGNORE_WHEN_CONTAINS as $el) {
+            if (str_contains($this->url, $el)) {
+                return true;
+            }
+        }
+
 
         return false;
     }
