@@ -24,7 +24,16 @@ class stats_visit
         '.ico',
         '.svg',
         '.docx',
+        '.xlsx',
         '.odt',
+        '.ods',
+        '.odp',
+        '.pptx',
+        '.mp3',
+        '.mp4',
+        '.avi',
+        '.mpg',
+        '.gif',
     ];
 
     const IGNORE_WHEN_CONTAINS = [
@@ -103,7 +112,7 @@ class stats_visit
         }
 
         foreach (self::MEDIA_TYPES as $el) {
-            if (str_ends_with($this->url, $el)) {
+            if (str_ends_with($this->url, $el) || str_ends_with($this->url, strtoupper($el))) {
                 return true;
             }
         }
