@@ -12,7 +12,6 @@ class stats_visit
         '/index.php?rex_media_type',
         '/media',
         '/index.php?rex_media_file',
-        '/assets',
     ];
 
     const MEDIA_TYPES = [
@@ -24,27 +23,29 @@ class stats_visit
         '.pdf',
         '.ico',
         '.svg',
+        '.docx',
+        '.odt',
     ];
 
     const IGNORE_WHEN_CONTAINS = [
         'rex_version=1',
     ];
 
-    private DateTime $datetime_now;
+    private $datetime_now;
 
     private $addon;
-    private string $clientIPAddress;
-    private string $url;
-    private string $userAgent;
+    private $clientIPAddress;
+    private $url;
+    private $userAgent;
 
     public $DeviceDetector;
 
-    private string $browser = 'Undefiniert';
-    private string $os = 'Undefiniert';
-    private string $osVer = 'Undefiniert';
-    private string $device_type = 'Undefiniert';
-    private string $brand = 'Undefiniert';
-    private string $model = 'Undefiniert';
+    private $browser = 'Undefiniert';
+    private $os = 'Undefiniert';
+    private $osVer = 'Undefiniert';
+    private $device_type = 'Undefiniert';
+    private $brand = 'Undefiniert';
+    private $model = 'Undefiniert';
 
 
 
