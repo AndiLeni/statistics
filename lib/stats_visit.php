@@ -8,11 +8,22 @@ class stats_visit
 {
 
     // media urls, for media detection
-    // NOTICE: /media can not be detected, since boot.php is not called when media file is directly accessed via /media
     const MEDIA_URLS = [
         '/index.php?rex_media_type',
         '/media',
-        '/favicon.ico',
+        '/index.php?rex_media_file',
+        '/assets',
+    ];
+
+    const MEDIA_TYPES = [
+        '.jpg',
+        '.jpeg',
+        '.png',
+        '.webp',
+        '.tiff',
+        '.pdf',
+        '.ico',
+        '.svg',
     ];
 
     const IGNORE_WHEN_CONTAINS = [
@@ -89,6 +100,13 @@ class stats_visit
                 return true;
             }
         }
+
+        foreach (self::MEDIA_TYPES as $el) {
+            if (str_ends_with($this->url, $el)) {
+                return true;
+            }
+        }
+
         return false;
     }
 
