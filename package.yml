@@ -6,6 +6,7 @@ supportpage: https://github.com/AndiLeni/redaxo_analytics
 page:
   title: 'Statistiken'
   icon: rex-icon fa-line-chart
+  perm: stats[]
   subpages:
     stats:
       title: Statistiken
