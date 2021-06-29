@@ -13,29 +13,32 @@ if ($request_date_end == '' || $request_date_start == '') {
     $max_date = $max_date->getValue('date');
     $max_date = new DateTime($max_date);
     $max_date->modify('+1 day');
-    $max_date = $max_date->format('d.m.Y');
-
 
     $min_date = $sql->setQuery('SELECT MIN(date) AS "date" from ' . rex::getTable('pagestats_dump'));
     $min_date = $min_date->getValue('date');
     $min_date = new DateTime($min_date);
-    $min_date = $min_date->format('d.m.Y');
 
     $sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY date ORDER BY date ASC');
 } else {
+
     $max_date = new DateTime($request_date_end);
-    $max_date = $max_date->format('d.m.Y');
     $min_date = new DateTime($request_date_start);
-    $min_date = $min_date->format('d.m.Y');
+
+    if ($min_date > $max_date) {
+        echo '<div class="alert alert-danger">Das Enddatum muss größer sein als das Startdatum.</div>';
+        $min_date = new DateTime();
+        $max_date = new DateTime();
+        $max_date->modify('+1 day');
+    }
 
     $sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY date ORDER BY date ASC', ['start' => $request_date_start, ':end' => $request_date_end]);
 }
 
 
 $period = new DatePeriod(
-    new DateTime($min_date),
+    new DateTime($min_date->format('d.m.Y')),
     new DateInterval('P1D'),
-    new DateTime($max_date)
+    new DateTime($max_date->format('d.m.Y'))
 );
 
 foreach ($period as $value) {
@@ -98,11 +101,11 @@ $hour_data = $hour->get_data();
             <input type="hidden" value="stats/stats" name="page">
             <div class="form-group">
                 <label for="exampleInputName2">Startdatum:</label>
-                <input style="line-height: normal;" type="date" class="form-control" name="date_start">
+                <input style="line-height: normal;" type="date" value="<?php echo $request_date_start ? $request_date_start : $min_date->format('Y-m-d') ?>" class="form-control" name="date_start">
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail2">Enddatum:</label>
-                <input style="line-height: normal;" value="<?php echo date('Y-m-d') ?>" type="date" class="form-control" name="date_end">
+                <input style="line-height: normal;" value="<?php echo $request_date_end ? $request_date_end : $max_date->format('Y-m-d') ?>" type="date" class="form-control" name="date_end">
             </div>
             <button type="submit" class="btn btn-default">Filtern</button>
         </form>
@@ -117,6 +120,7 @@ if (!isset($sum_per_day_labels)) {
     echo '<p>Es sind noch keine Daten vorhanden.</p>';
     echo '</div>';
 }
+
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', 'Aufrufe pro Tag:');
@@ -272,8 +276,8 @@ echo $fragment->parse('core/page/section.php');
 
     chart_browsertype = Plotly.newPlot('chart_browsertype', [{
         type: 'pie',
-        labels: <?php echo $browsertype_data['labels']?>,
-        values: <?php echo $browsertype_data['values']?>,
+        labels: <?php echo $browsertype_data['labels'] ?>,
+        values: <?php echo $browsertype_data['values'] ?>,
     }], layout, config);
 
     chart_os = Plotly.newPlot('chart_os', [{

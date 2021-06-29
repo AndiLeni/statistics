@@ -18,22 +18,64 @@ class stats_visit
         '.jpg',
         '.jpeg',
         '.png',
+        '.gif',
         '.webp',
         '.tiff',
-        '.pdf',
+        '.tif',
         '.ico',
         '.svg',
+        '.wbmp',
+        '.bmp',
+        '.pdf',
+        '.doc',
+        '.xls',
+        '.ppt',
+        '.xla',
+        '.pps',
+        '.ppz',
+        '.pot',
+        '.dot',
+        '.dotx',
         '.docx',
         '.xlsx',
+        '.pptx',
         '.odt',
         '.ods',
         '.odp',
-        '.pptx',
+        '.odc',
+        '.odf',
+        '.odi',
+        '.odm',
         '.mp3',
         '.mp4',
         '.avi',
         '.mpg',
-        '.gif',
+        '.flv',
+        '.ogg',
+        '.ogv',
+        '.swf',
+        '.wmv',
+        '.webm',
+        '.mpeg',
+        '.mov',
+        '.qt',
+        '.wav',
+        '.3gp',
+        '.js',
+        '.css',
+        '.gz',
+        '.zip',
+        '.rar',
+        '.tar',
+        '.gzip',
+        '.json',
+        '.xml',
+        '.txt',
+        '.csv',
+    ];
+
+    const IGNORE_WHEN_STARTS = [
+        '/robots.txt',
     ];
 
     const IGNORE_WHEN_CONTAINS = [
@@ -100,6 +142,12 @@ class stats_visit
 
         foreach (self::IGNORE_WHEN_ENDS as $el) {
             if (str_ends_with($this->url, $el) || str_ends_with($this->url, strtoupper($el))) {
+                return true;
+            }
+        }
+
+        foreach (self::IGNORE_WHEN_STARTS as $el) {
+            if (str_starts_with($this->url, $el) || str_starts_with($this->url, strtoupper($el))) {
                 return true;
             }
         }
@@ -225,9 +273,9 @@ class stats_visit
     {
         $botInfo = $this->DeviceDetector->getBot();
 
-        $botname = $botInfo['name'];
-        $botcategory = $botInfo['category'];
-        $botproducer = $botInfo['producer']['name'];
+        $botname = $botInfo['name'] ?? '-';
+        $botcategory = $botInfo['category'] ?? '-';
+        $botproducer = $botInfo['producer']['name'] ?? '-';
 
         $sql = rex_sql::factory();
         $result = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_bot') . ' SET count = count + 1 WHERE name = :name AND category = :category AND producer = :producer', ['name' => $botname, 'category' => $botcategory, 'producer' => $botproducer]);

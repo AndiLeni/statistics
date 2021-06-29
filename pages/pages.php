@@ -2,9 +2,19 @@
 
 $addon = rex_addon::get('stats');
 
+$request_url = rex_request('url', 'string', '');
+$request_url = rex_escape($request_url);
+$ignore_page = rex_request('ignore_page', 'boolean', false);
+$search_string = rex_escape(rex_request('search_string', 'string', ''));
+
 // sum per page, bar chart
 $sql = rex_sql::factory();
-$sum_per_page = $sql->setQuery('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC');
+
+if ($search_string == '') {
+    $sum_per_page = $sql->setQuery('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC');
+} else {
+    $sum_per_page = $sql->setQuery('SELECT url, COUNT(url) as "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url LIKE :url GROUP BY url ORDER BY count DESC', ['url' => '%' . $search_string . '%']);
+}
 
 $sum_per_page_labels = [];
 $sum_per_page_values = [];
@@ -22,9 +32,24 @@ $sum_per_page_values = json_encode($sum_per_page_values);
 
 
 
-$request_url = rex_request('url', 'string', '');
-$request_url = rex_escape($request_url);
-$ignore_page = rex_request('ignore_page', 'boolean', false);
+
+// search form
+$form = '
+<form class="form-inline" action="' . rex_url::backendPage('stats/pages') . '" method="GET">
+    <input type="hidden" value="stats/pages" name="page">
+    <div class="form-group">
+        <label for="exampleInputName2">Suchen nach:</label>
+        <input style="line-height: normal;" type="text" value="' . $search_string . '" class="form-control" name="search_string">
+    </div>
+    <button type="submit" class="btn btn-default">Suchen</button>
+</form>
+';
+
+$fragment = new rex_fragment();
+$fragment->setVar('title', 'Aufrufe pro Tag:');
+$fragment->setVar('body', $form, false);
+echo $fragment->parse('core/page/section.php');
+
 
 
 // check if request is for ignoring a url
@@ -33,7 +58,7 @@ if ($request_url != '' && $ignore_page === true) {
     $addon = rex_addon::get('stats');
     $ignored_paths = $addon->getConfig('pagestats_ignored_paths');
     $addon->setConfig('pagestats_ignored_paths', $ignored_paths . PHP_EOL . $request_url);
-    
+
     $sql = rex_sql::factory();
     $sql->setQuery('delete from ' . rex::getTable('pagestats_dump') . ' where url = :url', ['url' => $request_url]);
     echo '<div class="alert alert-success">Es wurden ' . $sql->getRows() . ' Einträge gelöscht. Die Url <code>' . $request_url . '</code> wird zukünftig ignoriert.</div>';
@@ -85,11 +110,15 @@ if ($request_url != '' && !$ignore_page) {
 }
 
 
-$list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC');
+if ($search_string == '') {
+    $list = $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC');
+} else {
+    $list = rex_list::factory('SELECT url, COUNT(url) as "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url LIKE "%' . $search_string . '%" GROUP BY url ORDER BY count DESC');
+}
+
+
 $list->setColumnLabel('url', 'Url');
 $list->setColumnLabel('count', 'Anzahl');
-// $list->setColumnSortable('url', $direction = 'asc'); needs fix, "url" url-param not set when reorderung
-// $list->setColumnSortable('count', $direction = 'asc'); needs fix, "url" url-param not set when reorderung
 $list->setColumnParams('url', ['url' => '###url###']);
 
 $list->addColumn('edit', 'Ignorieren & löschen');
