@@ -1,5 +1,6 @@
 <?php
 
+$addon = rex_addon::get('stats');
 
 // sum per page, bar chart
 $sql = rex_sql::factory();
@@ -123,7 +124,7 @@ echo $fragment->parse('core/page/section.php');
             r: 25,
             l: 25,
             t: 25,
-            b: 90,
+            b: <?php echo $addon->getConfig('pagestats_chart_padding_bottom') ?>,
         },
     }
 

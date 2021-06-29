@@ -40,6 +40,11 @@ class stats_visit
         'rex_version=1',
     ];
 
+    const IGNORE_WHEN_ENDS = [
+        '.css',
+        '.js',
+    ];
+
     private $datetime_now;
 
     private $addon;
@@ -90,6 +95,12 @@ class stats_visit
                 if (str_starts_with($this->url, $path)) {
                     return true;
                 }
+            }
+        }
+
+        foreach (self::IGNORE_WHEN_ENDS as $el) {
+            if (str_ends_with($this->url, $el) || str_ends_with($this->url, strtoupper($el))) {
+                return true;
             }
         }
 
