@@ -37,7 +37,18 @@ Es können folgende Einstellungen getroffen werden:
 - Ignore-Liste für IPs, hier kann eine Reihe an IP Adressen angegeben werden von denen Besuche nicht erfasst werden sollen
 
 
-Preview:
+## Frontend Counter:
+Falls man im Frontend einen Besucher-Counter einfügen möchte klappt das mittles der folgenden Modul-Ausgabe:
+```php
+<?php
+$counter = new stats_visitor_counter();
+?>
+
+<p>Besucher: <code><?php echo $counter->get_text() ?></code><p>
+```
+Der Ausgegebene Text kann dann nach Belieben gestaltet werden.
+
+## Preview:
 
 ### Startseite des Addons mit den wichtigsten Metriken:
 ![Preview](./preview/1.png "Preview")
