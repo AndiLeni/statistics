@@ -77,7 +77,7 @@ rex_extension::register('RESPONSE_SHUTDOWN', function() {
             }
         }
     }
-}
+});
 
 
 
