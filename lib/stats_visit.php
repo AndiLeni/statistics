@@ -76,6 +76,7 @@ class stats_visit
 
     const IGNORE_WHEN_STARTS = [
         '/robots.txt',
+        '/sitemap.xml',
     ];
 
     const IGNORE_WHEN_CONTAINS = [
@@ -141,13 +142,13 @@ class stats_visit
         }
 
         foreach (self::IGNORE_WHEN_ENDS as $el) {
-            if (str_ends_with($this->url, $el) || str_ends_with($this->url, strtoupper($el))) {
+            if (str_ends_with($this->url, $el)) {
                 return true;
             }
         }
 
         foreach (self::IGNORE_WHEN_STARTS as $el) {
-            if (str_starts_with($this->url, $el) || str_starts_with($this->url, strtoupper($el))) {
+            if (str_starts_with($this->url, $el)) {
                 return true;
             }
         }
