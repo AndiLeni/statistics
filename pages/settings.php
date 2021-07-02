@@ -31,13 +31,13 @@ $form = rex_config_form::factory("statistics");
 
 $field2 = $form->addTextField('pagestats_visit_duration');
 $field2->setLabel('Sitzungsdauer:');
-$field2->setNotice('Wie lange eine Sitzung des Besuchers dauern soll. Besuche innerhalb dieser Zeit werden nur einmal gezählt.');
+$field2->setNotice('Wie lange eine Sitzung des Besuchers dauern soll (in Minuten). Besuche innerhalb dieser Zeit werden nur einmal gezählt.');
 $field2->getValidator()->add('type', 'Bitte für die Sitzungsdauer einen ganzzahligen Wert eingeben', 'int');
 
 
 $field2 = $form->addTextField('pagestats_chart_padding_bottom');
 $field2->setLabel('Chart bottom-padding:');
-$field2->setNotice('Anpassung des Paddings auf der Seite "Seiten". Falls die Seitennamen abgeschnitten werden.');
+$field2->setNotice('Anpassung des Paddings in Pixel auf der Seite "Seiten". Falls die Seitennamen abgeschnitten werden.');
 $field2->getValidator()->add('type', 'Bitte einen ganzzahligen Wert eingeben', 'int');
 
 
