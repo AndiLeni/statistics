@@ -78,11 +78,10 @@ $content = '
 <button class="btn btn-danger" type="submit" data-confirm="Wirklich alle Besuche von Bots löschen?">Alle Bots löschen</button>
 </form>
 
-</div>
 ';
 
 
-if (rex::isBackend() && rex_addon::get('statistics/media')->isAvailable()) {
+if (rex::isBackend() && rex_plugin::get('statistics', 'media')->isAvailable()) {
     $content .= '
     <form style="margin:5px" action="' . rex_url::backendPage('statistics/settings') . '" method="post">
     <input type="hidden" name="func" value="delete_media">
@@ -90,6 +89,8 @@ if (rex::isBackend() && rex_addon::get('statistics/media')->isAvailable()) {
     </form>
     ';
 }
+
+$content .= '</div>';
 
 
 $fragment = new rex_fragment();

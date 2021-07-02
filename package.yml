@@ -10,13 +10,17 @@ page:
   subpages:
     stats:
       title: Statistiken
+      icon: rex-icon fa-pie-chart
     pages: 
       title: Seiten
+      icon: rex-icon fa-file-text-o
     referer: 
       title: Referer
+      icon: rex-icon fa-external-link
     settings: 
       title: Einstellungen
       perm: admin
+      icon: rex-icon fa-cog
 
 requires:
   redaxo: '^5.11'
