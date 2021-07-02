@@ -1,5 +1,6 @@
 <?php
 
+/** @package  */
 class stats_media_request
 {
 
@@ -74,6 +75,11 @@ class stats_media_request
     private $datetime_now;
 
 
+    /**
+     * 
+     * @param string $url 
+     * @return void 
+     */
     public function __construct(string $url)
     {
         $this->url = $url;
@@ -81,6 +87,10 @@ class stats_media_request
     }
 
 
+    /**
+     * 
+     * @return bool 
+     */
     public function is_media()
     {
         foreach (self::MEDIA_URLS as $el) {
@@ -99,6 +109,10 @@ class stats_media_request
     }
 
 
+    /**
+     * 
+     * @return void 
+     */
     public function save_media()
     {
         $sql = rex_sql::factory();

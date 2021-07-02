@@ -4,6 +4,8 @@ require_once __DIR__ . '/../vendors/autoload.php';
 
 use DeviceDetector\DeviceDetector;
 
+
+/** @package  */
 class stats_visit
 {
 
@@ -22,24 +24,57 @@ class stats_visit
         'favicon.ico',
     ];
 
+    /**
+     * 
+     * @var DateTime
+     */
     private $datetime_now;
 
     private $addon;
     private $clientIPAddress;
+
     private $url;
     private $userAgent;
-
     public $DeviceDetector;
 
+    /**
+     * @var string
+     */
     private $browser = 'Undefiniert';
+
+    /**
+     * @var string
+     */
     private $os = 'Undefiniert';
+
+    /**
+     * @var string
+     */
     private $osVer = 'Undefiniert';
+
+    /**
+     * @var string
+     */
     private $device_type = 'Undefiniert';
+
+    /**
+     * @var string
+     */
     private $brand = 'Undefiniert';
+
+    /**
+     * @var string
+     */
     private $model = 'Undefiniert';
 
 
-
+    /**
+     * 
+     * @param string $clientIPAddress 
+     * @param string $url 
+     * @param string $userAgent 
+     * @return void 
+     */
     public function __construct(string $clientIPAddress, string $url, string $userAgent)
     {
         $this->addon = rex_addon::get('statistics');
@@ -49,6 +84,10 @@ class stats_visit
         $this->userAgent = $userAgent;
     }
 
+    /**
+     * 
+     * @return bool 
+     */
     public function ignore_visit()
     {
         // check if visit should be ignored
@@ -97,6 +136,10 @@ class stats_visit
         return false;
     }
 
+    /**
+     * 
+     * @return void 
+     */
     public function persist()
     {
         $clientInfo = $this->DeviceDetector->getClient();
@@ -128,6 +171,10 @@ class stats_visit
         $sql->insert();
     }
 
+    /**
+     * 
+     * @return bool 
+     */
     public function save_visit()
     {
         $hash_string = $this->userAgent . $this->browser . $this->os . " " . $this->osVer . $this->device_type . $this->brand . $this->model . $this->clientIPAddress . $this->url;
@@ -166,13 +213,20 @@ class stats_visit
         }
     }
 
-
+    /**
+     * 
+     * @return void 
+     */
     public function parse_ua()
     {
         $this->DeviceDetector = new DeviceDetector($this->userAgent);
         $this->DeviceDetector->parse();
     }
 
+    /**
+     * 
+     * @return void 
+     */
     public function save_bot()
     {
         $botInfo = $this->DeviceDetector->getBot();
@@ -195,7 +249,13 @@ class stats_visit
         }
     }
 
-    public function save_referer($referer) {
+    /**
+     * 
+     * @param string $referer 
+     * @return void 
+     */
+    public function save_referer(string $referer)
+    {
         $sql = rex_sql::factory();
         $result = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_referer') . ' SET count = count + 1 WHERE referer = :referer', ['referer' => $referer]);
 
@@ -208,7 +268,12 @@ class stats_visit
         }
     }
 
-    public function is_bot() {
+    /**
+     * 
+     * @return bool 
+     */
+    public function is_bot()
+    {
         return $this->DeviceDetector->isBot();
     }
 }
