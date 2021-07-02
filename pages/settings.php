@@ -26,7 +26,7 @@ if (rex_request_method() == 'post') {
 }
 
 
-$form = rex_config_form::factory("stats");
+$form = rex_config_form::factory("statistics");
 
 
 $field2 = $form->addTextField('pagestats_visit_duration');
@@ -51,7 +51,7 @@ $field3->setLabel('Zu ignorierende IPs:');
 $field3->setNotice('Besuche dieser IPs nicht aufzeichnen. Eine IP pro Zeile.');
 
 
-$addon = rex_addon::get('stats');
+$addon = rex_addon::get('statistics');
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'edit', false);
 $fragment->setVar('title', 'Einstellungen', false);
@@ -63,22 +63,22 @@ echo $fragment->parse('core/page/section.php');
 $content = '
 <div style="display: flex; flex-wrap: wrap">
 
-<form style="margin:5px" action="' . rex_url::backendPage('stats/settings') . '" method="post">
+<form style="margin:5px" action="' . rex_url::backendPage('statistics/settings') . '" method="post">
 <input type="hidden" name="func" value="delete_hash">
 <button class="btn btn-danger" type="submit" data-confirm="Wirklich alle Hashes löschen?">Alle Hashes löschen</button>
 </form>
 
-<form style="margin:5px" action="' . rex_url::backendPage('stats/settings') . '" method="post">
+<form style="margin:5px" action="' . rex_url::backendPage('statistics/settings') . '" method="post">
 <input type="hidden" name="func" value="delete_dump">
 <button class="btn btn-danger" type="submit" data-confirm="Wirklich alle Einträge der Statistik löschen?">Alle Besuche löschen</button>
 </form>
 
-<form style="margin:5px" action="' . rex_url::backendPage('stats/settings') . '" method="post">
+<form style="margin:5px" action="' . rex_url::backendPage('statistics/settings') . '" method="post">
 <input type="hidden" name="func" value="delete_media">
 <button class="btn btn-danger" type="submit" data-confirm="Wirklich die gesamte Media-Statistik löschen?">Alle Media-Statistik löschen</button>
 </form>
 
-<form style="margin:5px" action="' . rex_url::backendPage('stats/settings') . '" method="post">
+<form style="margin:5px" action="' . rex_url::backendPage('statistics/settings') . '" method="post">
 <input type="hidden" name="func" value="delete_bot">
 <button class="btn btn-danger" type="submit" data-confirm="Wirklich alle Besuche von Bots löschen?">Alle Bots löschen</button>
 </form>

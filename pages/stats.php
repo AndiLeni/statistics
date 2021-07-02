@@ -91,14 +91,14 @@ $hour_data = $hour->get_data();
 ?>
 
 
-<script src="<?php echo rex_addon::get('stats')->getAssetsUrl('plotly-2.0.0.min.js') ?>"></script>
+<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('plotly-2.0.0.min.js') ?>"></script>
 
 
 <div class="panel panel-default">
     <div class="panel-heading">Zeitraum filtern</div>
     <div class="panel-body">
-        <form class="form-inline" action="<?php echo rex_url::backendPage('stats/settings') ?>" method="GET">
-            <input type="hidden" value="stats/stats" name="page">
+        <form class="form-inline" action="<?php echo rex_url::backendPage('statistics/settings') ?>" method="GET">
+            <input type="hidden" value="statistics/stats" name="page">
             <div class="form-group">
                 <label for="exampleInputName2">Startdatum:</label>
                 <input style="line-height: normal;" type="date" value="<?php echo $request_date_start ? $request_date_start : $min_date->format('Y-m-d') ?>" class="form-control" name="date_start">

@@ -5,7 +5,7 @@ class stats_visitor_counter
 
     public function __construct()
     {
-        $this->addon = rex_addon::get('stats');
+        $this->addon = rex_addon::get('statistics');
     }
 
     private function get_sql()

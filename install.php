@@ -29,3 +29,8 @@ rex_sql_table::get(rex::getTable('pagestats_media'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->ensureColumn(new rex_sql_column('date', 'date'))
     ->ensure();
+
+rex_sql_table::get(rex::getTable('pagestats_referer'))
+    ->ensureColumn(new rex_sql_column('referer', 'varchar(255)'))
+    ->ensureColumn(new rex_sql_column('count', 'int'))
+    ->ensure();

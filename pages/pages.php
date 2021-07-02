@@ -1,6 +1,6 @@
 <?php
 
-$addon = rex_addon::get('stats');
+$addon = rex_addon::get('statistics');
 
 $request_url = rex_request('url', 'string', '');
 $request_url = rex_escape($request_url);
@@ -35,8 +35,8 @@ $sum_per_page_values = json_encode($sum_per_page_values);
 
 // search form
 $form = '
-<form class="form-inline" action="' . rex_url::backendPage('stats/pages') . '" method="GET">
-    <input type="hidden" value="stats/pages" name="page">
+<form class="form-inline" action="' . rex_url::backendPage('statistics/pages') . '" method="GET">
+    <input type="hidden" value="statistics/pages" name="page">
     <div class="form-group">
         <label for="exampleInputName2">Suchen nach:</label>
         <input style="line-height: normal;" type="text" value="' . $search_string . '" class="form-control" name="search_string">
@@ -55,7 +55,6 @@ echo $fragment->parse('core/page/section.php');
 // check if request is for ignoring a url
 // if yes, add url to addon settings and delete all database entries of this url 
 if ($request_url != '' && $ignore_page === true) {
-    $addon = rex_addon::get('stats');
     $ignored_paths = $addon->getConfig('pagestats_ignored_paths');
     $addon->setConfig('pagestats_ignored_paths', $ignored_paths . PHP_EOL . $request_url);
 
@@ -111,7 +110,7 @@ if ($request_url != '' && !$ignore_page) {
 
 
 if ($search_string == '') {
-    $list = $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC');
+    $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC');
 } else {
     $list = rex_list::factory('SELECT url, COUNT(url) as "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url LIKE "%' . $search_string . '%" GROUP BY url ORDER BY count DESC');
 }
@@ -134,7 +133,7 @@ echo $fragment->parse('core/page/section.php');
 
 ?>
 
-<script src="<?php echo rex_addon::get('stats')->getAssetsUrl('plotly-2.0.0.min.js') ?>"></script>
+<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('plotly-2.0.0.min.js') ?>"></script>
 
 <script>
     var config = {

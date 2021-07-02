@@ -72,6 +72,12 @@ if (!rex::isBackend() && !$visit->ignore_visit()) {
 
             if ($visit->save_visit()) {
 
+                // check if referer exists, if yes safe it
+                $referer = $_SERVER['HTTP_REFERER'];
+                if (isset($referer)) {
+                    $visit->save_referer($referer);
+                }
+
                 // visitor is human
                 // check hash with save_visit, if true then save visit
                 $visit->persist();

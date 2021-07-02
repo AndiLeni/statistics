@@ -13,8 +13,8 @@ if ($search_string == '') {
 
 
 $form = '
-<form class="form-inline" action="' . rex_url::backendPage('stats/media') . '" method="GET">
-    <input type="hidden" value="stats/media" name="page">
+<form class="form-inline" action="' . rex_url::backendPage('statistics/media') . '" method="GET">
+    <input type="hidden" value="statistics/media" name="page">
     <div class="form-group">
         <label for="exampleInputName2">Suchen nach:</label>
         <input style="line-height: normal;" type="text" value="'. $search_string .'" class="form-control" name="search_string">

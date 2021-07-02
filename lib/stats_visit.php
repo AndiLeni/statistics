@@ -108,7 +108,7 @@ class stats_visit
 
     public function __construct(string $clientIPAddress, string $url, string $userAgent)
     {
-        $this->addon = rex_addon::get('stats');
+        $this->addon = rex_addon::get('statistics');
         $this->clientIPAddress = $clientIPAddress;
         $this->url = $url;
         $this->datetime_now = new DateTime();
@@ -289,6 +289,19 @@ class stats_visit
             $bot->setValue('producer', $botproducer);
             $bot->setValue('count', 1);
             $bot->insert();
+        }
+    }
+
+    public function save_referer($referer) {
+        $sql = rex_sql::factory();
+        $result = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_referer') . ' SET count = count + 1 WHERE referer = :referer', ['referer' => $referer]);
+
+        if ($result->getRows() === 0) {
+            $ref = rex_sql::factory();
+            $ref->setTable(rex::getTable('pagestats_referer'));
+            $ref->setValue('referer', $referer);
+            $ref->setValue('count', 1);
+            $ref->insert();
         }
     }
 }
