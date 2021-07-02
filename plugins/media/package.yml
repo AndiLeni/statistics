@@ -1,0 +1,22 @@
+package: statistics/media
+version: dev
+author: Andreas Lenhardt
+supportpage: https://github.com/AndiLeni/redaxo_analytics
+
+page:
+  title: 'Media'
+  icon: rex-icon fa-image
+  perm: stats[]
+
+requires:
+  redaxo: '^5.11'
+  packages:
+        yrewrite: '^2.7'
+  php:
+    version: '>=7.1'
+
+default_config:
+    pagestats_ignored_paths: ''
+    pagestats_ignored_ips: ''
+    pagestats_visit_duration: 30
+    pagestats_chart_padding_bottom: 90

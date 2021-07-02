@@ -1,7 +1,7 @@
 package: statistics
 version: dev
 author: Andreas Lenhardt
-supportpage: https://github.com/AndiLeni/redaxo_analytics
+supportpage: https://github.com/AndiLeni/statistics
 
 page:
   title: 'Statistiken'
@@ -12,8 +12,6 @@ page:
       title: Statistiken
     pages: 
       title: Seiten
-    media: 
-      title: Medien
     referer: 
       title: Referer
     settings: 
@@ -22,6 +20,8 @@ page:
 
 requires:
   redaxo: '^5.11'
+  packages:
+    yrewrite: '^2.7'
   php:
     version: '>=7.1'
 

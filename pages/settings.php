@@ -74,17 +74,23 @@ $content = '
 </form>
 
 <form style="margin:5px" action="' . rex_url::backendPage('statistics/settings') . '" method="post">
-<input type="hidden" name="func" value="delete_media">
-<button class="btn btn-danger" type="submit" data-confirm="Wirklich die gesamte Media-Statistik löschen?">Alle Media-Statistik löschen</button>
-</form>
-
-<form style="margin:5px" action="' . rex_url::backendPage('statistics/settings') . '" method="post">
 <input type="hidden" name="func" value="delete_bot">
 <button class="btn btn-danger" type="submit" data-confirm="Wirklich alle Besuche von Bots löschen?">Alle Bots löschen</button>
 </form>
 
 </div>
 ';
+
+
+if (rex::isBackend() && rex_addon::get('statistics/media')->isAvailable()) {
+    $content .= '
+    <form style="margin:5px" action="' . rex_url::backendPage('statistics/settings') . '" method="post">
+    <input type="hidden" name="func" value="delete_media">
+    <button class="btn btn-danger" type="submit" data-confirm="Wirklich die gesamte Media-Statistik löschen?">Alle Media-Statistik löschen</button>
+    </form>
+    ';
+}
+
 
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'danger', false);

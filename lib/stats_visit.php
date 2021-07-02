@@ -7,73 +7,6 @@ use DeviceDetector\DeviceDetector;
 class stats_visit
 {
 
-    // media urls, for media detection
-    const MEDIA_URLS = [
-        '/index.php?rex_media_type',
-        '/media',
-        '/index.php?rex_media_file',
-    ];
-
-    const MEDIA_TYPES = [
-        '.jpg',
-        '.jpeg',
-        '.png',
-        '.gif',
-        '.webp',
-        '.tiff',
-        '.tif',
-        '.ico',
-        '.svg',
-        '.wbmp',
-        '.bmp',
-        '.pdf',
-        '.doc',
-        '.xls',
-        '.ppt',
-        '.xla',
-        '.pps',
-        '.ppz',
-        '.pot',
-        '.dot',
-        '.dotx',
-        '.docx',
-        '.xlsx',
-        '.pptx',
-        '.odt',
-        '.ods',
-        '.odp',
-        '.odc',
-        '.odf',
-        '.odi',
-        '.odm',
-        '.mp3',
-        '.mp4',
-        '.avi',
-        '.mpg',
-        '.flv',
-        '.ogg',
-        '.ogv',
-        '.swf',
-        '.wmv',
-        '.webm',
-        '.mpeg',
-        '.mov',
-        '.qt',
-        '.wav',
-        '.3gp',
-        '.js',
-        '.css',
-        '.gz',
-        '.zip',
-        '.rar',
-        '.tar',
-        '.gzip',
-        '.json',
-        '.xml',
-        '.txt',
-        '.csv',
-    ];
-
     const IGNORE_WHEN_STARTS = [
         '/robots.txt',
         '/sitemap.xml',
@@ -86,6 +19,7 @@ class stats_visit
     const IGNORE_WHEN_ENDS = [
         '.css',
         '.js',
+        'favicon.ico',
     ];
 
     private $datetime_now;
@@ -163,23 +97,6 @@ class stats_visit
         return false;
     }
 
-    function is_media()
-    {
-        foreach (self::MEDIA_URLS as $el) {
-            if (str_starts_with($this->url, $el)) {
-                return true;
-            }
-        }
-
-        foreach (self::MEDIA_TYPES as $el) {
-            if (str_ends_with($this->url, $el) || str_ends_with($this->url, strtoupper($el))) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public function persist()
     {
         $clientInfo = $this->DeviceDetector->getClient();
@@ -249,20 +166,6 @@ class stats_visit
         }
     }
 
-    public function save_media()
-    {
-        $sql = rex_sql::factory();
-        $result = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_media') . ' SET count = count + 1 WHERE url = :url AND date = :date', ['url' => $this->url, 'date' => date('Y-m-d')]);
-
-        if ($result->getRows() === 0) {
-            $bot = rex_sql::factory();
-            $bot->setTable(rex::getTable('pagestats_media'));
-            $bot->setValue('url', $this->url);
-            $bot->setValue('date', $this->datetime_now->format('Y-m-d'));
-            $bot->setValue('count', 1);
-            $bot->insert();
-        }
-    }
 
     public function parse_ua()
     {
@@ -303,5 +206,9 @@ class stats_visit
             $ref->setValue('count', 1);
             $ref->insert();
         }
+    }
+
+    public function is_bot() {
+        return $this->DeviceDetector->isBot();
     }
 }
