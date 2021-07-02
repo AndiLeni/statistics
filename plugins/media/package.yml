@@ -7,6 +7,14 @@ page:
   title: 'Media'
   icon: rex-icon fa-image
   perm: stats[]
+  subpages:
+    media: 
+      title: Medien
+      icon: rex-icon fa-image
+    settings: 
+      title: Einstellungen
+      perm: admin
+      icon: rex-icon fa-cog
 
 requires:
   redaxo: '^5.11'
@@ -16,7 +24,5 @@ requires:
     version: '>=7.1'
 
 default_config:
-    pagestats_ignored_paths: ''
-    pagestats_ignored_ips: ''
-    pagestats_visit_duration: 30
-    pagestats_chart_padding_bottom: 90
+    pagestats_media_log_all: false
+    pagestats_media_log_mm: true
