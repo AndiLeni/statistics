@@ -49,7 +49,7 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () {
     $visit = new stats_visit($clientAddress, $url, $userAgent);
 
 
-    // Track only frontend requests if page url should not be ignoredm
+    // Track only frontend requests if page url should not be ignored
     if (!rex::isBackend() && !$visit->ignore_visit()) {
 
         // visit is not a media request, hence either bot or human visitor
@@ -71,10 +71,13 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () {
                 // check if referer exists, if yes safe it
                 $referer = $_SERVER['HTTP_REFERER'];
                 if (isset($referer)) {
-                    $visit->save_referer($referer);
+
+                    if (!str_starts_with($referer, rex::getServer())) {
+                        $visit->save_referer($referer);
+                    }
                 }
 
-                
+
                 $visit->persist();
             }
         }
