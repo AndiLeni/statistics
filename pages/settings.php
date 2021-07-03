@@ -67,22 +67,22 @@ echo $fragment->parse('core/page/section.php');
 $content = '
 <div style="display: flex; flex-wrap: wrap">
 
-<form style="margin:5px" action="' . rex_url::backendPage('statistics/settings') . '" method="post">
+<form style="margin:5px" action="' . rex_url::currentBackendPage() . '" method="post">
 <input type="hidden" name="func" value="delete_hash">
 <button class="btn btn-danger" type="submit" data-confirm="Wirklich alle Hashes löschen?">Alle Hashes löschen</button>
 </form>
 
-<form style="margin:5px" action="' . rex_url::backendPage('statistics/settings') . '" method="post">
+<form style="margin:5px" action="' . rex_url::currentBackendPage() . '" method="post">
 <input type="hidden" name="func" value="delete_dump">
 <button class="btn btn-danger" type="submit" data-confirm="Wirklich alle Einträge der Statistik löschen?">Alle Besuche löschen</button>
 </form>
 
-<form style="margin:5px" action="' . rex_url::backendPage('statistics/settings') . '" method="post">
+<form style="margin:5px" action="' . rex_url::currentBackendPage() . '" method="post">
 <input type="hidden" name="func" value="delete_bot">
 <button class="btn btn-danger" type="submit" data-confirm="Wirklich alle Besuche von Bots löschen?">Alle Bots löschen</button>
 </form>
 
-<form style="margin:5px" action="' . rex_url::backendPage('statistics/settings') . '" method="post">
+<form style="margin:5px" action="' . rex_url::currentBackendPage() . '" method="post">
 <input type="hidden" name="func" value="delete_referer">
 <button class="btn btn-danger" type="submit" data-confirm="Wirklich alle Referer löschen?">Alle Referer löschen</button>
 </form>
@@ -91,7 +91,7 @@ $content = '
 
 if (rex::isBackend() && rex_plugin::get('statistics', 'media')->isAvailable()) {
     $content .= '
-    <form style="margin:5px" action="' . rex_url::backendPage('statistics/settings') . '" method="post">
+    <form style="margin:5px" action="' . rex_url::currentBackendPage() . '" method="post">
     <input type="hidden" name="func" value="delete_media">
     <button class="btn btn-danger" type="submit" data-confirm="Wirklich die gesamte Media-Statistik löschen?">Alle Media-Statistik löschen</button>
     </form>
