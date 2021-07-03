@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/vendors/autoload.php';
-
 
 use Vectorface\Whip\Whip;
 
@@ -34,6 +32,8 @@ if (rex::isBackend() && rex_addon::get('dashboard')->isAvailable()) {
 // NOTICE: EP 'RESPONSE_SHUTDOWN' is not called on madia request
 // do actions after content is delivered
 rex_extension::register('RESPONSE_SHUTDOWN', function () {
+
+    require_once __DIR__ . '/vendors/autoload.php';
 
     // get ip from visitor, set to 0.0.0.0 when ip can not be determined
     $whip = new Whip();
