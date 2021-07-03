@@ -11,9 +11,9 @@ $search_string = htmlspecialchars_decode(rex_request('search_string', 'string', 
 $sql = rex_sql::factory();
 
 if ($search_string == '') {
-    $sum_per_page = $sql->setQuery('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC');
+    $sum_per_page = $sql->setQuery('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC, url ASC');
 } else {
-    $sum_per_page = $sql->setQuery('SELECT url, COUNT(url) as "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url LIKE :url GROUP BY url ORDER BY count DESC', ['url' => '%' . $search_string . '%']);
+    $sum_per_page = $sql->setQuery('SELECT url, COUNT(url) as "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url LIKE :url GROUP BY url ORDER BY count DESC, url ASC', ['url' => '%' . $search_string . '%']);
 }
 
 $sum_per_page_labels = [];
@@ -110,9 +110,9 @@ if ($request_url != '' && !$ignore_page) {
 
 
 if ($search_string == '') {
-    $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC');
+    $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC, url ASC');
 } else {
-    $list = rex_list::factory('SELECT url, COUNT(url) as "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url LIKE "%' . $search_string . '%" GROUP BY url ORDER BY count DESC');
+    $list = rex_list::factory('SELECT url, COUNT(url) as "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url LIKE "%' . $search_string . '%" GROUP BY url ORDER BY count DESC, url ASC');
 }
 
 
