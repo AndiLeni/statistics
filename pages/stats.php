@@ -2,8 +2,8 @@
 
 
 
-$request_date_start = rex_escape(rex_request('date_start', 'string', ''));
-$request_date_end = rex_escape(rex_request('date_end', 'string', ''));
+$request_date_start = htmlspecialchars_decode(rex_request('date_start', 'string', ''));
+$request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''));
 
 $sql = rex_sql::factory();
 

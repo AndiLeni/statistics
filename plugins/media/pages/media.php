@@ -1,6 +1,6 @@
 <?php
 
-$search_string = rex_escape(rex_request('search_string', 'string', ''));
+$search_string = htmlspecialchars_decode(rex_request('search_string', 'string', ''));
 
 if ($search_string == '') {
     $list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_media') . ' GROUP BY url ORDER BY count DESC');

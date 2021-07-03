@@ -3,9 +3,9 @@
 $addon = rex_addon::get('statistics');
 
 $request_url = rex_request('url', 'string', '');
-$request_url = rex_escape($request_url);
+$request_url = htmlspecialchars_decode($request_url);
 $ignore_page = rex_request('ignore_page', 'boolean', false);
-$search_string = rex_escape(rex_request('search_string', 'string', ''));
+$search_string = htmlspecialchars_decode(rex_request('search_string', 'string', ''));
 
 // sum per page, bar chart
 $sql = rex_sql::factory();
