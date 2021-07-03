@@ -1,9 +1,8 @@
 <?php
 
-
 /**
  * Used on the page "pages.php" to handle and retreive data for a single url in the "details-section"
- * 
+ *
  * @author Andreas Lenhardt
  */
 class stats_pagedetails
@@ -11,10 +10,10 @@ class stats_pagedetails
     private $url;
 
     /**
-     * 
-     * 
-     * @param string $url 
-     * @return void 
+     *
+     *
+     * @param string $url
+     * @return void
      * @author Andreas Lenhardt
      */
     public function __construct(string $url)
@@ -23,11 +22,11 @@ class stats_pagedetails
     }
 
     /**
-     * 
-     * 
-     * @return (string|false)[] 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return (string|false)[]
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function get_browser()
@@ -48,11 +47,11 @@ class stats_pagedetails
     }
 
     /**
-     * 
-     * 
-     * @return (string|false)[] 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return (string|false)[]
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function get_browsertype()
@@ -73,11 +72,11 @@ class stats_pagedetails
     }
 
     /**
-     * 
-     * 
-     * @return (string|false)[] 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return (string|false)[]
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function get_os()
@@ -98,11 +97,11 @@ class stats_pagedetails
     }
 
     /**
-     * 
-     * 
-     * @return string 
-     * @throws InvalidArgumentException 
-     * @throws rex_exception 
+     *
+     *
+     * @return string
+     * @throws InvalidArgumentException
+     * @throws rex_exception
      * @author Andreas Lenhardt
      */
     public function get_list()
@@ -117,11 +116,11 @@ class stats_pagedetails
         return $list->get();
     }
     /**
-     * 
-     * 
-     * @return mixed 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return mixed
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function get_page_total()
@@ -134,17 +133,17 @@ class stats_pagedetails
     }
 
     /**
-     * 
-     * 
-     * @return (string|false)[] 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return (string|false)[]
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function get_sum_per_day()
     {
         $sql = rex_sql::factory();
-        
+
         $max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable('pagestats_dump') . ' WHERE url = :url', ['url' => $this->url]);
         $max_date = $max_date->getValue('date');
         $max_date = new DateTime($max_date);

@@ -1,20 +1,19 @@
 <?php
 
-
 /**
  * Provides data for the dashboard addon
- * 
+ *
  * @author Andreas Lenhardt
  */
 class rex_dashboard_views_total extends rex_dashboard_item
 {
-    
+
     /**
-     * 
-     * 
-     * @return string 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return string
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function getData()

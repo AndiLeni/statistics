@@ -1,22 +1,20 @@
 <?php
 
-
-
 /**
-     * Media Manager Effect to provide a method to log specific media files 
- * 
+     * Media Manager Effect to provide a method to log specific media files
+ *
  * @author Andreas Lenhardt
  */
 class rex_effect_stats_mm extends rex_effect_abstract
 {
 
-    
+
     /**
-     * 
-     * 
-     * @return void 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return void
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function execute()
@@ -25,7 +23,6 @@ class rex_effect_stats_mm extends rex_effect_abstract
         $plugin = rex_plugin::get('statistics', 'media');
 
         if ($plugin->getConfig('pagestats_media_log_mm') == true) {
-
             $url = $_SERVER['REQUEST_URI'];
 
             $sql = rex_sql::factory();
@@ -42,11 +39,11 @@ class rex_effect_stats_mm extends rex_effect_abstract
         }
     }
 
-    
+
     /**
-     * 
-     * 
-     * @return string 
+     *
+     *
+     * @return string
      * @author Andreas Lenhardt
      */
     public function getName()

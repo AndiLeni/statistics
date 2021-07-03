@@ -1,20 +1,19 @@
 <?php
 
-
 /**
  * Handles the "hour" data for statistics
- * 
+ *
  * @author Andreas Lenhardt
  */
 class stats_hour
 {
 
     /**
-     * 
-     * 
-     * @return array 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return array
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     private function get_sql()
@@ -31,11 +30,11 @@ class stats_hour
         return $data;
     }
     /**
-     * 
-     * 
-     * @return (string|false)[] 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return (string|false)[]
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function get_data()
@@ -49,11 +48,11 @@ class stats_hour
     }
 
     /**
-     * 
-     * 
-     * @return string 
-     * @throws InvalidArgumentException 
-     * @throws rex_exception 
+     *
+     *
+     * @return string
+     * @throws InvalidArgumentException
+     * @throws rex_exception
      * @author Andreas Lenhardt
      */
     public function get_list()
@@ -69,11 +68,11 @@ class stats_hour
     }
 
     /**
-     * 
-     * 
-     * @return array 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return array
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function get_data_dashboard()

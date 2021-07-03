@@ -1,18 +1,17 @@
 <?php
 
-
 /**
- * 
- * 
+ *
+ *
  * @author Andreas Lenhardt
  */
 class stats_weekday
 {
     /**
-     * 
-     * 
-     * @param mixed $weekday 
-     * @return string|void 
+     *
+     *
+     * @param mixed $weekday
+     * @return string|void
      * @author Andreas Lenhardt
      */
     public static function get_weekday_string($weekday)
@@ -44,11 +43,11 @@ class stats_weekday
 
 
     /**
-     * 
-     * 
-     * @return array 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return array
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     private function get_sql()
@@ -67,11 +66,11 @@ class stats_weekday
 
 
     /**
-     * 
-     * 
-     * @return (string|false)[] 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return (string|false)[]
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function get_data()
@@ -86,11 +85,11 @@ class stats_weekday
 
 
     /**
-     * 
-     * 
-     * @return string 
-     * @throws InvalidArgumentException 
-     * @throws rex_exception 
+     *
+     *
+     * @return string
+     * @throws InvalidArgumentException
+     * @throws rex_exception
      * @author Andreas Lenhardt
      */
     public function get_list()
@@ -107,11 +106,11 @@ class stats_weekday
 
 
     /**
-     * 
-     * 
-     * @return array 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return array
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function get_data_dashboard()

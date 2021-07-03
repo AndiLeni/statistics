@@ -1,10 +1,9 @@
 <?php
 
-
 /**
  * Can be used to retreive the total amount of visitors
  * F.e. to be used in an old-fashioned Visitor-Counter
- * 
+ *
  * @author Andreas Lenhardt
  */
 class stats_visitor_counter
@@ -12,10 +11,10 @@ class stats_visitor_counter
     private $addon;
 
     /**
-     * 
-     * 
-     * @return void 
-     * @throws InvalidArgumentException 
+     *
+     *
+     * @return void
+     * @throws InvalidArgumentException
      * @author Andreas Lenhardt
      */
     public function __construct()
@@ -24,10 +23,10 @@ class stats_visitor_counter
     }
 
     /**
-     * 
-     * 
-     * @return mixed 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return mixed
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     private function get_sql()
@@ -39,10 +38,10 @@ class stats_visitor_counter
     }
 
     /**
-     * 
-     * 
-     * @return string 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return string
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function get_text()

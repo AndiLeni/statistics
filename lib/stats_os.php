@@ -1,19 +1,18 @@
 <?php
 
-
 /**
  * Handles the devices-"os" data for statistics
- * 
+ *
  * @author Andreas Lenhardt
  */
 class stats_os
 {
     /**
-     * 
-     * 
-     * @return array 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return array
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     private function get_sql()
@@ -30,11 +29,11 @@ class stats_os
         return $data;
     }
     /**
-     * 
-     * 
-     * @return (string|false)[] 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return (string|false)[]
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function get_data()
@@ -48,11 +47,11 @@ class stats_os
     }
 
     /**
-     * 
-     * 
-     * @return string 
-     * @throws InvalidArgumentException 
-     * @throws rex_exception 
+     *
+     *
+     * @return string
+     * @throws InvalidArgumentException
+     * @throws rex_exception
      * @author Andreas Lenhardt
      */
     public function get_list()
@@ -67,11 +66,11 @@ class stats_os
     }
 
     /**
-     * 
-     * 
-     * @return array 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return array
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function get_data_dashboard()

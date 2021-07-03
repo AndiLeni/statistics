@@ -8,7 +8,7 @@ use DeviceDetector\DeviceDetector;
 /**
  * Main class to handle saving of page visitors.
  * Performs checks to decide if visit should be ignored
- * 
+ *
  * @author Andreas Lenhardt
  */
 class stats_visit
@@ -29,7 +29,7 @@ class stats_visit
         'favicon.ico',
     ];
 
-    
+
     private $datetime_now;
 
     private $addon;
@@ -82,15 +82,15 @@ class stats_visit
     private $model = 'Undefiniert';
 
 
-    
+
     /**
-     * 
-     * 
-     * @param string $clientIPAddress 
-     * @param string $url 
-     * @param string $userAgent 
-     * @return void 
-     * @throws InvalidArgumentException 
+     *
+     *
+     * @param string $clientIPAddress
+     * @param string $url
+     * @param string $userAgent
+     * @return void
+     * @throws InvalidArgumentException
      * @author Andreas Lenhardt
      */
     public function __construct(string $clientIPAddress, string $url, string $userAgent)
@@ -102,11 +102,11 @@ class stats_visit
         $this->userAgent = $userAgent;
     }
 
-    
+
     /**
-     * 
-     * 
-     * @return bool 
+     *
+     *
+     * @return bool
      * @author Andreas Lenhardt
      */
     public function ignore_visit()
@@ -157,13 +157,13 @@ class stats_visit
         return false;
     }
 
-    
+
     /**
-     * 
-     * 
-     * @return void 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return void
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function persist()
@@ -197,14 +197,14 @@ class stats_visit
         $sql->insert();
     }
 
-    
+
 
     /**
-     * 
-     * 
-     * @return bool 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return bool
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function save_visit()
@@ -245,12 +245,12 @@ class stats_visit
         }
     }
 
-    
+
     /**
-     * 
-     * 
-     * @return void 
-     * @throws Exception 
+     *
+     *
+     * @return void
+     * @throws Exception
      * @author Andreas Lenhardt
      */
     public function parse_ua()
@@ -259,13 +259,13 @@ class stats_visit
         $this->DeviceDetector->parse();
     }
 
-    
+
     /**
-     * 
-     * 
-     * @return void 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return void
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function save_bot()
@@ -290,14 +290,14 @@ class stats_visit
         }
     }
 
-    
+
     /**
-     * 
-     * 
-     * @param string $referer 
-     * @return void 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @param string $referer
+     * @return void
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      * @author Andreas Lenhardt
      */
     public function save_referer(string $referer)
@@ -314,11 +314,11 @@ class stats_visit
         }
     }
 
-    
+
     /**
-     * 
-     * 
-     * @return mixed 
+     *
+     *
+     * @return mixed
      * @author Andreas Lenhardt
      */
     public function is_bot()
