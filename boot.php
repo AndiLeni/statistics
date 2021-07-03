@@ -10,22 +10,22 @@ use Vectorface\Whip\Whip;
 // dashboard addon integration
 if (rex::isBackend() && rex_addon::get('dashboard')->isAvailable()) {
     rex_dashboard::addItem(
-        rex_dashboard_views_total::factory('stats_views_total', 'Seitenaufrufe')
+        rex_dashboard_views_total::factory('stats_views_total', 'Statistik | Seitenaufrufe')
     );
     rex_dashboard::addItem(
-        rex_dashboard_browser::factory('stats_browser', 'Browser')->setDonut()
+        rex_dashboard_browser::factory('stats_browser', 'Statistik | Browser')->setDonut()
     );
     rex_dashboard::addItem(
-        rex_dashboard_browsertype::factory('stats_browsertype', 'Gerätetypen')->setDonut()
+        rex_dashboard_browsertype::factory('stats_browsertype', 'Statistik | Gerätetypen')->setDonut()
     );
     rex_dashboard::addItem(
-        rex_dashboard_os::factory('stats_os', 'Betriebssysteme')->setDonut()
+        rex_dashboard_os::factory('stats_os', 'Statistik | Betriebssysteme')->setDonut()
     );
     rex_dashboard::addItem(
-        rex_dashboard_hour::factory('stats_hour', 'Uhrzeiten')
+        rex_dashboard_hour::factory('stats_hour', 'Statistik | Seitenaufrufe: Uhrzeiten')
     );
     rex_dashboard::addItem(
-        stats_weekday_dashboard::factory('stats_weekday', 'Wochentage')
+        stats_weekday_dashboard::factory('stats_weekday', 'Statistik | Seitenaufrufe: Wochentage')
     );
 }
 

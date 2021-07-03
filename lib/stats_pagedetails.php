@@ -1,13 +1,35 @@
 <?php
+
+
+/**
+ * Used on the page "pages.php" to handle and retreive data for a single url in the "details-section"
+ * 
+ * @author Andreas Lenhardt
+ */
 class stats_pagedetails
 {
     private $url;
 
+    /**
+     * 
+     * 
+     * @param string $url 
+     * @return void 
+     * @author Andreas Lenhardt
+     */
     public function __construct(string $url)
     {
         $this->url = $url;
     }
 
+    /**
+     * 
+     * 
+     * @return (string|false)[] 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     * @author Andreas Lenhardt
+     */
     public function get_browser()
     {
         $sql = rex_sql::factory();
@@ -25,6 +47,14 @@ class stats_pagedetails
         ];
     }
 
+    /**
+     * 
+     * 
+     * @return (string|false)[] 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     * @author Andreas Lenhardt
+     */
     public function get_browsertype()
     {
         $sql = rex_sql::factory();
@@ -42,6 +72,14 @@ class stats_pagedetails
         ];
     }
 
+    /**
+     * 
+     * 
+     * @return (string|false)[] 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     * @author Andreas Lenhardt
+     */
     public function get_os()
     {
         $sql = rex_sql::factory();
@@ -59,6 +97,14 @@ class stats_pagedetails
         ];
     }
 
+    /**
+     * 
+     * 
+     * @return string 
+     * @throws InvalidArgumentException 
+     * @throws rex_exception 
+     * @author Andreas Lenhardt
+     */
     public function get_list()
     {
         $list = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = "' . $this->url . '" GROUP BY date ORDER BY count DESC');
@@ -70,6 +116,14 @@ class stats_pagedetails
 
         return $list->get();
     }
+    /**
+     * 
+     * 
+     * @return mixed 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     * @author Andreas Lenhardt
+     */
     public function get_page_total()
     {
         $details_page_total = rex_sql::factory();
@@ -79,6 +133,14 @@ class stats_pagedetails
         return $details_page_total;
     }
 
+    /**
+     * 
+     * 
+     * @return (string|false)[] 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     * @author Andreas Lenhardt
+     */
     public function get_sum_per_day()
     {
         $sql = rex_sql::factory();

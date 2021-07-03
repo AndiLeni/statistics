@@ -1,6 +1,11 @@
 <?php
 
-/** @package  */
+
+/**
+ * Main class to handle saving of media requests
+ * 
+ * @author Andreas Lenhardt
+ */
 class stats_media_request
 {
 
@@ -75,10 +80,13 @@ class stats_media_request
     private $datetime_now;
 
 
+    
     /**
+     * 
      * 
      * @param string $url 
      * @return void 
+     * @author Andreas Lenhardt
      */
     public function __construct(string $url)
     {
@@ -87,9 +95,12 @@ class stats_media_request
     }
 
 
+    
     /**
      * 
+     * 
      * @return bool 
+     * @author Andreas Lenhardt
      */
     public function is_media()
     {
@@ -109,9 +120,14 @@ class stats_media_request
     }
 
 
+    
     /**
      * 
+     * 
      * @return void 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     * @author Andreas Lenhardt
      */
     public function save_media()
     {

@@ -1,7 +1,22 @@
 <?php
 
+
+/**
+ * Provides data for the dashboard addon
+ * 
+ * @author Andreas Lenhardt
+ */
 class rex_dashboard_views_total extends rex_dashboard_item
 {
+    
+    /**
+     * 
+     * 
+     * @return string 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     * @author Andreas Lenhardt
+     */
     public function getData()
     {
         $sql = rex_sql::factory();
@@ -23,7 +38,7 @@ class rex_dashboard_views_total extends rex_dashboard_item
             </tr>
             <tr>
                 <td class="h2">Insgesamt:</td>
-                <td class="text-right h2"><b>'. $total .'</b></td>
+                <td class="text-right h2"><b>' . $total . '</b></td>
             </tr>
         </table>
         ';

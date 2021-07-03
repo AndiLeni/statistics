@@ -11,7 +11,6 @@ if ($plugin->getConfig('pagestats_media_log_all') == true) {
 
     $url = $_SERVER['REQUEST_URI'];
 
-
     $media_request = new stats_media_request($url);
 
     if ($media_request->is_media()) {

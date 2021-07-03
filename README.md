@@ -24,10 +24,21 @@ Persönlichen Daten (z.B. die IP Adresse des Besuchers) werden nur gehasht gespe
 Die IP Adresse wird genutzt, um ein wiederholtes Aufrufen von Seiten nicht in die Statistik einfließen zu lassen.
 
 
+### Medien-Tracking:
+Um Aufrufe von Medien (Bilder, Dokumente, etc.) zu loggen muss das Plugin "Media" aktiviert werden.
+Dieses kann auf zwei Arten verwendet werden:
+1. Alle Medien tracken  
+   Dabei werden alle Aufrufe zu Medien in der Statistik erfasst.
+   > **Dies wirkt sich sehr negativ auf die Ladezeit der Website aus und sollte nur mit Bedacht genutzt werden!**
+2. Medien mittles Media-Manager-Effekt tracken  
+   Um gezielt Medien erfassen zu können, kann ein Media-Manager-Effekt genutzt werden.
+   Dieser wird einfach als weiterer Effekt hinzugefügt und erfasst dann nur die Medien die tatsächlich für die Statistik interessant sind.
+
+
 ## Installation:
 
 Das Repository herunterladen und im Ordner `redaxo > src > addons` entpacken.  
-Danach den Ordner `redaxo_analytics-main` in `stats` umbenennen.  
+Danach den Ordner `statistics` umbenennen.  
 
 
 ## Einstellungen:
@@ -37,7 +48,9 @@ Es können folgende Einstellungen getroffen werden:
 - Ignore-Liste für IPs, hier kann eine Reihe an IP Adressen angegeben werden von denen Besuche nicht erfasst werden sollen
 
 
-## Frontend Counter:
+## Beispiele:
+
+### Frontend Counter:
 Falls man im Frontend einen Besucher-Counter einfügen möchte klappt das mittles der folgenden Modul-Ausgabe:
 ```php
 <?php
@@ -47,6 +60,46 @@ $counter = new stats_visitor_counter();
 <p>Besucher: <code><?php echo $counter->get_text() ?></code><p>
 ```
 Der Ausgegebene Text kann dann nach Belieben gestaltet werden.
+
+
+### Download-Counter:
+1. Im Media Manager einen neuen Medientyp anlegen mit dem Namen "log"
+2. Zu diesem den Effekt "Datei in Statistik loggen" hinzufügen
+3. Ein Modul anlegen  
+   Eingabe:
+   ```
+    <label>Downloads:</label>
+    REX_MEDIALIST[id="1" widget="1"]
+   ```
+   Ausgabe:
+   ```
+    <div class="container">
+        <h2>Downloads:</h2>
+        <table class="table">
+    
+        <tr>
+            <th>Name</th>
+            <th>Link</th>
+        </tr>
+
+        <?php
+        foreach (explode(',', "REX_MEDIALIST[1]") as $img)
+        {
+            echo '<tr>';
+                echo '<td>'. $img .'</td>';
+                echo '<td><a href="'.rex_media_manager::getUrl('log',$img).'">Download</a></td>';
+            echo '</tr>';
+        }
+        ?>
+            
+        </table>
+    </div>
+   ```
+4. In den Einstellungen des Media-Plugins das tracken aktivieren.
+5. Das Beipiel erzeugt dann eine solche Tabelle:  
+   ![Beispiel1](./preview/6.png "Beispiel1")
+   Klickt der Besucher auf den Link "Download" wird dieser Aufruf in der Statistik gespeichert.
+
 
 ## Preview:
 

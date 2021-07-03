@@ -1,6 +1,20 @@
 <?php
+
+
+/**
+ * 
+ * 
+ * @author Andreas Lenhardt
+ */
 class stats_weekday
 {
+    /**
+     * 
+     * 
+     * @param mixed $weekday 
+     * @return string|void 
+     * @author Andreas Lenhardt
+     */
     public static function get_weekday_string($weekday)
     {
         switch ($weekday['value']) {
@@ -27,6 +41,16 @@ class stats_weekday
                 break;
         }
     }
+
+
+    /**
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     * @author Andreas Lenhardt
+     */
     private function get_sql()
     {
         $sql = rex_sql::factory();
@@ -40,6 +64,16 @@ class stats_weekday
 
         return $data;
     }
+
+
+    /**
+     * 
+     * 
+     * @return (string|false)[] 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     * @author Andreas Lenhardt
+     */
     public function get_data()
     {
         $data = $this->get_sql();
@@ -50,6 +84,15 @@ class stats_weekday
         ];
     }
 
+
+    /**
+     * 
+     * 
+     * @return string 
+     * @throws InvalidArgumentException 
+     * @throws rex_exception 
+     * @author Andreas Lenhardt
+     */
     public function get_list()
     {
         $list = rex_list::factory('SELECT weekday, COUNT(weekday) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY weekday ORDER BY count DESC');
@@ -62,6 +105,15 @@ class stats_weekday
         return $list->get();
     }
 
+
+    /**
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     * @author Andreas Lenhardt
+     */
     public function get_data_dashboard()
     {
         $data = $this->get_sql();
