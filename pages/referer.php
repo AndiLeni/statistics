@@ -1,6 +1,6 @@
 <?php
 
-$list = rex_list::factory('SELECT referer, count from ' . rex::getTable('pagestats_referer') . ' ORDER BY count DESC');
+$list = rex_list::factory('SELECT referer, count from ' . rex::getTable('pagestats_referer') . ' ORDER BY count DESC, referer ASC');
 
 $list->setColumnLabel('referer', 'Referer');
 $list->setColumnLabel('count', 'Anzahl');
