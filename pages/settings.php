@@ -21,6 +21,10 @@ if (rex_request_method() == 'post') {
         $sql = rex_sql::factory();
         $sql->setQuery('delete from ' . rex::getTable('pagestats_bot'));
         echo '<div class="alert alert-success">Es wurden '. $sql->getRows() .' Einträge aus der Tabelle bot gelöscht.</div>';
+    } elseif ($function == 'delete_referer') {
+        $sql = rex_sql::factory();
+        $sql->setQuery('delete from ' . rex::getTable('pagestats_referer'));
+        echo '<div class="alert alert-success">Es wurden '. $sql->getRows() .' Einträge aus der Tabelle referer gelöscht.</div>';
     }
 
 }
@@ -78,6 +82,10 @@ $content = '
 <button class="btn btn-danger" type="submit" data-confirm="Wirklich alle Besuche von Bots löschen?">Alle Bots löschen</button>
 </form>
 
+<form style="margin:5px" action="' . rex_url::backendPage('statistics/settings') . '" method="post">
+<input type="hidden" name="func" value="delete_referer">
+<button class="btn btn-danger" type="submit" data-confirm="Wirklich alle Referer löschen?">Alle Referer löschen</button>
+</form>
 ';
 
 
@@ -98,7 +106,3 @@ $fragment->setVar('class', 'danger', false);
 $fragment->setVar('title', 'Statistiken löschen', false);
 $fragment->setVar('body', $content , false);
 echo $fragment->parse('core/page/section.php');
-
-
-?>
-
