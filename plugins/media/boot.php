@@ -7,17 +7,19 @@ if (rex::isBackend()) {
     }
 } else {
 
-    $plugin = rex_plugin::get('statistics', 'media');
-    
-    if ($plugin->getConfig('pagestats_media_log_all') == true) {
+    rex_extension::register('MEDIA_MANAGER_AFTER_SEND', function () {
+        $plugin = rex_plugin::get('statistics', 'media');
 
-        $url = $_SERVER['REQUEST_URI'];
+        if ($plugin->getConfig('pagestats_media_log_all') == true) {
 
-        $media_request = new stats_media_request($url);
+            $url = $_SERVER['REQUEST_URI'];
 
-        if ($media_request->is_media()) {
+            $media_request = new stats_media_request($url);
 
-            $media_request->save_media();
+            if ($media_request->is_media()) {
+
+                $media_request->save_media();
+            }
         }
-    }
+    });
 }
