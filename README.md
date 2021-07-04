@@ -107,7 +107,7 @@ Der Ausgegebene Text kann dann nach Belieben gestaltet werden.
 ### Startseite des Addons mit den wichtigsten Metriken:
 ![Preview](./preview/1.png "Preview")
 
-### Seite für Details über eine URL:
+### Seite mit Details über eine URL:
 ![Preview](./preview/2.png "Preview")
 
 ### Statistiken über Medien Aufrufe:
