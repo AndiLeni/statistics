@@ -91,7 +91,7 @@ $hour_data = $hour->get_data();
 ?>
 
 
-<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('plotly-2.0.0.min.js') ?>"></script>
+<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('plotly.min.js') ?>"></script>
 
 
 <div class="panel panel-default">
