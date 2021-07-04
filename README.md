@@ -16,6 +16,7 @@ Dabei werden folgende Metriken erfasst und optisch dargestellt:
 - Betriebssystem
 - Gerätemarke und Gerätemodell
 - Bots (Crawler etc.)
+- Referrer
 
 Dieses Addon arbeitet **OHNE** Cookies und kann somit Datenschutzkonform eingesetzt werden.
 
@@ -111,6 +112,7 @@ Der Ausgegebene Text kann dann nach Belieben gestaltet werden.
 
 ### Statistiken über Medien Aufrufe:
 ![Preview](./preview/5.png "Preview")
+![Preview](./preview/7.png "Preview")
 
 ### Einstellungen:
 ![Preview](./preview/3.png "Preview")
