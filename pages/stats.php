@@ -177,7 +177,7 @@ echo $fragment->parse('core/page/section.php');
         <?php
 
         $fragment = new rex_fragment();
-        $fragment->setVar('title', 'Marke:');
+        $fragment->setVar('title', 'Geräte-Hersteller:');
         $fragment->setVar('content', '<div id="chart_brand"></div>' . $brand->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
@@ -188,7 +188,7 @@ echo $fragment->parse('core/page/section.php');
         <?php
 
         $fragment = new rex_fragment();
-        $fragment->setVar('title', 'Modell:');
+        $fragment->setVar('title', 'Geräte:');
         $fragment->setVar('content', '<div id="chart_model"></div>' . $model->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
@@ -199,7 +199,7 @@ echo $fragment->parse('core/page/section.php');
         <?php
 
         $fragment = new rex_fragment();
-        $fragment->setVar('title', 'Wochentage:');
+        $fragment->setVar('title', 'Aufrufe nach Wochentagen:');
         $fragment->setVar('content', '<div id="chart_weekday"></div>' . $weekday->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
@@ -210,7 +210,7 @@ echo $fragment->parse('core/page/section.php');
         <?php
 
         $fragment = new rex_fragment();
-        $fragment->setVar('title', 'Uhrzeiten:');
+        $fragment->setVar('title', 'Aufrufe nach Uhrzeiten:');
         $fragment->setVar('content', '<div id="chart_hour"></div>' . $hour->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 

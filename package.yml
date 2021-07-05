@@ -12,10 +12,10 @@ page:
       title: Statistiken
       icon: rex-icon fa-pie-chart
     pages: 
-      title: Seiten
+      title: Seitenaufrufe
       icon: rex-icon fa-file-text-o
     referer: 
-      title: Referer
+      title: Verweise
       icon: rex-icon fa-external-link
     settings: 
       title: Einstellungen

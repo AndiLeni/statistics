@@ -4,7 +4,7 @@ author: Andreas Lenhardt
 supportpage: https://github.com/AndiLeni/redaxo_analytics
 
 page:
-  title: 'Media'
+  title: 'Medienaufrufe'
   icon: rex-icon fa-image
   perm: stats[]
   subpages:

@@ -188,7 +188,7 @@ class stats_visit
         $sql->setValue('os', $this->os . " " . $this->osVer);
         $sql->setValue('browsertype', $this->device_type);
         $sql->setValue('brand', $this->brand);
-        $sql->setValue('model', $this->model);
+        $sql->setValue('model', $this->brand . ' - ' . $this->model);
         $sql->setValue('url', $this->url);
         $sql->setValue('date', $this->datetime_now->format('Y-m-d'));
         $sql->setValue('hour', $this->datetime_now->format('H'));
