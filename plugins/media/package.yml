@@ -4,15 +4,15 @@ author: Andreas Lenhardt
 supportpage: https://github.com/AndiLeni/redaxo_analytics
 
 page:
-  title: 'Medienaufrufe'
+  title: 'translate:statistics_media_access'
   icon: rex-icon fa-image
   perm: stats[]
   subpages:
     media: 
-      title: Medien
+      title: 'translate:statistics_media'
       icon: rex-icon fa-image
     settings: 
-      title: Einstellungen
+      title: 'translate:statistics_media_settings'
       perm: admin
       icon: rex-icon fa-cog
 

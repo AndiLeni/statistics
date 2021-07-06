@@ -25,7 +25,7 @@ if ($request_date_end == '' || $request_date_start == '') {
     $min_date = new DateTime($request_date_start);
 
     if ($min_date > $max_date) {
-        echo '<div class="alert alert-danger">Das Enddatum muss größer sein als das Startdatum.</div>';
+        echo '<div class="alert alert-danger">' . $this->i18n('statistics_dates') . '</div>';
         $min_date = new DateTime();
         $max_date = new DateTime();
         $max_date->modify('+1 day');
@@ -95,19 +95,19 @@ $hour_data = $hour->get_data();
 
 
 <div class="panel panel-default">
-    <div class="panel-heading">Zeitraum filtern</div>
+    <div class="panel-heading"><?php echo $this->i18n('statistics_filter_date') ?></div>
     <div class="panel-body">
         <form class="form-inline" action="<?php echo rex_url::backendPage('statistics/settings') ?>" method="GET">
             <input type="hidden" value="statistics/stats" name="page">
             <div class="form-group">
-                <label for="exampleInputName2">Startdatum:</label>
+                <label for="exampleInputName2"><?php echo $this->i18n('statistics_startdate') ?></label>
                 <input style="line-height: normal;" type="date" value="<?php echo $request_date_start ? $request_date_start : $min_date->format('Y-m-d') ?>" class="form-control" name="date_start">
             </div>
             <div class="form-group">
-                <label for="exampleInputEmail2">Enddatum:</label>
+                <label for="exampleInputEmail2"><?php echo $this->i18n('statistics_enddate') ?></label>
                 <input style="line-height: normal;" value="<?php echo $request_date_end ? $request_date_end : $max_date->format('Y-m-d') ?>" type="date" class="form-control" name="date_end">
             </div>
-            <button type="submit" class="btn btn-default">Filtern</button>
+            <button type="submit" class="btn btn-default"><?php echo $this->i18n('statistics_filter') ?></button>
         </form>
     </div>
 </div>
@@ -117,13 +117,13 @@ $hour_data = $hour->get_data();
 <?php
 if (!isset($sum_per_day_labels)) {
     echo '<div class="alert alert-danger">';
-    echo '<p>Es sind noch keine Daten vorhanden.</p>';
+    echo '<p>' . $this->i18n('statistics_no_data') . '</p>';
     echo '</div>';
 }
 
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', 'Aufrufe pro Tag:');
+$fragment->setVar('title', $this->i18n('statistics_views_per_day'));
 $fragment->setVar('content', '<div id="chart_visits"></div>', false);
 echo $fragment->parse('core/page/section.php');
 ?>
@@ -134,7 +134,7 @@ echo $fragment->parse('core/page/section.php');
         <?php
 
         $fragment = new rex_fragment();
-        $fragment->setVar('title', 'Browser:');
+        $fragment->setVar('title', $this->i18n('statistics_browser'));
         $fragment->setVar('content', '<div id="chart_browser"></div>' . $browser->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
@@ -145,7 +145,7 @@ echo $fragment->parse('core/page/section.php');
         <?php
 
         $fragment = new rex_fragment();
-        $fragment->setVar('title', 'Gerätetyp:');
+        $fragment->setVar('title', $this->i18n('statistics_devicetype'));
         $fragment->setVar('content', '<div id="chart_browsertype"></div>' . $browsertype->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
@@ -159,7 +159,7 @@ echo $fragment->parse('core/page/section.php');
         <?php
 
         $fragment = new rex_fragment();
-        $fragment->setVar('title', 'Betriebssystem:');
+        $fragment->setVar('title', $this->i18n('statistics_os'));
         $fragment->setVar('content', '<div id="chart_os"></div>' . $os->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
@@ -177,7 +177,7 @@ echo $fragment->parse('core/page/section.php');
         <?php
 
         $fragment = new rex_fragment();
-        $fragment->setVar('title', 'Geräte-Hersteller:');
+        $fragment->setVar('title', $this->i18n('statistics_brand'));
         $fragment->setVar('content', '<div id="chart_brand"></div>' . $brand->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
@@ -188,7 +188,7 @@ echo $fragment->parse('core/page/section.php');
         <?php
 
         $fragment = new rex_fragment();
-        $fragment->setVar('title', 'Geräte:');
+        $fragment->setVar('title', $this->i18n('statistics_model'));
         $fragment->setVar('content', '<div id="chart_model"></div>' . $model->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
@@ -199,7 +199,7 @@ echo $fragment->parse('core/page/section.php');
         <?php
 
         $fragment = new rex_fragment();
-        $fragment->setVar('title', 'Aufrufe nach Wochentagen:');
+        $fragment->setVar('title', $this->i18n('statistics_days'));
         $fragment->setVar('content', '<div id="chart_weekday"></div>' . $weekday->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
@@ -210,7 +210,7 @@ echo $fragment->parse('core/page/section.php');
         <?php
 
         $fragment = new rex_fragment();
-        $fragment->setVar('title', 'Aufrufe nach Uhrzeiten:');
+        $fragment->setVar('title', $this->i18n('statistics_hours'));
         $fragment->setVar('content', '<div id="chart_hour"></div>' . $hour->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
@@ -223,10 +223,10 @@ echo $fragment->parse('core/page/section.php');
 <?php
 
 $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_bot') . ' ORDER BY count DESC');
-$list->setColumnLabel('name', 'Name');
-$list->setColumnLabel('count', 'Anzahl');
-$list->setColumnLabel('category', 'Kategorie');
-$list->setColumnLabel('producer', 'Hersteller');
+$list->setColumnLabel('name', $this->i18n('statistics_name'));
+$list->setColumnLabel('count', $this->i18n('statistics_count'));
+$list->setColumnLabel('category', $this->i18n('statistics_category'));
+$list->setColumnLabel('producer', $this->i18n('statistics_producer'));
 $list->setColumnSortable('name', $direction = 'asc');
 $list->setColumnSortable('count', $direction = 'asc');
 $list->setColumnSortable('category', $direction = 'asc');

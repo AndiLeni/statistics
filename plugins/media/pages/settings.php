@@ -18,23 +18,23 @@ $form = rex_config_form::factory("statistics/media");
 
 
 $field = $form->addRadioField ('pagestats_media_log_all');
-$field->setLabel('Alle Medien loggen:');
-$field->addOption ('Ja', true);
-$field->addOption ('Nein', false);
-$field->setNotice('Loggt alle Aufrufe von Medien Dateien. Dadurch wird die Website verlangsamt. VORSICHTIG EINSETZEN!');
+$field->setLabel($this->i18n('statistics_media_log_all'));
+$field->addOption ($this->i18n('statistics_media_yes'), true);
+$field->addOption ($this->i18n('statistics_media_no'), false);
+$field->setNotice($this->i18n('statistics_media_log_all_note'));
 
 
 $field = $form->addRadioField ('pagestats_media_log_mm');
-$field->setLabel('Medien loggen mit zugehörigem Media-Manager-Effekt.');
-$field->addOption ('Ja', true);
-$field->addOption ('Nein', false);
-$field->setNotice('Loggt nur Medien die den Media-Manager-Effekt haben.');
+$field->setLabel($this->i18n('statistics_media_log_mm'));
+$field->addOption ($this->i18n('statistics_media_yes'), true);
+$field->addOption ($this->i18n('statistics_media_no'), false);
+$field->setNotice($this->i18n('statistics_media_log_mm_note'));
 
 
 
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'edit', false);
-$fragment->setVar('title', 'Einstellungen', false);
+$fragment->setVar('title', $this->i18n('statistics_media_settings'), false);
 $fragment->setVar('body', $form->get(), false);
 echo $fragment->parse('core/page/section.php');
 
@@ -45,7 +45,7 @@ $content = '
 
 <form style="margin:5px" action="' . rex_url::backendPage('statistics/media/settings') . '" method="post">
 <input type="hidden" name="func" value="delete_media">
-<button class="btn btn-danger" type="submit" data-confirm="Wirklich die gesamte Media-Statistik löschen?">Alle Media-Statistik löschen</button>
+<button class="btn btn-danger" type="submit" data-confirm="'. $this->i18n('statistics_media_delete_media_confirm') .'">'. $this->i18n('statistics_media_delete_media') .'</button>
 </form>
 
 </div>
@@ -55,6 +55,6 @@ $content = '
 
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'danger', false);
-$fragment->setVar('title', 'Statistiken löschen', false);
+$fragment->setVar('title', $this->i18n('statistics_media_delete_stats'), false);
 $fragment->setVar('body', $content , false);
 echo $fragment->parse('core/page/section.php');

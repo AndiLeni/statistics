@@ -4,21 +4,21 @@ author: Andreas Lenhardt
 supportpage: https://github.com/AndiLeni/statistics
 
 page:
-  title: 'Statistiken'
+  title: 'translate:statistics_stats'
   icon: rex-icon fa-line-chart
   perm: stats[]
   subpages:
     stats:
-      title: Statistiken
+      title: 'translate:statistics_stats'
       icon: rex-icon fa-pie-chart
     pages: 
-      title: Seitenaufrufe
+      title: 'translate:statistics_pages'
       icon: rex-icon fa-file-text-o
     referer: 
-      title: Verweise
+      title: 'translate:statistics_referer'
       icon: rex-icon fa-external-link
     settings: 
-      title: Einstellungen
+      title: 'translate:statistics_settings'
       perm: admin
       icon: rex-icon fa-cog
 

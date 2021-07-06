@@ -38,15 +38,15 @@ $form = '
 <form class="form-inline" action="' . rex_url::backendPage('statistics/pages') . '" method="GET">
     <input type="hidden" value="statistics/pages" name="page">
     <div class="form-group">
-        <label for="exampleInputName2">Suchen nach:</label>
+        <label for="exampleInputName2">' . $this->i18n('statistics_search_for') . '</label>
         <input style="line-height: normal;" type="text" value="' . $search_string . '" class="form-control" name="search_string">
     </div>
-    <button type="submit" class="btn btn-default">Suchen</button>
+    <button type="submit" class="btn btn-default">' . $this->i18n('statistics_search') . '</button>
 </form>
 ';
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', 'Aufrufe pro Tag:');
+$fragment->setVar('title', $this->i18n('statistics_views_per_day'));
 $fragment->setVar('body', $form, false);
 echo $fragment->parse('core/page/section.php');
 
@@ -103,7 +103,7 @@ if ($request_url != '' && !$ignore_page) {
     $fragment->setVar('class', 'info', false);
     $fragment->setVar('title', 'Details für:');
     $fragment->setVar('heading', $request_url);
-    $fragment->setVar('body', '<h4>Aufrufe insgesamt: <b>' . $pagedetails->get_page_total() . '</b></h4>', false);
+    $fragment->setVar('body', '<h4>' . $this->i18n('statistics_views_total') . ' <b>' . $pagedetails->get_page_total() . '</b></h4>', false);
     $fragment->setVar('content', $content, false);
     echo $fragment->parse('core/page/section.php');
 }
@@ -116,18 +116,18 @@ if ($search_string == '') {
 }
 
 
-$list->setColumnLabel('url', 'Url');
-$list->setColumnLabel('count', 'Anzahl');
+$list->setColumnLabel('url', $this->i18n('statistics_url'));
+$list->setColumnLabel('count', $this->i18n('statistics_count'));
 $list->setColumnParams('url', ['url' => '###url###']);
 
-$list->addColumn('edit', 'Ignorieren & löschen');
-$list->setColumnLabel('edit', 'Diese URL in Ignorier-Liste verschieben');
-$list->addLinkAttribute('edit', 'data-confirm', 'Dieser Eintrag wird aus der Datenbank gelöscht und zukünftig ignoriert. Sind Sie sicher?');
+$list->addColumn('edit', $this->i18n('statistics_ignore_and_delete'));
+$list->setColumnLabel('edit', $this->i18n('statistics_ignore'));
+$list->addLinkAttribute('edit', 'data-confirm', $this->i18n('statistics_confirm_ignore_delete'));
 $list->setColumnParams('edit', ['url' => '###url###', 'ignore_page' => true]);
 
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', 'Summe pro Seite:');
+$fragment->setVar('title', $this->i18n('statistics_sum_per_page'));
 $fragment->setVar('content', '<div id="chart_visits_per_page"></div>' . $list->get(), false);
 echo $fragment->parse('core/page/section.php');
 
