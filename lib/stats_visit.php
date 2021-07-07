@@ -20,6 +20,7 @@ class stats_visit
 
     const IGNORE_WHEN_CONTAINS = [
         'rex_version=1',
+        'search_it_build_index',
     ];
 
     const IGNORE_WHEN_ENDS = [
