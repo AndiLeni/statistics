@@ -57,7 +57,7 @@ class stats_model
     public function get_list()
     {
         $addon = rex_addon::get('statistics');
-        $list = rex_list::factory('SELECT model, COUNT(model) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY model ORDER BY count DESC');
+        $list = rex_list::factory('SELECT model, COUNT(model) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY model ORDER BY count DESC', 5);
         $list->setColumnLabel('model', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));
         $list->setColumnSortable('model', $direction = 'asc');

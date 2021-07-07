@@ -58,11 +58,15 @@ class stats_browser
     public function get_list()
     {
         $addon = rex_addon::get('statistics');
-        $list = rex_list::factory('SELECT browser, COUNT(browser) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY browser ORDER BY count DESC');
+        $list = rex_list::factory('SELECT browser, COUNT(browser) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY browser ORDER BY count DESC', 5);
         $list->setColumnLabel('browser', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));
         $list->setColumnSortable('browser', $direction = 'asc');
         $list->setColumnSortable('count', $direction = 'asc');
+        // $list->addFormAttribute('id', 'brand');
+        // $list->addTableAttribute('id', 'brand');
+        // $list->addParam('id', 'brand');
+        // $list->getPager()->test = 'brand';
 
         return $list->get();
     }

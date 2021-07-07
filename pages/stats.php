@@ -171,7 +171,6 @@ echo $fragment->parse('core/page/section.php');
     </div>
 </div>
 
-
 <div class="row">
     <div class="col-12 col-md-6">
         <?php

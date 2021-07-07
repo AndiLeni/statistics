@@ -127,7 +127,7 @@ class stats_weekday
      */
     public function get_list()
     {
-        $list = rex_list::factory('SELECT weekday, COUNT(weekday) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY weekday ORDER BY count DESC');
+        $list = rex_list::factory('SELECT weekday, COUNT(weekday) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY weekday ORDER BY count DESC', 7);
         $list->setColumnLabel('weekday', $this->addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $this->addon->i18n('statistics_count'));
         $list->setColumnSortable('weekday', $direction = 'asc');
