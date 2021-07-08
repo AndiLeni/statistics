@@ -69,8 +69,8 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () {
                 // check hash with save_visit, if true then save visit
 
                 // check if referer exists, if yes safe it
-                $referer = $_SERVER['HTTP_REFERER'];
-                if (isset($referer)) {
+                if (isset($_SERVER['HTTP_REFERER'])) {
+                    $referer = $_SERVER['HTTP_REFERER'];
 
                     if (!str_starts_with($referer, rex::getServer())) {
                         $visit->save_referer($referer);
