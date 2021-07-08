@@ -1,0 +1,15 @@
+statistics_api_campaigns = Kampagnen
+statistics_api_settings = Einstellungen
+statistics_api_filter = Filtern
+statistics_api_search_for = Suche nach:
+statistics_api_search = Suchen 
+statistics_api_campaign_views = Kampagnen-Aufrufe:
+statistics_api_name = Name
+statistics_api_count = Anzahl
+statistics_api_enable_campaigns = Kampagnen aktivieren:
+statistics_api_yes = Ja
+statistics_api_no = Nein
+statistics_api_enable_campaigns_note = Aktiviert das tracken von API Aufrufen
+statistics_api_delete_api = Alle API Aufrufe löschen
+statistics_api_delete_api_confirm = Möchten Sie wirklich alle API Aufrufe und Kampagnen löschen?
+statistics_api_delete = Löschen

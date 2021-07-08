@@ -92,6 +92,9 @@ $hour_data = $hour->get_data();
 
 
 <script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('plotly.min.js') ?>"></script>
+<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.js') ?>"></script>
+<link rel="stylesheet" href="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.css') ?>">
+
 
 
 <div class="panel panel-default">
@@ -135,7 +138,7 @@ echo $fragment->parse('core/page/section.php');
 
         $fragment = new rex_fragment();
         $fragment->setVar('title', $this->i18n('statistics_browser'));
-        $fragment->setVar('content', '<div id="chart_browser"></div>' . $browser->get_list(), false);
+        $fragment->setVar('body', '<div id="chart_browser"></div>' . $browser->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
         ?>
@@ -146,7 +149,7 @@ echo $fragment->parse('core/page/section.php');
 
         $fragment = new rex_fragment();
         $fragment->setVar('title', $this->i18n('statistics_devicetype'));
-        $fragment->setVar('content', '<div id="chart_browsertype"></div>' . $browsertype->get_list(), false);
+        $fragment->setVar('body', '<div id="chart_browsertype"></div>' . $browsertype->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
         ?>
@@ -160,7 +163,7 @@ echo $fragment->parse('core/page/section.php');
 
         $fragment = new rex_fragment();
         $fragment->setVar('title', $this->i18n('statistics_os'));
-        $fragment->setVar('content', '<div id="chart_os"></div>' . $os->get_list(), false);
+        $fragment->setVar('body', '<div id="chart_os"></div>' . $os->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
         ?>
@@ -177,7 +180,7 @@ echo $fragment->parse('core/page/section.php');
 
         $fragment = new rex_fragment();
         $fragment->setVar('title', $this->i18n('statistics_brand'));
-        $fragment->setVar('content', '<div id="chart_brand"></div>' . $brand->get_list(), false);
+        $fragment->setVar('body', '<div id="chart_brand"></div>' . $brand->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
         ?>
@@ -188,7 +191,7 @@ echo $fragment->parse('core/page/section.php');
 
         $fragment = new rex_fragment();
         $fragment->setVar('title', $this->i18n('statistics_model'));
-        $fragment->setVar('content', '<div id="chart_model"></div>' . $model->get_list(), false);
+        $fragment->setVar('body', '<div id="chart_model"></div>' . $model->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
         ?>
@@ -199,7 +202,7 @@ echo $fragment->parse('core/page/section.php');
 
         $fragment = new rex_fragment();
         $fragment->setVar('title', $this->i18n('statistics_days'));
-        $fragment->setVar('content', '<div id="chart_weekday"></div>' . $weekday->get_list(), false);
+        $fragment->setVar('body', '<div id="chart_weekday"></div>' . $weekday->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
         ?>
@@ -210,7 +213,7 @@ echo $fragment->parse('core/page/section.php');
 
         $fragment = new rex_fragment();
         $fragment->setVar('title', $this->i18n('statistics_hours'));
-        $fragment->setVar('content', '<div id="chart_hour"></div>' . $hour->get_list(), false);
+        $fragment->setVar('body', '<div id="chart_hour"></div>' . $hour->get_list(), false);
         echo $fragment->parse('core/page/section.php');
 
         ?>
@@ -226,10 +229,6 @@ $list->setColumnLabel('name', $this->i18n('statistics_name'));
 $list->setColumnLabel('count', $this->i18n('statistics_count'));
 $list->setColumnLabel('category', $this->i18n('statistics_category'));
 $list->setColumnLabel('producer', $this->i18n('statistics_producer'));
-$list->setColumnSortable('name', $direction = 'asc');
-$list->setColumnSortable('count', $direction = 'asc');
-$list->setColumnSortable('category', $direction = 'asc');
-$list->setColumnSortable('producer', $direction = 'asc');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', 'Bots:');
@@ -308,4 +307,53 @@ echo $fragment->parse('core/page/section.php');
         x: <?php echo $hour_data['labels'] ?>,
         y: <?php echo $hour_data['values'] ?>,
     }], layout, config);
+
+
+    const datatable_config = {
+        paging: false,
+        pageLength: 5,
+        "search": {
+            "caseInsensitive": false
+        }
+    }
+
+    $(document).ready(function() {
+        $('.table').DataTable({
+            "paging": true,
+            "pageLength": 5,
+            "lengthChange": true,
+            "lengthMenu": [5, 10, 50, 100],
+            "search": {
+                "caseInsensitive": false
+            },
+            <?php
+    	    
+            if (trim(rex::getUser()->getLanguage()) == '' || trim(rex::getUser()->getLanguage()) == 'de_de') {
+                if (rex::getProperty('lang') == 'de_de') {
+                    echo '
+                    language: {
+                        "search": "Suchen:",
+                        "decimal": ",",
+                        "info": "Einträge _START_-_END_ von _TOTAL_",
+                        "emptyTable": "Keine Daten",
+                        "infoEmpty": "0 von 0 Einträgen",
+                        "infoFiltered": "(von _MAX_ insgesamt)",
+                        "lengthMenu": "_MENU_ anzeigen",
+                        "loadingRecords": "Lade...",
+                        "zeroRecords": "Keine passenden Datensätze gefunden",
+                        "thousands": ".",
+                        "paginate": {
+                            "first": "<<",
+                            "last": ">>",
+                            "next": ">",
+                            "previous": "<"
+                        },
+                    },
+                    ';
+                }
+            }
+
+            ?>
+        });
+    });
 </script>

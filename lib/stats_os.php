@@ -57,11 +57,9 @@ class stats_os
     public function get_list()
     {
         $addon = rex_addon::get('statistics');
-        $list = rex_list::factory('SELECT os, COUNT(os) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY os ORDER BY count DESC', 5);
+        $list = rex_list::factory('SELECT os, COUNT(os) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY os ORDER BY count DESC');
         $list->setColumnLabel('os', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));
-        $list->setColumnSortable('os', $direction = 'asc');
-        $list->setColumnSortable('count', $direction = 'asc');
 
         return $list->get();
     }

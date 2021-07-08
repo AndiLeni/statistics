@@ -58,12 +58,18 @@ class stats_hour
     public function get_list()
     {
         $addon = rex_addon::get('statistics');
-        $list = rex_list::factory('SELECT hour, COUNT(hour) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY hour ORDER BY count DESC', 5);
+        $list = rex_list::factory('SELECT hour, COUNT(hour) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY hour ORDER BY count DESC');
         $list->setColumnLabel('hour', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));
-        $list->setColumnSortable('hour', $direction = 'asc');
-        $list->setColumnSortable('count', $direction = 'asc');
-        $list->setColumnFormat('hour', 'sprintf', '###hour### Uhr');
+        $list->setColumnFormat('hour', 'custom',  function ($params) {
+
+            $hour = $params['value'];
+            if (strlen($hour) == 1) {
+                return '0' . $hour . ' Uhr';
+            } else {
+                return $hour . ' Uhr';
+            }
+        });
 
         return $list->get();
     }

@@ -24,6 +24,7 @@ Persönlichen Daten (z.B. die IP Adresse des Besuchers) werden nur gehasht gespe
 
 Die IP Adresse wird genutzt, um ein wiederholtes Aufrufen von Seiten nicht in die Statistik einfließen zu lassen.
 
+## Plugins_
 
 ### Medien-Tracking:
 Um Aufrufe von Medien (Bilder, Dokumente, etc.) zu loggen muss das Plugin "Media" aktiviert werden.
@@ -36,10 +37,15 @@ Dieses kann auf zwei Arten verwendet werden:
    Dieser wird einfach als weiterer Effekt hinzugefügt und erfasst dann nur die Medien die tatsächlich für die Statistik interessant sind.
 
 
+### API (Kampagnen):
+Dieses Plugin erlaubt es, einen API Request zu nutzen um im Frontend ein bestimmtes Ereigniss zu tracken (beispielsweise das Anklicken eines Links oder das Absenden eines Formulars).
+
+
+
 ## Installation:
 
 Das Repository herunterladen und im Ordner `redaxo > src > addons` entpacken.  
-Danach den Ordner `statistics` umbenennen.  
+Danach den Ordner in `statistics` umbenennen.  
 
 
 ## Einstellungen:
@@ -64,6 +70,7 @@ Der Ausgegebene Text kann dann nach Belieben gestaltet werden.
 
 
 ### Download-Counter:
+> Benötigt das Plugin "Media"
 1. Im Media Manager einen neuen Medientyp anlegen mit dem Namen "log"
 2. Zu diesem den Effekt "Datei in Statistik loggen" hinzufügen
 3. Ein Modul anlegen  
@@ -100,6 +107,28 @@ Der Ausgegebene Text kann dann nach Belieben gestaltet werden.
 5. Das Beipiel erzeugt dann eine solche Tabelle:  
    ![Beispiel1](./preview/6.png "Beispiel1")
    Klickt der Besucher auf den Link "Download" wird dieser Aufruf in der Statistik gespeichert.
+
+
+### Kampagnen-Tracking:
+Ziel: Das Klicken eines Links im Frontend soll erfasst werden.
+> Benötigt das Plugin "API"
+1. Ein Modul anlegen
+   Eingabe:
+   ```html
+    <label>Kampagnen-Name:</label>
+    <input type="text" name="REX_INPUT_VALUE[1]" value="REX_VALUE[1]">
+   ```
+
+   Ausgabe:
+   ```html
+    <a class="btn btn-primary" onclick="myFunction()" href="http://example.com/">Link</a>
+
+    <script>
+    function myFunction() {
+        fetch('/?rex-api-call=stats&name=REX_VALUE[1]');
+    }
+    </script>
+   ```
 
 
 ## Preview:
