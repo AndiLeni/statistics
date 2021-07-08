@@ -34,21 +34,21 @@ $sum_per_page_values = json_encode($sum_per_page_values);
 
 
 // search form
-$form = '
-<form class="form-inline" action="' . rex_url::backendPage('statistics/pages') . '" method="GET">
-    <input type="hidden" value="statistics/pages" name="page">
-    <div class="form-group">
-        <label for="exampleInputName2">' . $this->i18n('statistics_search_for') . '</label>
-        <input style="line-height: normal;" type="text" value="' . $search_string . '" class="form-control" name="search_string">
-    </div>
-    <button type="submit" class="btn btn-default">' . $this->i18n('statistics_search') . '</button>
-</form>
-';
+// $form = '
+// <form class="form-inline" action="' . rex_url::backendPage('statistics/pages') . '" method="GET">
+//     <input type="hidden" value="statistics/pages" name="page">
+//     <div class="form-group">
+//         <label for="exampleInputName2">' . $this->i18n('statistics_search_for') . '</label>
+//         <input style="line-height: normal;" type="text" value="' . $search_string . '" class="form-control" name="search_string">
+//     </div>
+//     <button type="submit" class="btn btn-default">' . $this->i18n('statistics_search') . '</button>
+// </form>
+// ';
 
-$fragment = new rex_fragment();
-$fragment->setVar('title', $this->i18n('statistics_views_per_day'));
-$fragment->setVar('body', $form, false);
-echo $fragment->parse('core/page/section.php');
+// $fragment = new rex_fragment();
+// $fragment->setVar('title', $this->i18n('statistics_views_per_day'));
+// $fragment->setVar('body', $form, false);
+// echo $fragment->parse('core/page/section.php');
 
 
 
@@ -104,15 +104,15 @@ if ($request_url != '' && !$ignore_page) {
     $fragment->setVar('title', 'Details für:');
     $fragment->setVar('heading', $request_url);
     $fragment->setVar('body', '<h4>' . $this->i18n('statistics_views_total') . ' <b>' . $pagedetails->get_page_total() . '</b></h4>', false);
-    $fragment->setVar('content', $content, false);
+    $fragment->setVar('body', $content, false);
     echo $fragment->parse('core/page/section.php');
 }
 
 
 if ($search_string == '') {
-    $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC, url ASC');
+    $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC, url ASC', 500);
 } else {
-    $list = rex_list::factory('SELECT url, COUNT(url) as "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url LIKE "%' . $search_string . '%" GROUP BY url ORDER BY count DESC, url ASC');
+    $list = rex_list::factory('SELECT url, COUNT(url) as "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url LIKE "%' . $search_string . '%" GROUP BY url ORDER BY count DESC, url ASC', 500);
 }
 
 
@@ -122,18 +122,22 @@ $list->setColumnParams('url', ['url' => '###url###']);
 
 $list->addColumn('edit', $this->i18n('statistics_ignore_and_delete'));
 $list->setColumnLabel('edit', $this->i18n('statistics_ignore'));
-$list->addLinkAttribute('edit', 'data-confirm', $this->i18n('statistics_confirm_ignore_delete'));
+$list->addLinkAttribute('edit', 'data-confirm', '###url###:' . PHP_EOL . $this->i18n('statistics_confirm_ignore_delete'));
 $list->setColumnParams('edit', ['url' => '###url###', 'ignore_page' => true]);
+$list->addFormAttribute('style', 'margin-top: 3rem');
+$list->addTableAttribute('class', 'table-bordered');
 
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('statistics_sum_per_page'));
-$fragment->setVar('content', '<div id="chart_visits_per_page"></div>' . $list->get(), false);
+$fragment->setVar('body', '<div id="chart_visits_per_page"></div>' . $list->get(), false);
 echo $fragment->parse('core/page/section.php');
 
 ?>
 
 <script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('plotly.min.js') ?>"></script>
+<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.js') ?>"></script>
+<link rel="stylesheet" href="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.css') ?>">
 
 <script>
     var config = {
@@ -193,4 +197,44 @@ echo $fragment->parse('core/page/section.php');
 
 
     ?>
+
+    $(document).ready(function() {
+        $('.table').DataTable({
+            "paging": true,
+            "pageLength": 20,
+            "lengthChange": true,
+            "lengthMenu": [ [10, 20, 50, 100, 200, -1], [10, 20, 50, 100, 200, 'All'] ],
+            "search": {
+                "caseInsensitive": false
+            },
+            <?php
+
+            if (trim(rex::getUser()->getLanguage()) == '' || trim(rex::getUser()->getLanguage()) == 'de_de') {
+                if (rex::getProperty('lang') == 'de_de') {
+                    echo '
+                    language: {
+                        "search": "Suchen:",
+                        "decimal": ",",
+                        "info": "Einträge _START_-_END_ von _TOTAL_",
+                        "emptyTable": "Keine Daten",
+                        "infoEmpty": "0 von 0 Einträgen",
+                        "infoFiltered": "(von _MAX_ insgesamt)",
+                        "lengthMenu": "_MENU_ anzeigen",
+                        "loadingRecords": "Lade...",
+                        "zeroRecords": "Keine passenden Datensätze gefunden",
+                        "thousands": ".",
+                        "paginate": {
+                            "first": "<<",
+                            "last": ">>",
+                            "next": ">",
+                            "previous": "<"
+                        },
+                    },
+                    ';
+                }
+            }
+
+            ?>
+        });
+    });
 </script>

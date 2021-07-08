@@ -143,8 +143,12 @@ Ziel: Das Klicken eines Links im Frontend soll erfasst werden.
 ![Preview](./preview/5.png "Preview")
 ![Preview](./preview/7.png "Preview")
 
-### Einstellungen:
-![Preview](./preview/3.png "Preview")
+### Verweise:
+![Preview](./preview/8.png "Preview")
+
+### API / Kampagnen:
+![Preview](./preview/9.png "Preview")
+
 
 ### Integration in das Addon https://github.com/yakamara/dashboard
 ![Preview](./preview/4.png "Preview")

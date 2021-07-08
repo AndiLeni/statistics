@@ -39,43 +39,46 @@ if ($search_string == '') {
 }
 
 
-$form = '
-<form class="form-inline" action="' . rex_url::currentBackendPage() . '" method="GET">
-    <input type="hidden" value="statistics/api/campaigns" name="page">
-    <div class="form-group">
-        <label for="exampleInputName2">' . $this->i18n('statistics_api_search_for') . '</label>
-        <input style="line-height: normal;" type="text" value="' . $search_string . '" class="form-control" name="search_string">
-    </div>
-    <button type="submit" class="btn btn-default">' . $this->i18n('statistics_api_search') . '</button>
-</form>
-';
+// $form = '
+// <form class="form-inline" action="' . rex_url::currentBackendPage() . '" method="GET">
+//     <input type="hidden" value="statistics/api/campaigns" name="page">
+//     <div class="form-group">
+//         <label for="exampleInputName2">' . $this->i18n('statistics_api_search_for') . '</label>
+//         <input style="line-height: normal;" type="text" value="' . $search_string . '" class="form-control" name="search_string">
+//     </div>
+//     <button type="submit" class="btn btn-default">' . $this->i18n('statistics_api_search') . '</button>
+// </form>
+// ';
 
 
-$fragment = new rex_fragment();
-$fragment->setVar('title', $this->i18n('statistics_api_filter'));
-$fragment->setVar('body', $form, false);
-echo $fragment->parse('core/page/section.php');
+// $fragment = new rex_fragment();
+// $fragment->setVar('title', $this->i18n('statistics_api_filter'));
+// $fragment->setVar('body', $form, false);
+// echo $fragment->parse('core/page/section.php');
 
 
 $list->setColumnLabel('name', $this->i18n('statistics_api_name'));
 $list->setColumnLabel('count', $this->i18n('statistics_api_count'));
-$list->setColumnSortable('name', $direction = 'asc');
-$list->setColumnSortable('count', $direction = 'asc');
+// $list->setColumnSortable('name', $direction = 'asc');
+// $list->setColumnSortable('count', $direction = 'asc');
 $list->setColumnParams('name', ['name' => '###name###']);
 
 $list->addColumn('edit', $this->i18n('statistics_api_delete'));
 $list->setColumnLabel('edit', $this->i18n('statistics_api_delete'));
-$list->addLinkAttribute('edit', 'data-confirm', $this->i18n('statistics_api_delete_confirm'));
+$list->addLinkAttribute('edit', 'data-confirm', '###name###' . PHP_EOL . $this->i18n('statistics_api_delete_confirm'));
 $list->setColumnParams('edit', ['name' => '###name###', 'delete_entry' => true]);
+$list->addTableAttribute('class', 'table-bordered');
 
 $fragment2 = new rex_fragment();
 $fragment2->setVar('title', $this->i18n('statistics_api_campaign_views'));
-$fragment2->setVar('content', $list->get(), false);
+$fragment2->setVar('body', $list->get(), false);
 echo $fragment2->parse('core/page/section.php');
 
 ?>
 
 <script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('plotly.min.js') ?>"></script>
+<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.js') ?>"></script>
+<link rel="stylesheet" href="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.css') ?>">
 
 <script>
     var config = {
@@ -109,6 +112,48 @@ echo $fragment2->parse('core/page/section.php');
         }], layout, config);';
     }
 
-
     ?>
+
+    $(document).ready(function() {
+        $('.table').DataTable({
+            "paging": true,
+            "pageLength": 20,
+            "lengthChange": true,
+            "lengthMenu": [
+                [10, 20, 50, 100, 200, -1],
+                [10, 20, 50, 100, 200, 'All']
+            ],
+            "search": {
+                "caseInsensitive": false
+            },
+            <?php
+
+            if (trim(rex::getUser()->getLanguage()) == '' || trim(rex::getUser()->getLanguage()) == 'de_de') {
+                if (rex::getProperty('lang') == 'de_de') {
+                    echo '
+                    language: {
+                        "search": "Suchen:",
+                        "decimal": ",",
+                        "info": "Einträge _START_-_END_ von _TOTAL_",
+                        "emptyTable": "Keine Daten",
+                        "infoEmpty": "0 von 0 Einträgen",
+                        "infoFiltered": "(von _MAX_ insgesamt)",
+                        "lengthMenu": "_MENU_ anzeigen",
+                        "loadingRecords": "Lade...",
+                        "zeroRecords": "Keine passenden Datensätze gefunden",
+                        "thousands": ".",
+                        "paginate": {
+                            "first": "<<",
+                            "last": ">>",
+                            "next": ">",
+                            "previous": "<"
+                        },
+                    },
+                    ';
+                }
+            }
+
+            ?>
+        });
+    });
 </script>

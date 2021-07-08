@@ -106,12 +106,11 @@ class stats_pagedetails
      */
     public function get_list()
     {
-        $list = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = "' . $this->url . '" GROUP BY date ORDER BY count DESC');
+        $list = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = "' . $this->url . '" GROUP BY date ORDER BY count DESC', 500);
         $list->setColumnLabel('date', 'Datum');
         $list->setColumnLabel('count', 'Anzahl');
-        $list->setColumnSortable('date', $direction = 'desc');
-        $list->setColumnSortable('count', $direction = 'desc');
         $list->setColumnParams('url', ['url' => '###url###']);
+        $list->addTableAttribute('class', 'table-bordered');
 
         return $list->get();
     }
