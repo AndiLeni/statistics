@@ -25,7 +25,7 @@ if ($request_date_end == '' || $request_date_start == '') {
     $min_date = new DateTime($request_date_start);
 
     if ($min_date > $max_date) {
-        echo '<div class="alert alert-danger">' . $this->i18n('statistics_dates') . '</div>';
+        echo rex_view::error($this->i18n('statistics_dates'));
         $min_date = new DateTime();
         $max_date = new DateTime();
         $max_date->modify('+1 day');
@@ -118,10 +118,8 @@ $hour_data = $hour->get_data();
 
 
 <?php
-if (!isset($sum_per_day_labels)) {
-    echo '<div class="alert alert-danger">';
-    echo '<p>' . $this->i18n('statistics_no_data') . '</p>';
-    echo '</div>';
+if ($sum_per_day_labels == "[]") {
+    echo rex_view::error($this->i18n('statistics_no_data'));
 }
 
 

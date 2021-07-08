@@ -8,7 +8,7 @@ if (rex_request_method() == 'post') {
     if ($function == 'delete_media') {
         $sql = rex_sql::factory();
         $sql->setQuery('delete from ' . rex::getTable('pagestats_media'));
-        echo '<div class="alert alert-success">Es wurden '. $sql->getRows() .' Einträge aus der Tabelle media gelöscht.</div>';
+        echo rex_view::success('Es wurden '. $sql->getRows() .' Einträge aus der Tabelle media gelöscht.</div>');
     }
 
 }

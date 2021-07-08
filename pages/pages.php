@@ -60,7 +60,7 @@ if ($request_url != '' && $ignore_page === true) {
 
     $sql = rex_sql::factory();
     $sql->setQuery('delete from ' . rex::getTable('pagestats_dump') . ' where url = :url', ['url' => $request_url]);
-    echo '<div class="alert alert-success">Es wurden ' . $sql->getRows() . ' Einträge gelöscht. Die Url <code>' . $request_url . '</code> wird zukünftig ignoriert.</div>';
+    echo rex_view::success('Es wurden ' . $sql->getRows() . ' Einträge gelöscht. Die Url <code>' . $request_url . '</code> wird zukünftig ignoriert.');
 }
 
 if ($request_url != '' && !$ignore_page) {

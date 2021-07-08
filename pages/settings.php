@@ -8,23 +8,28 @@ if (rex_request_method() == 'post') {
     if ($function == 'delete_hash') {
         $sql = rex_sql::factory();
         $sql->setQuery('delete from ' . rex::getTable('pagestats_hash'));
-        echo '<div class="alert alert-success">' . $sql->getRows() . ' ' . $this->i18n('statistics_deleted_hashes') . '</div>';
+        echo rex_view::success($sql->getRows() . ' ' . $this->i18n('statistics_deleted_hashes'));
+        
     } elseif ($function == 'delete_dump') {
         $sql = rex_sql::factory();
         $sql->setQuery('delete from ' . rex::getTable('pagestats_dump'));
-        echo '<div class="alert alert-success">' . $sql->getRows() . ' ' . $this->i18n('statistics_deleted_dump') . '</div>';
+        echo rex_view::success($sql->getRows() . ' ' . $this->i18n('statistics_deleted_dump'));
+        
     } elseif ($function == 'delete_media') {
         $sql = rex_sql::factory();
         $sql->setQuery('delete from ' . rex::getTable('pagestats_media'));
-        echo '<div class="alert alert-success">' . $sql->getRows() . ' ' . $this->i18n('statistics_deleted_bots') . '</div>';
+        echo rex_view::success($sql->getRows() . ' ' . $this->i18n('statistics_deleted_bots'));
+        
     } elseif ($function == 'delete_bot') {
         $sql = rex_sql::factory();
         $sql->setQuery('delete from ' . rex::getTable('pagestats_bot'));
-        echo '<div class="alert alert-success">' . $sql->getRows() . ' ' . $this->i18n('statistics_deleted_referer') . '</div>';
+        echo rex_view::success($sql->getRows() . ' ' . $this->i18n('statistics_deleted_referer'));
+        
     } elseif ($function == 'delete_referer') {
         $sql = rex_sql::factory();
         $sql->setQuery('delete from ' . rex::getTable('pagestats_referer'));
-        echo '<div class="alert alert-success">' . $sql->getRows() . ' ' . $this->i18n('statistics_deleted_media') . '</div>';
+        echo rex_view::success($sql->getRows() . ' ' . $this->i18n('statistics_deleted_media'));
+        
     }
 }
 
