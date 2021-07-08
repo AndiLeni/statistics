@@ -230,7 +230,7 @@ $list->setColumnLabel('producer', $this->i18n('statistics_producer'));
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', 'Bots:');
-$fragment->setVar('content', '<div id="chart_hour"></div>' . $list->get(), false);
+$fragment->setVar('body', '<div id="chart_hour"></div>' . $list->get(), false);
 echo $fragment->parse('core/page/section.php');
 
 ?>
