@@ -13,3 +13,4 @@ statistics_api_enable_campaigns_note = Aktiviert das tracken von API Aufrufen
 statistics_api_delete_api = Alle API Aufrufe löschen
 statistics_api_delete_api_confirm = Möchten Sie wirklich alle API Aufrufe und Kampagnen löschen?
 statistics_api_delete = Löschen
+statistics_api_delete_confirm = Wirklich alle Einträge für diese Kampagne löschen?

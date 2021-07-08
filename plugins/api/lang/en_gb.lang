@@ -13,3 +13,4 @@ statistics_api_enable_campaigns_note = Enable tracking of API calls
 statistics_api_delete_api = Delete all API calls
 statistics_api_delete_api_confirm = Do you really want to delete all API calls and campaigns?
 statistics_api_delete = Delete
+statistics_api_delete_confirm = Really delete all entries for this campaign?
