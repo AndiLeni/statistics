@@ -21,6 +21,8 @@ page:
       title: 'translate:statistics_settings'
       perm: admin
       icon: rex-icon fa-cog
+    help:
+      { title: 'translate:statistics_help', icon: rex-icon fa-info-circle, itemclass: pull-right}
 
 requires:
   redaxo: '^5.11'

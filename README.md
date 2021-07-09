@@ -24,7 +24,7 @@ Persönlichen Daten (z.B. die IP Adresse des Besuchers) werden nur gehasht gespe
 
 Die IP Adresse wird genutzt, um ein wiederholtes Aufrufen von Seiten nicht in die Statistik einfließen zu lassen.
 
-## Plugins_
+## Plugins:
 
 ### Medien-Tracking:
 Um Aufrufe von Medien (Bilder, Dokumente, etc.) zu loggen muss das Plugin "Media" aktiviert werden.
@@ -70,7 +70,8 @@ Der Ausgegebene Text kann dann nach Belieben gestaltet werden.
 
 
 ### Download-Counter:
-> Benötigt das Plugin "Media"
+> Benötigt das Plugin "Media"  
+
 1. Im Media Manager einen neuen Medientyp anlegen mit dem Namen "log"
 2. Zu diesem den Effekt "Datei in Statistik loggen" hinzufügen
 3. Ein Modul anlegen  
@@ -112,6 +113,7 @@ Der Ausgegebene Text kann dann nach Belieben gestaltet werden.
 ### Kampagnen-Tracking:
 Ziel: Das Klicken eines Links im Frontend soll erfasst werden.
 > Benötigt das Plugin "API"
+
 1. Ein Modul anlegen
    Eingabe:
    ```html

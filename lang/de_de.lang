@@ -62,3 +62,4 @@ statistics_deleted_dump = Einträge aus der Tabelle dump gelöscht.
 statistics_deleted_bots = Einträge aus der Tabelle media gelöscht.
 statistics_deleted_referer = Einträge aus der Tabelle bot gelöscht.
 statistics_deleted_media = Einträge aus der Tabelle referer gelöscht.
+statistics_help = Hilfe

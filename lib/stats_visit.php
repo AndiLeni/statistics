@@ -21,6 +21,7 @@ class stats_visit
     const IGNORE_WHEN_CONTAINS = [
         'rex_version=1',
         'search_it_build_index',
+        'rex-api-call',
     ];
 
     const IGNORE_WHEN_ENDS = [
