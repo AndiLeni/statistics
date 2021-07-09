@@ -1,3 +1,11 @@
+<style>
+    .my-0 {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+</style>
+
+
 <?php
 
 
@@ -63,6 +71,31 @@ $sum_per_day_values = json_encode(array_values($data));
 
 
 
+$list_dates = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY date ORDER BY count DESC', 500);
+$list_dates->setColumnLabel('date', 'Datum');
+$list_dates->setColumnLabel('count', 'Anzahl');
+$list_dates->setColumnParams('url', ['url' => '###url###']);
+$list_dates->addTableAttribute('class', 'table-bordered');
+
+
+
+
+// views total
+$views_total = $sql->setQuery('SELECT count(*) as "count" from ' . rex::getTable('pagestats_dump'));
+$views_total = $views_total->getValue('count');
+
+$views_today = $sql->setQuery('SELECT count(*) as "count" from ' . rex::getTable('pagestats_dump') . ' where date = :date', ['date' => date('Y-m-d')]);
+$views_today = $views_today->getValue('count');
+
+$table = '
+    <p class="h3 my-0">' . $this->i18n('statistics_today') . ' : <b>' . $views_today . '</b></p>
+    <hr>
+    <p class="h3 my-0">' . $this->i18n('statistics_total') . ' : <b>' . $views_total . '</b></p>
+';
+
+$fragment_views_total = new rex_fragment();
+$fragment_views_total->setVar('title', $this->i18n('statistics_pages'));
+$fragment_views_total->setVar('body', $table, false);
 
 
 
@@ -92,26 +125,36 @@ $hour_data = $hour->get_data();
 
 
 <script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('plotly.min.js') ?>"></script>
-<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.js') ?>"></script>
+<!-- <script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.js') ?>"></script> -->
+<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.js') ?>"></script>
 <link rel="stylesheet" href="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.css') ?>">
 
 
 
-<div class="panel panel-default">
-    <div class="panel-heading"><?php echo $this->i18n('statistics_filter_date') ?></div>
-    <div class="panel-body">
-        <form class="form-inline" action="<?php echo rex_url::backendPage('statistics/settings') ?>" method="GET">
-            <input type="hidden" value="statistics/stats" name="page">
-            <div class="form-group">
-                <label for="exampleInputName2"><?php echo $this->i18n('statistics_startdate') ?></label>
-                <input style="line-height: normal;" type="date" value="<?php echo $request_date_start ? $request_date_start : $min_date->format('Y-m-d') ?>" class="form-control" name="date_start">
+
+
+<div class="row">
+    <div class="col-12 col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading"><?php echo $this->i18n('statistics_filter_date') ?></div>
+            <div class="panel-body">
+                <form class="form-inline" action="<?php echo rex_url::backendPage('statistics/settings') ?>" method="GET">
+                    <input type="hidden" value="statistics/stats" name="page">
+                    <div class="form-group">
+                        <label for="exampleInputName2"><?php echo $this->i18n('statistics_startdate') ?></label>
+                        <input style="line-height: normal;" type="date" value="<?php echo $request_date_start ? $request_date_start : $min_date->format('Y-m-d') ?>" class="form-control" name="date_start">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2"><?php echo $this->i18n('statistics_enddate') ?></label>
+                        <input style="line-height: normal;" value="<?php echo $request_date_end ? $request_date_end : $max_date->format('Y-m-d') ?>" type="date" class="form-control" name="date_end">
+                    </div>
+                    <button type="submit" class="btn btn-default"><?php echo $this->i18n('statistics_filter') ?></button>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="exampleInputEmail2"><?php echo $this->i18n('statistics_enddate') ?></label>
-                <input style="line-height: normal;" value="<?php echo $request_date_end ? $request_date_end : $max_date->format('Y-m-d') ?>" type="date" class="form-control" name="date_end">
-            </div>
-            <button type="submit" class="btn btn-default"><?php echo $this->i18n('statistics_filter') ?></button>
-        </form>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <?php echo $fragment_views_total->parse('core/page/section.php'); ?>
     </div>
 </div>
 
@@ -122,10 +165,14 @@ if ($sum_per_day_labels == "[]") {
     echo rex_view::error($this->i18n('statistics_no_data'));
 }
 
+$fragment_collapse = new rex_fragment();
+$fragment_collapse->setVar('title', $this->i18n('statistics_views_per_day'));
+$fragment_collapse->setVar('content', $list_dates->get(), false);
+// echo $fragment_collapse->parse('collapse.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('statistics_views_per_day'));
-$fragment->setVar('content', '<div id="chart_visits"></div>', false);
+$fragment->setVar('body', '<div id="chart_visits"></div>' . $fragment_collapse->parse('collapse.php'), false);
 echo $fragment->parse('core/page/section.php');
 ?>
 
@@ -307,15 +354,7 @@ echo $fragment->parse('core/page/section.php');
     }], layout, config);
 
 
-    const datatable_config = {
-        paging: false,
-        pageLength: 5,
-        "search": {
-            "caseInsensitive": false
-        }
-    }
-
-    $(document).ready(function() {
+    $(document).on('rex:ready', function() {
         $('.table').DataTable({
             "paging": true,
             "pageLength": 5,
@@ -325,7 +364,7 @@ echo $fragment->parse('core/page/section.php');
                 "caseInsensitive": false
             },
             <?php
-    	    
+
             if (trim(rex::getUser()->getLanguage()) == '' || trim(rex::getUser()->getLanguage()) == 'de_de') {
                 if (rex::getProperty('lang') == 'de_de') {
                     echo '

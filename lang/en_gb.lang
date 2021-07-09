@@ -65,3 +65,6 @@ statistics_deleted_bots = entries deleted from the media table.
 statistics_deleted_referer = entries deleted from table bot.
 statistics_deleted_media = entries deleted from table referer.
 statistics_help = Help
+statistics_today = Today
+statistics_total = Total
+statistics_toggle_collapse_table = Toggle table
