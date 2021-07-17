@@ -84,6 +84,7 @@ echo $fragment2->parse('core/page/section.php');
             scale: 1,
         },
         displaylogo: false,
+        displayModeBar: true,
     }
     var layout = {
         margin: {
