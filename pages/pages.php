@@ -137,6 +137,7 @@ echo $fragment->parse('core/page/section.php');
 
 <script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('plotly.min.js') ?>"></script>
 <script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.js') ?>"></script>
+<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('statistics.js') ?>"></script>
 <link rel="stylesheet" href="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.css') ?>">
 
 <script>
