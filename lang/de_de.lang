@@ -66,3 +66,7 @@ statistics_help = Hilfe
 statistics_today = Heute
 statistics_total = Insgesamt
 statistics_toggle_collapse_table = Tabelle umschalten
+statistics_log_404 = Alle Aufrufe loggen:
+statistics_yes = Ja
+statistics_no = Nein
+statistics_log_404_note = Dadurch werden auch Aufrufe mit einem Statuscode != 200 geloggt.

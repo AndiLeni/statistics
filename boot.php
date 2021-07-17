@@ -33,52 +33,66 @@ if (rex::isBackend() && rex_addon::get('dashboard')->isAvailable()) {
 // do actions after content is delivered
 rex_extension::register('RESPONSE_SHUTDOWN', function () {
 
-    require_once __DIR__ . '/vendors/autoload.php';
+    if (!rex::isBackend()) {
 
-    // get ip from visitor, set to 0.0.0.0 when ip can not be determined
-    $whip = new Whip();
-    $clientAddress = $whip->getValidIpAddress();
-    $clientAddress = $clientAddress ? $clientAddress : '0.0.0.0';
+        require_once __DIR__ . '/vendors/autoload.php';
 
-    // page url
-    $url = $_SERVER['REQUEST_URI'];
+        $addon = rex_addon::get('statistics');
+        $log_all = $addon->getConfig('statistics_log_all');
 
-    // user agent
-    $userAgent = $_SERVER['HTTP_USER_AGENT'];
-
-    $visit = new stats_visit($clientAddress, $url, $userAgent);
+        $response_code = rex_response::getStatus();
 
 
-    // Track only frontend requests if page url should not be ignored
-    if (!rex::isBackend() && !$visit->ignore_visit()) {
+        // check responsecode and if non-200 requests should be logged
+        if ($response_code == '200 OK' || $log_all) {
 
-        // visit is not a media request, hence either bot or human visitor
 
-        // parse useragent
-        $visit->parse_ua();
+            // get ip from visitor, set to 0.0.0.0 when ip can not be determined
+            $whip = new Whip();
+            $clientAddress = $whip->getValidIpAddress();
+            $clientAddress = $clientAddress ? $clientAddress : '0.0.0.0';
 
-        if ($visit->is_bot()) {
+            // page url
+            $url = $_SERVER['REQUEST_URI'];
 
-            // visitor is a bot
-            $visit->save_bot();
-        } else {
+            // user agent
+            $userAgent = $_SERVER['HTTP_USER_AGENT'];
 
-            if ($visit->save_visit()) {
+            $visit = new stats_visit($clientAddress, $url, $userAgent);
 
-                // visitor is human
-                // check hash with save_visit, if true then save visit
 
-                // check if referer exists, if yes safe it
-                if (isset($_SERVER['HTTP_REFERER'])) {
-                    $referer = $_SERVER['HTTP_REFERER'];
+            // Track only frontend requests if page url should not be ignored
+            if (!rex::isBackend() && !$visit->ignore_visit()) {
 
-                    if (!str_starts_with($referer, rex::getServer())) {
-                        $visit->save_referer($referer);
+                // visit is not a media request, hence either bot or human visitor
+
+                // parse useragent
+                $visit->parse_ua();
+
+                if ($visit->is_bot()) {
+
+                    // visitor is a bot
+                    $visit->save_bot();
+                } else {
+
+                    if ($visit->save_visit()) {
+
+                        // visitor is human
+                        // check hash with save_visit, if true then save visit
+
+                        // check if referer exists, if yes safe it
+                        if (isset($_SERVER['HTTP_REFERER'])) {
+                            $referer = $_SERVER['HTTP_REFERER'];
+
+                            if (!str_starts_with($referer, rex::getServer())) {
+                                $visit->save_referer($referer);
+                            }
+                        }
+
+
+                        $visit->persist();
                     }
                 }
-
-
-                $visit->persist();
             }
         }
     }

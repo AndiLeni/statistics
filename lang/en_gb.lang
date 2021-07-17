@@ -68,3 +68,7 @@ statistics_help = Help
 statistics_today = Today
 statistics_total = Total
 statistics_toggle_collapse_table = Toggle table
+statistics_log_404 = Log all calls:
+statistics_yes = Yes
+statistics_no = No
+statistics_log_404_note = This will also log calls with a status code != 200.
