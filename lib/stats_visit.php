@@ -115,6 +115,7 @@ class stats_visit
         // check if visit should be ignored
         $ignored_paths = $this->addon->getConfig('pagestats_ignored_paths');
         $ignored_ips = $this->addon->getConfig('pagestats_ignored_ips');
+        $ignored_regex = $this->addon->getConfig('pagestats_ignored_regex');
 
         if (trim($ignored_ips != '')) {
             $ignored_ips = explode("\n", str_replace("\r", "", $ignored_ips));
@@ -154,6 +155,14 @@ class stats_visit
             }
         }
 
+        if (trim($ignored_regex != '')) {
+            $ignored_regex = explode(PHP_EOL, $ignored_regex);
+            foreach ($ignored_regex as $regex) {                
+                if (preg_match($regex, $this->url) === true) {
+                    return true;
+                }
+            }
+        }
 
         return false;
     }

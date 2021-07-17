@@ -70,3 +70,5 @@ statistics_log_404 = Alle Aufrufe loggen:
 statistics_yes = Ja
 statistics_no = Nein
 statistics_log_404_note = Dadurch werden auch Aufrufe mit einem Statuscode != 200 geloggt.
+pagestats_ignored_regex = Zu ignorierende REGEX:
+pagestats_ignored_regex_note = Ignoriert alle Aufrufe deren URL mit diesen REGEX-Ausdrücken matchen. HINWEIS: die Option für das Ignorieren von Pfaden ist schneller, da diese mit str_starts_with() arbeitet anstelle von preg_match()

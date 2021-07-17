@@ -72,3 +72,5 @@ statistics_log_404 = Log all calls:
 statistics_yes = Yes
 statistics_no = No
 statistics_log_404_note = This will also log calls with a status code != 200.
+pagestats_ignored_regex = REGEX to ignore:
+pagestats_ignored_regex_note = Ignore all calls whose URL match these REGEX expressions. NOTE: the option for ignoring paths is faster because it works with str_starts_with() instead of preg_match().

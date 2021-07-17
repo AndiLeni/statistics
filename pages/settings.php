@@ -59,6 +59,11 @@ $field3->setLabel($this->i18n('statistics_ignore_ips'));
 $field3->setNotice($this->i18n('statistics_ips_note'));
 
 
+$field3 = $form->addTextAreaField('pagestats_ignored_regex');
+$field3->setLabel($this->i18n('pagestats_ignored_regex'));
+$field3->setNotice($this->i18n('pagestats_ignored_regex_note'));
+
+
 $field4 = $form->addRadioField ('statistics_log_all');
 $field4->setLabel($this->i18n('statistics_log_404'));
 $field4->addOption ($this->i18n('statistics_yes'), true);
