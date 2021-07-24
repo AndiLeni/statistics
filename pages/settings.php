@@ -71,6 +71,13 @@ $field4->addOption ($this->i18n('statistics_no'), false);
 $field4->setNotice($this->i18n('statistics_log_404_note'));
 
 
+$field4 = $form->addRadioField ('statistics_scroll_pagination');
+$field4->setLabel($this->i18n('statistics_scroll_pagination'));
+$field4->addOption ($this->i18n('statistics_scroll_table'), 'table');
+$field4->addOption ($this->i18n('statistics_scroll_panel'), 'panel');
+$field4->addOption ($this->i18n('statistics_scroll_none'), 'none');
+
+
 $addon = rex_addon::get('statistics');
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'edit', false);

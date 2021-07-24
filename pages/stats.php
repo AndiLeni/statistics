@@ -125,15 +125,6 @@ $hour_data = $hour->get_data();
 ?>
 
 
-<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('plotly.min.js') ?>"></script>
-<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.js') ?>"></script>
-<!-- <script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('statistics.js') ?>"></script> -->
-<link rel="stylesheet" href="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.css') ?>">
-<link rel="stylesheet" href="<?php echo rex_addon::get('statistics')->getAssetsUrl('statistics.css') ?>">
-
-
-
-
 
 <div class="row">
     <div class="col-12 col-md-6">

@@ -37,3 +37,4 @@ default_config:
     pagestats_visit_duration: 30
     pagestats_chart_padding_bottom: 90
     statistics_log_all: true
+    statistics_scroll_pagination: 'none'
