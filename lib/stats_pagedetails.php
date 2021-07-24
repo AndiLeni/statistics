@@ -111,6 +111,7 @@ class stats_pagedetails
         $list->setColumnLabel('count', 'Anzahl');
         $list->setColumnParams('url', ['url' => '###url###']);
         $list->addTableAttribute('class', 'table-bordered');
+        $list->addTableAttribute('class', 'dt_order_first');
 
         return $list->get();
     }

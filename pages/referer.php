@@ -15,7 +15,6 @@ echo $fragment->parse('core/page/section.php');
 ?>
 
 <script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.js') ?>"></script>
-<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('statistics.js') ?>"></script>
 <link rel="stylesheet" href="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.css') ?>">
 <link rel="stylesheet" href="<?php echo rex_addon::get('statistics')->getAssetsUrl('statistics.css') ?>">
 
@@ -28,6 +27,9 @@ echo $fragment->parse('core/page/section.php');
             "lengthMenu": [
                 [10, 20, 50, 100, -1],
                 [10, 20, 50, 100, 'All']
+            ],
+            "order": [
+                [1, "desc"]
             ],
             "search": {
                 "caseInsensitive": false

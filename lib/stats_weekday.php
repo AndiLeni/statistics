@@ -155,6 +155,7 @@ class stats_weekday
                     break;
             }
         });
+        $list->addTableAttribute('class', 'dt_order_second');
 
         return $list->get();
     }

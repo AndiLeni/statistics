@@ -126,6 +126,7 @@ $list->addLinkAttribute('edit', 'data-confirm', '###url###:' . PHP_EOL . $this->
 $list->setColumnParams('edit', ['url' => '###url###', 'ignore_page' => true]);
 $list->addFormAttribute('style', 'margin-top: 3rem');
 $list->addTableAttribute('class', 'table-bordered');
+$list->addTableAttribute('class', 'dt_order_second');
 
 
 $fragment = new rex_fragment();
@@ -137,7 +138,6 @@ echo $fragment->parse('core/page/section.php');
 
 <script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('plotly.min.js') ?>"></script>
 <script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.js') ?>"></script>
-<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('statistics.js') ?>"></script>
 <link rel="stylesheet" href="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.css') ?>">
 
 <script>
@@ -201,11 +201,61 @@ echo $fragment->parse('core/page/section.php');
     ?>
 
     $(document).ready(function() {
-        $('.table').DataTable({
+        $('.dt_order_second').DataTable({
             "paging": true,
             "pageLength": 20,
             "lengthChange": true,
-            "lengthMenu": [ [10, 20, 50, 100, 200, -1], [10, 20, 50, 100, 200, 'All'] ],
+            "lengthMenu": [
+                [10, 20, 50, 100, 200, -1],
+                [10, 20, 50, 100, 200, 'All']
+            ],
+            "order": [
+                [1, "desc"]
+            ],
+            "search": {
+                "caseInsensitive": false
+            },
+            <?php
+
+            if (trim(rex::getUser()->getLanguage()) == '' || trim(rex::getUser()->getLanguage()) == 'de_de') {
+                if (rex::getProperty('lang') == 'de_de') {
+                    echo '
+                    language: {
+                        "search": "Suchen:",
+                        "decimal": ",",
+                        "info": "Einträge _START_-_END_ von _TOTAL_",
+                        "emptyTable": "Keine Daten",
+                        "infoEmpty": "0 von 0 Einträgen",
+                        "infoFiltered": "(von _MAX_ insgesamt)",
+                        "lengthMenu": "_MENU_ anzeigen",
+                        "loadingRecords": "Lade...",
+                        "zeroRecords": "Keine passenden Datensätze gefunden",
+                        "thousands": ".",
+                        "paginate": {
+                            "first": "<<",
+                            "last": ">>",
+                            "next": ">",
+                            "previous": "<"
+                        },
+                    },
+                    ';
+                }
+            }
+
+            ?>
+        });
+
+        $('.dt_order_first').DataTable({
+            "paging": true,
+            "pageLength": 20,
+            "lengthChange": true,
+            "lengthMenu": [
+                [10, 20, 50, 100, 200, -1],
+                [10, 20, 50, 100, 200, 'All']
+            ],
+            "order": [
+                [0, "desc"]
+            ],
             "search": {
                 "caseInsensitive": false
             },

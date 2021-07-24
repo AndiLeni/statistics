@@ -65,6 +65,7 @@ class stats_brand
         $list = rex_list::factory('SELECT brand, COUNT(brand) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY brand ORDER BY count DESC');
         $list->setColumnLabel('brand', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));
+        $list->addTableAttribute('class', 'dt_order_second');
 
         return $list->get();
     }

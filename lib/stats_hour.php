@@ -70,6 +70,7 @@ class stats_hour
                 return $hour . ' Uhr';
             }
         });
+        $list->addTableAttribute('class', 'dt_order_second');
 
         return $list->get();
     }

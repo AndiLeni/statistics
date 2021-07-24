@@ -63,6 +63,7 @@ class stats_browsertype
         $list = rex_list::factory('SELECT browsertype, COUNT(browsertype) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY browsertype ORDER BY count DESC');
         $list->setColumnLabel('browsertype', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));
+        $list->addTableAttribute('class', 'dt_order_second');
 
         return $list->get();
     }

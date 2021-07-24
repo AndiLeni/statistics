@@ -60,6 +60,7 @@ class stats_os
         $list = rex_list::factory('SELECT os, COUNT(os) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY os ORDER BY count DESC');
         $list->setColumnLabel('os', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));
+        $list->addTableAttribute('class', 'dt_order_second');
 
         return $list->get();
     }

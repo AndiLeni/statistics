@@ -76,6 +76,7 @@ $list_dates->setColumnLabel('date', 'Datum');
 $list_dates->setColumnLabel('count', 'Anzahl');
 $list_dates->setColumnParams('url', ['url' => '###url###']);
 $list_dates->addTableAttribute('class', 'table-bordered');
+$list_dates->addTableAttribute('class', 'dt_order_first');
 
 
 
@@ -126,7 +127,7 @@ $hour_data = $hour->get_data();
 
 <script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('plotly.min.js') ?>"></script>
 <script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.js') ?>"></script>
-<script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('statistics.js') ?>"></script>
+<!-- <script src="<?php echo rex_addon::get('statistics')->getAssetsUrl('statistics.js') ?>"></script> -->
 <link rel="stylesheet" href="<?php echo rex_addon::get('statistics')->getAssetsUrl('datatables.min.css') ?>">
 <link rel="stylesheet" href="<?php echo rex_addon::get('statistics')->getAssetsUrl('statistics.css') ?>">
 
@@ -275,6 +276,7 @@ $list->setColumnLabel('name', $this->i18n('statistics_name'));
 $list->setColumnLabel('count', $this->i18n('statistics_count'));
 $list->setColumnLabel('category', $this->i18n('statistics_category'));
 $list->setColumnLabel('producer', $this->i18n('statistics_producer'));
+$list->addTableAttribute('class', 'dt_order_default');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', 'Bots:');
@@ -357,7 +359,89 @@ echo $fragment->parse('core/page/section.php');
 
 
     $(document).on('rex:ready', function() {
-        $('.table').DataTable({
+        $('.dt_order_second').DataTable({
+            "paging": true,
+            "pageLength": 5,
+            "lengthChange": true,
+            "lengthMenu": [5, 10, 50, 100],
+            "order": [
+                [1, "desc"]
+            ],
+            "search": {
+                "caseInsensitive": false
+            },
+            <?php
+
+            if (trim(rex::getUser()->getLanguage()) == '' || trim(rex::getUser()->getLanguage()) == 'de_de') {
+                if (rex::getProperty('lang') == 'de_de') {
+                    echo '
+                    language: {
+                        "search": "Suchen:",
+                        "decimal": ",",
+                        "info": "Einträge _START_-_END_ von _TOTAL_",
+                        "emptyTable": "Keine Daten",
+                        "infoEmpty": "0 von 0 Einträgen",
+                        "infoFiltered": "(von _MAX_ insgesamt)",
+                        "lengthMenu": "_MENU_ anzeigen",
+                        "loadingRecords": "Lade...",
+                        "zeroRecords": "Keine passenden Datensätze gefunden",
+                        "thousands": ".",
+                        "paginate": {
+                            "first": "<<",
+                            "last": ">>",
+                            "next": ">",
+                            "previous": "<"
+                        },
+                    },
+                    ';
+                }
+            }
+
+            ?>
+        });
+
+        $('.dt_order_first').DataTable({
+            "paging": true,
+            "pageLength": 5,
+            "lengthChange": true,
+            "lengthMenu": [5, 10, 50, 100],
+            "order": [
+                [0, "desc"]
+            ],
+            "search": {
+                "caseInsensitive": false
+            },
+            <?php
+
+            if (trim(rex::getUser()->getLanguage()) == '' || trim(rex::getUser()->getLanguage()) == 'de_de') {
+                if (rex::getProperty('lang') == 'de_de') {
+                    echo '
+                    language: {
+                        "search": "Suchen:",
+                        "decimal": ",",
+                        "info": "Einträge _START_-_END_ von _TOTAL_",
+                        "emptyTable": "Keine Daten",
+                        "infoEmpty": "0 von 0 Einträgen",
+                        "infoFiltered": "(von _MAX_ insgesamt)",
+                        "lengthMenu": "_MENU_ anzeigen",
+                        "loadingRecords": "Lade...",
+                        "zeroRecords": "Keine passenden Datensätze gefunden",
+                        "thousands": ".",
+                        "paginate": {
+                            "first": "<<",
+                            "last": ">>",
+                            "next": ">",
+                            "previous": "<"
+                        },
+                    },
+                    ';
+                }
+            }
+
+            ?>
+        });
+
+        $('.dt_order_default').DataTable({
             "paging": true,
             "pageLength": 5,
             "lengthChange": true,

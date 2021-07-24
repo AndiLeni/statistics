@@ -60,6 +60,7 @@ class stats_model
         $list = rex_list::factory('SELECT model, COUNT(model) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY model ORDER BY count DESC');
         $list->setColumnLabel('model', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));
+        $list->addTableAttribute('class', 'dt_order_second');
 
         return $list->get();
     }
