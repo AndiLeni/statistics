@@ -156,7 +156,8 @@ class stats_visit
         }
 
         if (trim($ignored_regex != '')) {
-            $ignored_regex = explode(PHP_EOL, $ignored_regex);
+            $ignored_regex = explode("\n", str_replace("\r", "", $ignored_regex));
+
             foreach ($ignored_regex as $regex) {                
                 if (preg_match($regex, $this->url) === true) {
                     return true;
