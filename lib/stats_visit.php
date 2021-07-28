@@ -159,7 +159,7 @@ class stats_visit
             $ignored_regex = explode("\n", str_replace("\r", "", $ignored_regex));
 
             foreach ($ignored_regex as $regex) {                
-                if (preg_match($regex, $this->url) === true) {
+                if (preg_match($regex, $this->url) === 1) {
                     return true;
                 }
             }
