@@ -171,7 +171,7 @@ echo $fragment->parse('core/page/section.php');
 
 
 <div class="row">
-    <div class="col-12 col-md-6">
+    <div class="col-sm-12 col-lg-6">
         <?php
 
         $fragment = new rex_fragment();
@@ -182,7 +182,7 @@ echo $fragment->parse('core/page/section.php');
         ?>
 
     </div>
-    <div class="col-12 col-md-6">
+    <div class="col-sm-12 col-lg-6">
         <?php
 
         $fragment = new rex_fragment();
@@ -196,7 +196,7 @@ echo $fragment->parse('core/page/section.php');
 </div>
 
 <div class="row">
-    <div class="col-12 col-md-6">
+    <div class="col-sm-12 col-lg-6">
         <?php
 
         $fragment = new rex_fragment();
@@ -207,13 +207,13 @@ echo $fragment->parse('core/page/section.php');
         ?>
 
     </div>
-    <div class="col-12 col-md-6">
+    <div class="col-sm-12 col-lg-6">
 
     </div>
 </div>
 
 <div class="row">
-    <div class="col-12 col-md-6">
+    <div class="col-sm-12 col-lg-6">
         <?php
 
         $fragment = new rex_fragment();
@@ -224,7 +224,7 @@ echo $fragment->parse('core/page/section.php');
         ?>
 
     </div>
-    <div class="col-12 col-md-6">
+    <div class="col-sm-12 col-lg-6">
         <?php
 
         $fragment = new rex_fragment();
@@ -235,7 +235,7 @@ echo $fragment->parse('core/page/section.php');
         ?>
 
     </div>
-    <div class="col-12 col-md-6">
+    <div class="col-sm-12 col-lg-6">
         <?php
 
         $fragment = new rex_fragment();
@@ -246,7 +246,7 @@ echo $fragment->parse('core/page/section.php');
         ?>
 
     </div>
-    <div class="col-12 col-md-6">
+    <div class="col-sm-12 col-lg-6">
         <?php
 
         $fragment = new rex_fragment();
@@ -361,6 +361,17 @@ echo $fragment->parse('core/page/section.php');
             "search": {
                 "caseInsensitive": false
             },
+            drawCallback: function() {
+                var api = this.api();
+                var rowCount = api.rows({
+                    page: 'current'
+                }).count();
+
+                for (var i = 0; i < api.page.len() - (rowCount === 0 ? 1 : rowCount); i++) {
+                    $(this).append($("<tr><td>&nbsp;</td><td></td></tr>"));
+                }
+            },
+
             <?php
 
             if (trim(rex::getUser()->getLanguage()) == '' || trim(rex::getUser()->getLanguage()) == 'de_de') {
@@ -402,6 +413,17 @@ echo $fragment->parse('core/page/section.php');
             "search": {
                 "caseInsensitive": false
             },
+            drawCallback: function() {
+                var api = this.api();
+                var rowCount = api.rows({
+                    page: 'current'
+                }).count();
+
+                for (var i = 0; i < api.page.len() - (rowCount === 0 ? 1 : rowCount); i++) {
+                    $(this).append($("<tr><td>&nbsp;</td><td></td></tr>"));
+                }
+            },
+
             <?php
 
             if (trim(rex::getUser()->getLanguage()) == '' || trim(rex::getUser()->getLanguage()) == 'de_de') {
@@ -440,6 +462,7 @@ echo $fragment->parse('core/page/section.php');
             "search": {
                 "caseInsensitive": false
             },
+
             <?php
 
             if (trim(rex::getUser()->getLanguage()) == '' || trim(rex::getUser()->getLanguage()) == 'de_de') {
