@@ -74,13 +74,14 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () {
             $url = $_SERVER['REQUEST_URI'];
 
             // user agent
-            $userAgent = $_SERVER['HTTP_USER_AGENT'];
+            $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
             $visit = new stats_visit($clientAddress, $url, $userAgent);
 
 
             // Track only frontend requests if page url should not be ignored
-            if (!rex::isBackend() && !$visit->ignore_visit()) {
+            // ignore requests with empty user agent
+            if (!rex::isBackend() && $userAgent != '' && !$visit->ignore_visit()) {
 
                 // visit is not a media request, hence either bot or human visitor
 
