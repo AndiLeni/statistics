@@ -310,30 +310,35 @@ echo $fragment->parse('core/page/section.php');
         type: 'pie',
         labels: <?php echo $browser_data['labels'] ?>,
         values: <?php echo $browser_data['values'] ?>,
+        textposition: "inside",
     }], layout, config);
 
     chart_browsertype = Plotly.newPlot('chart_browsertype', [{
         type: 'pie',
         labels: <?php echo $browsertype_data['labels'] ?>,
         values: <?php echo $browsertype_data['values'] ?>,
+        textposition: "inside",
     }], layout, config);
 
     chart_os = Plotly.newPlot('chart_os', [{
         type: 'pie',
         labels: <?php echo $os_data['labels'] ?>,
         values: <?php echo $os_data['values'] ?>,
+        textposition: "inside",
     }], layout, config);
 
     chart_brand = Plotly.newPlot('chart_brand', [{
         type: 'pie',
         labels: <?php echo $brand_data['labels'] ?>,
         values: <?php echo $brand_data['values'] ?>,
+        textposition: "inside",
     }], layout, config);
 
     chart_model = Plotly.newPlot('chart_model', [{
         type: 'pie',
         labels: <?php echo $model_data['labels'] ?>,
         values: <?php echo $model_data['values'] ?>,
+        textposition: "inside",
     }], layout, config);
 
     chart_weekday = Plotly.newPlot('chart_weekday', [{
