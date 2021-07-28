@@ -153,7 +153,7 @@ echo $fragment->parse('core/page/section.php');
     var layout = {
         margin: {
             r: 25,
-            l: 25,
+            l: 50,
             t: 25,
             b: <?php echo $addon->getConfig('pagestats_chart_padding_bottom') ?>,
         },
