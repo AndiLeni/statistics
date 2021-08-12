@@ -71,7 +71,7 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () {
             $clientAddress = $clientAddress ? $clientAddress : '0.0.0.0';
 
             // page url
-            $url = $_SERVER['REQUEST_URI'];
+            $url = urldecode($_SERVER['REQUEST_URI']);
 
             // user agent
             $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
@@ -101,7 +101,7 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () {
 
                         // check if referer exists, if yes safe it
                         if (isset($_SERVER['HTTP_REFERER'])) {
-                            $referer = $_SERVER['HTTP_REFERER'];
+                            $referer = urldecode($_SERVER['HTTP_REFERER']);
 
                             if (!str_starts_with($referer, rex::getServer())) {
                                 $visit->save_referer($referer);
