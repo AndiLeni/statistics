@@ -6,67 +6,62 @@ $request_url = rex_request('url', 'string', '');
 $request_url = htmlspecialchars_decode($request_url);
 $ignore_page = rex_request('ignore_page', 'boolean', false);
 $search_string = htmlspecialchars_decode(rex_request('search_string', 'string', ''));
+$request_date_start = htmlspecialchars_decode(rex_request('date_start', 'string', ''));
+$request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''));
+
+
+$pages_helper = new PagesHelper($request_date_start, $request_date_end);
+
+
+// date filter
+if (!$pages_helper->filterValid()) {
+    echo rex_view::error($this->i18n('statistics_dates'));
+}
+
+
+?>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><?php echo $this->i18n('statistics_filter_date') ?></div>
+            <div class="panel-body">
+                <form class="form-inline" action="<?php echo rex_url::currentBackendPage() ?>" method="GET">
+                    <input type="hidden" value="statistics/pages" name="page">
+                    <div class="form-group">
+                        <label for="exampleInputName2"><?php echo $this->i18n('statistics_startdate') ?></label>
+                        <input style="line-height: normal;" type="date" value="<?php echo $pages_helper->min_date->format('Y-m-d') ?>" class="form-control" name="date_start">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2"><?php echo $this->i18n('statistics_enddate') ?></label>
+                        <input style="line-height: normal;" value="<?php echo $pages_helper->max_date->format('Y-m-d') ?>" type="date" class="form-control" name="date_end">
+                    </div>
+                    <button type="submit" class="btn btn-default"><?php echo $this->i18n('statistics_filter') ?></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php
 
 // sum per page, bar chart
-$sql = rex_sql::factory();
-
-if ($search_string == '') {
-    $sum_per_page = $sql->setQuery('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC, url ASC');
-} else {
-    $sum_per_page = $sql->setQuery('SELECT url, COUNT(url) as "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url LIKE :url GROUP BY url ORDER BY count DESC, url ASC', ['url' => '%' . $search_string . '%']);
-}
-
-$sum_per_page_labels = [];
-$sum_per_page_values = [];
-
-foreach ($sum_per_page as $row) {
-    $sum_per_page_labels[] = $row->getValue('url');
-}
-$sum_per_page_labels = json_encode($sum_per_page_labels);
-
-
-foreach ($sum_per_page as $row) {
-    $sum_per_page_values[] = $row->getValue('count');
-}
-$sum_per_page_values = json_encode($sum_per_page_values);
-
-
-
-
-// search form
-// $form = '
-// <form class="form-inline" action="' . rex_url::backendPage('statistics/pages') . '" method="GET">
-//     <input type="hidden" value="statistics/pages" name="page">
-//     <div class="form-group">
-//         <label for="exampleInputName2">' . $this->i18n('statistics_search_for') . '</label>
-//         <input style="line-height: normal;" type="text" value="' . $search_string . '" class="form-control" name="search_string">
-//     </div>
-//     <button type="submit" class="btn btn-default">' . $this->i18n('statistics_search') . '</button>
-// </form>
-// ';
-
-// $fragment = new rex_fragment();
-// $fragment->setVar('title', $this->i18n('statistics_views_per_day'));
-// $fragment->setVar('body', $form, false);
-// echo $fragment->parse('core/page/section.php');
-
+$sum_per_page = $pages_helper->sum_per_page();
 
 
 // check if request is for ignoring a url
 // if yes, add url to addon settings and delete all database entries of this url 
 if ($request_url != '' && $ignore_page === true) {
-    $ignored_paths = $addon->getConfig('pagestats_ignored_paths');
-    $addon->setConfig('pagestats_ignored_paths', $ignored_paths . PHP_EOL . $request_url);
-
-    $sql = rex_sql::factory();
-    $sql->setQuery('delete from ' . rex::getTable('pagestats_dump') . ' where url = :url', ['url' => $request_url]);
-    echo rex_view::success('Es wurden ' . $sql->getRows() . ' Einträge gelöscht. Die Url <code>' . $request_url . '</code> wird zukünftig ignoriert.');
+    $rows = $pages_helper->ignore_page($request_url);
+    echo rex_view::success('Es wurden ' . $rows . ' Einträge gelöscht. Die Url <code>' . $request_url . '</code> wird zukünftig ignoriert.');
 }
 
+
+// details for one url requested
 if ($request_url != '' && !$ignore_page) {
     // details section for single page
 
-    $pagedetails = new stats_pagedetails($request_url);
+    $pagedetails = new stats_pagedetails($request_url, $pages_helper->min_date, $pages_helper->max_date);
     $browsertype_data = $pagedetails->get_browsertype();
     $browser_data = $pagedetails->get_browser();
     $os_data = $pagedetails->get_os();
@@ -109,29 +104,10 @@ if ($request_url != '' && !$ignore_page) {
 }
 
 
-if ($search_string == '') {
-    $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY url ORDER BY count DESC, url ASC', 500);
-} else {
-    $list = rex_list::factory('SELECT url, COUNT(url) as "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url LIKE "%' . $search_string . '%" GROUP BY url ORDER BY count DESC, url ASC', 500);
-}
-
-
-$list->setColumnLabel('url', $this->i18n('statistics_url'));
-$list->setColumnLabel('count', $this->i18n('statistics_count'));
-$list->setColumnParams('url', ['url' => '###url###']);
-
-$list->addColumn('edit', $this->i18n('statistics_ignore_and_delete'));
-$list->setColumnLabel('edit', $this->i18n('statistics_ignore'));
-$list->addLinkAttribute('edit', 'data-confirm', '###url###:' . PHP_EOL . $this->i18n('statistics_confirm_ignore_delete'));
-$list->setColumnParams('edit', ['url' => '###url###', 'ignore_page' => true]);
-$list->addFormAttribute('style', 'margin-top: 3rem');
-$list->addTableAttribute('class', 'table-bordered');
-$list->addTableAttribute('class', 'dt_order_second');
-
-
+// list of all pages
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('statistics_sum_per_page'));
-$fragment->setVar('body', '<div id="chart_visits_per_page"></div>' . $list->get(), false);
+$fragment->setVar('body', '<div id="chart_visits_per_page"></div>' . $pages_helper->get_list(), false);
 echo $fragment->parse('core/page/section.php');
 
 ?>
@@ -162,8 +138,8 @@ echo $fragment->parse('core/page/section.php');
 
     chart_visits_per_page = Plotly.newPlot('chart_visits_per_page', [{
         type: 'bar',
-        x: <?php echo $sum_per_page_labels ?>,
-        y: <?php echo $sum_per_page_values ?>,
+        x: <?php echo $sum_per_page['labels'] ?>,
+        y: <?php echo $sum_per_page['values'] ?>,
     }], layout, config);
 
     <?php

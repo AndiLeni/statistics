@@ -99,26 +99,25 @@ $fragment_views_total->setVar('title', $this->i18n('statistics_pages'));
 $fragment_views_total->setVar('body', $table, false);
 
 
-
-$browser = new stats_browser();
+$browser = new stats_browser($request_date_start, $request_date_end);
 $browser_data = $browser->get_data();
 
-$browsertype = new stats_browsertype();
+$browsertype = new stats_browsertype($request_date_start, $request_date_end);
 $browsertype_data = $browsertype->get_data();
 
-$os = new stats_os();
+$os = new stats_os($request_date_start, $request_date_end);
 $os_data = $os->get_data();
 
-$brand = new stats_brand();
+$brand = new stats_brand($request_date_start, $request_date_end);
 $brand_data = $brand->get_data();
 
-$model = new stats_model();
+$model = new stats_model($request_date_start, $request_date_end);
 $model_data = $model->get_data();
 
-$weekday = new stats_weekday();
+$weekday = new stats_weekday($request_date_start, $request_date_end);
 $weekday_data = $weekday->get_data();
 
-$hour = new stats_hour();
+$hour = new stats_hour($request_date_start, $request_date_end);
 $hour_data = $hour->get_data();
 
 

@@ -8,6 +8,8 @@
 class stats_campaign_details
 {
     private $name;
+    private $min_date;
+    private $max_date;
 
     /**
      *
@@ -16,9 +18,11 @@ class stats_campaign_details
      * @return void
      * @author Andreas Lenhardt
      */
-    public function __construct(string $name)
+    public function __construct(string $name, $min_date, $max_date)
     {
         $this->name = $name;
+        $this->min_date = $min_date;
+        $this->max_date = $max_date;
     }
 
 
@@ -73,26 +77,21 @@ class stats_campaign_details
     {
         $sql = rex_sql::factory();
 
-        $max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable('pagestats_api') . ' WHERE name = :name', ['name' => $this->name]);
-        $max_date = $max_date->getValue('date');
-        $max_date = new DateTime($max_date);
-        $max_date->modify('+1 day');
-        $max_date = $max_date->format('d.m.Y');
-
-        $min_date = $sql->setQuery('SELECT MIN(date) AS "date" from ' . rex::getTable('pagestats_api') . ' WHERE name = :name', ['name' => $this->name]);
-        $min_date = $min_date->getValue('date');
-
         $period = new DatePeriod(
-            new DateTime($min_date),
+            new DateTime($this->min_date->format('Y-m-d')),
             new DateInterval('P1D'),
-            new DateTime($max_date)
+            new DateTime($this->max_date->format('Y-m-d'))
         );
 
         foreach ($period as $value) {
             $array[$value->format("d.m.Y")] = "0";
         }
 
-        $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_api') . ' WHERE name = :name GROUP BY date ORDER BY date ASC', ['name' => $this->name]);
+        if ($this->min_date != '' && $this->max_date != '') {
+            $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_api') . ' WHERE name = :name and date between :start and :end GROUP BY date ORDER BY date ASC', ['name' => $this->name, 'start' => $this->min_date->format('Y-m-d'), 'end' => $this->max_date->format('Y-m-d')]);
+        } else {
+            $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_api') . ' WHERE name = :name GROUP BY date ORDER BY date ASC', ['name' => $this->name]);
+        }
 
         $data = [];
 

@@ -9,16 +9,22 @@ class stats_weekday
 {
 
     private $addon;
+    private $start_date = '';
+    private $end_date = '';
 
     /**
      * 
      * 
+     * @param mixed $start_date 
+     * @param mixed $end_date 
      * @return void 
      * @author Andreas Lenhardt
      */
-    public function __construct()
+    public function __construct($start_date, $end_date)
     {
         $this->addon = rex_addon::get('statistics');
+        $this->start_date = $start_date;
+        $this->end_date = $end_date;
     }
 
 
@@ -68,7 +74,12 @@ class stats_weekday
     private function get_sql()
     {
         $sql = rex_sql::factory();
-        $result = $sql->setQuery('SELECT weekday, COUNT(weekday) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY weekday ORDER BY weekday ASC');
+
+        if ($this->start_date != '' && $this->end_date != '') {
+            $result = $sql->setQuery('SELECT weekday, COUNT(weekday) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY weekday ORDER BY count DESC', ['start' => $this->start_date, 'end' => $this->end_date]);
+        } else {
+            $result = $sql->setQuery('SELECT weekday, COUNT(weekday) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY weekday ORDER BY weekday ASC');
+        }
 
         $addon = rex_addon::get('statistics');
 
@@ -127,7 +138,14 @@ class stats_weekday
      */
     public function get_list()
     {
-        $list = rex_list::factory('SELECT weekday, COUNT(weekday) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY weekday ORDER BY count DESC');
+
+        if ($this->start_date != '' && $this->end_date != '') {
+            $list = rex_list::factory('SELECT weekday, COUNT(weekday) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->start_date . '" and "' . $this->end_date . '" GROUP BY weekday ORDER BY count DESC');
+        } else {
+            $list = rex_list::factory('SELECT weekday, COUNT(weekday) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY weekday ORDER BY count DESC');
+        }
+
+
         $list->setColumnLabel('weekday', $this->addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $this->addon->i18n('statistics_count'));
         $list->setColumnFormat('weekday', 'custom',  function ($params) {

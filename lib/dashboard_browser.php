@@ -19,7 +19,7 @@ class rex_dashboard_browser extends rex_dashboard_item_chart_pie
      */
     public function getChartData()
     {
-        $browser = new stats_browser();
+        $browser = new stats_browser('1900-01-01', '2100-12-31');
         return $browser->get_data_dashboard();
     }
 }

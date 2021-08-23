@@ -18,7 +18,7 @@ class rex_dashboard_os extends rex_dashboard_item_chart_pie
      */
     public function getChartData()
     {
-        $os = new stats_os();
+        $os = new stats_os('1900-01-01', '2100-12-31');
         return $os->get_data_dashboard();
     }
 }

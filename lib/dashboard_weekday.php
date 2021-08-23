@@ -18,7 +18,7 @@ class stats_weekday_dashboard extends rex_dashboard_item_chart_bar
      */
     public function getChartData()
     {
-        $weekday = new stats_weekday();
+        $weekday = new stats_weekday('1900-01-01', '2100-12-31');
         return $weekday->get_data_dashboard();
     }
 }

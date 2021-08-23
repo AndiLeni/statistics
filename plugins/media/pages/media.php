@@ -4,11 +4,64 @@ $search_string = htmlspecialchars_decode(rex_request('search_string', 'string', 
 $request_url = rex_request('url', 'string', '');
 $request_url = htmlspecialchars_decode($request_url);
 $delete_entry = rex_request('delete_entry', 'boolean', false);
+$request_date_start = htmlspecialchars_decode(rex_request('date_start', 'string', ''));
+$request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''));
 
+
+// date filter
+$sql = rex_sql::factory();
+if ($request_date_end == '' || $request_date_start == '') {
+
+    $max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable('pagestats_media'));
+    $max_date = $max_date->getValue('date');
+    $max_date = new DateTime($max_date);
+    $max_date->modify('+1 day');
+
+    $min_date = $sql->setQuery('SELECT MIN(date) AS "date" from ' . rex::getTable('pagestats_media'));
+    $min_date = $min_date->getValue('date');
+    $min_date = new DateTime($min_date);
+} else {
+
+    $max_date = new DateTime($request_date_end);
+    $min_date = new DateTime($request_date_start);
+
+    if ($min_date > $max_date) {
+        echo rex_view::error($this->i18n('statistics_dates'));
+        $min_date = new DateTime();
+        $max_date = new DateTime();
+        $max_date->modify('+1 day');
+    }
+}
+
+?>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading"><?php echo $this->i18n('statistics_filter_date') ?></div>
+            <div class="panel-body">
+                <form class="form-inline" action="<?php echo rex_url::currentBackendPage() ?>" method="GET">
+                    <input type="hidden" value="statistics/media/media" name="page">
+                    <div class="form-group">
+                        <label for="exampleInputName2"><?php echo $this->i18n('statistics_startdate') ?></label>
+                        <input style="line-height: normal;" type="date" value="<?php echo $min_date->format('Y-m-d') ?>" class="form-control" name="date_start">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail2"><?php echo $this->i18n('statistics_enddate') ?></label>
+                        <input style="line-height: normal;" value="<?php echo $max_date->format('Y-m-d') ?>" type="date" class="form-control" name="date_end">
+                    </div>
+                    <button type="submit" class="btn btn-default"><?php echo $this->i18n('statistics_filter') ?></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php
 
 if ($request_url != '' && $delete_entry === true) {
     $sql = rex_sql::factory();
-    $sql->setQuery('delete from ' . rex::getTable('pagestats_api') . ' where name = :name', ['name' => $request_url]);
+    $sql->setQuery('delete from ' . rex::getTable('pagestats_media') . ' where url = :url', ['url' => $request_url]);
     echo rex_view::success('Es wurden ' . $sql->getRows() . ' Einträge der Kampagne <code>' . $request_url . '</code> gelöscht.');
 }
 
@@ -16,9 +69,8 @@ if ($request_url != '' && $delete_entry === true) {
 if ($request_url != '' && !$delete_entry) {
     // details section for single campaign
 
-    $pagedetails = new stats_media_details($request_url);
+    $pagedetails = new stats_media_details($request_url, $min_date, $max_date);
     $sum_data = $pagedetails->get_sum_per_day();
-
 
     $content = '<div id="chart_details"></div>';
 
@@ -30,37 +82,21 @@ if ($request_url != '' && !$delete_entry) {
     echo $fragment->parse('core/page/section.php');
 }
 
-if ($search_string == '') {
-    $list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_media') . ' GROUP BY url ORDER BY count DESC');
+
+
+if ($request_date_start != '' && $request_date_end != '') {
+    $list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_media') . ' where date between "' . $min_date->format('Y-m-d') . '" and "' . $max_date->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC', 500);
 } else {
-    $list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_media') . ' WHERE url LIKE "%' . $search_string . '%" GROUP BY url ORDER BY count DESC');
+    $list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_media') . ' GROUP BY url ORDER BY count DESC', 500);
 }
-
-
-
-// $form = '
-// <form class="form-inline" action="' . rex_url::backendPage('statistics/media') . '" method="GET">
-//     <input type="hidden" value="statistics/media" name="page">
-//     <div class="form-group">
-//         <label for="exampleInputName2">' . $this->i18n('statistics_media_search_for') . '</label>
-//         <input style="line-height: normal;" type="text" value="' . $search_string . '" class="form-control" name="search_string">
-//     </div>
-//     <button type="submit" class="btn btn-default">' . $this->i18n('statistics_media_search') . '</button>
-// </form>
-// ';
-
-
-// $fragment = new rex_fragment();
-// $fragment->setVar('title', $this->i18n('statistics_media_filter'));
-// $fragment->setVar('body', $form, false);
-// echo $fragment->parse('core/page/section.php');
 
 
 $list->setColumnLabel('url', $this->i18n('statistics_media_url'));
 $list->setColumnLabel('count', $this->i18n('statistics_media_count'));
 // $list->setColumnSortable('url', $direction = 'asc');
 // $list->setColumnSortable('count', $direction = 'asc');
-$list->setColumnParams('url', ['url' => '###url###']);
+$list->setColumnParams('url', ['url' => '###url###', 'date_start' => $request_date_start, 'date_end' => $request_date_end]);
+$list->addTableAttribute('class', 'table-bordered');
 
 $fragment2 = new rex_fragment();
 $fragment2->setVar('title', $this->i18n('statistics_media_views'));
@@ -88,7 +124,7 @@ echo $fragment2->parse('core/page/section.php');
             r: 25,
             l: 25,
             t: 25,
-            b: 25,
+            b: 100,
         },
     }
 
