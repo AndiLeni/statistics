@@ -8,8 +8,8 @@
 class stats_media_details
 {
     private $url;
-    private $min_date;
-    private $max_date;
+    private $date_start;
+    private $date_end;
 
     /**
      *
@@ -18,11 +18,11 @@ class stats_media_details
      * @return void
      * @author Andreas Lenhardt
      */
-    public function __construct(string $url, $min_date, $max_date)
+    public function __construct(string $url, $date_start, $date_end)
     {
         $this->url = $url;
-        $this->min_date = $min_date;
-        $this->max_date = $max_date;
+        $this->date_start = $date_start;
+        $this->date_end = $date_end;
     }
 
 
@@ -78,20 +78,16 @@ class stats_media_details
         $sql = rex_sql::factory();
 
         $period = new DatePeriod(
-            new DateTime($this->min_date->format('Y-m-d')),
+            new DateTime($this->date_start->format('Y-m-d')),
             new DateInterval('P1D'),
-            new DateTime($this->max_date->format('Y-m-d'))
+            new DateTime($this->date_end->format('Y-m-d'))
         );
 
         foreach ($period as $value) {
             $array[$value->format("d.m.Y")] = "0";
         }
 
-        if ($this->min_date != '' && $this->max_date != '') {
-            $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_media') . ' WHERE url = :url and date between :start and :end GROUP BY date ORDER BY date ASC', ['url' => $this->url, 'start' => $this->min_date->format('Y-m-d'), 'end' => $this->max_date->format('Y-m-d')]);
-        } else {
-            $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_media') . ' WHERE url = :url GROUP BY date ORDER BY date ASC', ['url' => $this->url]);
-        }
+        $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_media') . ' WHERE url = :url and date between :start and :end GROUP BY date ORDER BY date ASC', ['url' => $this->url, 'start' => $this->date_start->format('Y-m-d'), 'end' => $this->date_end->format('Y-m-d')]);
 
         $data = [];
 

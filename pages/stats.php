@@ -1,87 +1,58 @@
-<style>
-    .my-0 {
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-</style>
-
 
 <?php
 
+// BASIC INITIALISATION 
 
-
+$current_backend_page = rex_get('page', 'string', '');
 $request_date_start = htmlspecialchars_decode(rex_request('date_start', 'string', ''));
 $request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''));
 
 $sql = rex_sql::factory();
 
+$filter_date_helper = new filter_date_helper($request_date_start, $request_date_end, 'pagestats_dump');
 
-if ($request_date_end == '' || $request_date_start == '') {
-    $max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable('pagestats_dump'));
-    $max_date = $max_date->getValue('date');
-    $max_date = new DateTime($max_date);
-    $max_date->modify('+1 day');
 
-    $min_date = $sql->setQuery('SELECT MIN(date) AS "date" from ' . rex::getTable('pagestats_dump'));
-    $min_date = $min_date->getValue('date');
-    $min_date = new DateTime($min_date);
 
-    $sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' GROUP BY date ORDER BY date ASC');
-} else {
 
-    $max_date = new DateTime($request_date_end);
-    $min_date = new DateTime($request_date_start);
 
-    if ($min_date > $max_date) {
-        echo rex_view::error($this->i18n('statistics_dates'));
-        $min_date = new DateTime();
-        $max_date = new DateTime();
-        $max_date->modify('+1 day');
-    }
+// DATA COLLECTION FOR MAIN CHART, "VIEWS PER DAY"
 
-    $sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY date ORDER BY date ASC', ['start' => $request_date_start, ':end' => $request_date_end]);
-}
-
+$sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY date ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
 
 $period = new DatePeriod(
-    new DateTime($min_date->format('d.m.Y')),
+    $filter_date_helper->date_start,
     new DateInterval('P1D'),
-    new DateTime($max_date->format('d.m.Y'))
+    $filter_date_helper->date_end
 );
 
 foreach ($period as $value) {
-    $array[$value->format("d.m.Y")] = "0";
+    $dates_array[$value->format("d.m.Y")] = "0";
 }
 
-
-
-$data = [];
+$complete_dates_counts = [];
 
 if ($sum_per_day->getRows() != 0) {
     foreach ($sum_per_day as $row) {
         $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
-        $arr2[$date] = $row->getValue('count');
+        $date_counts[$date] = $row->getValue('count');
     }
 
-    $data = array_merge($array, $arr2);
+    $complete_dates_counts = array_merge($dates_array, $date_counts);
 }
 
-$sum_per_day_labels = json_encode(array_keys($data));
-$sum_per_day_values = json_encode(array_values($data));
+$sum_per_day_labels = json_encode(array_keys($complete_dates_counts));
+$sum_per_day_values = json_encode(array_values($complete_dates_counts));
 
-
-
-$list_dates = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY date ORDER BY count DESC', 500);
-$list_dates->setColumnLabel('date', 'Datum');
-$list_dates->setColumnLabel('count', 'Anzahl');
-$list_dates->setColumnParams('url', ['url' => '###url###']);
-$list_dates->addTableAttribute('class', 'table-bordered');
-$list_dates->addTableAttribute('class', 'dt_order_first');
+if (array_keys($complete_dates_counts) == []) {
+    echo rex_view::error($this->i18n('statistics_no_data'));
+}
 
 
 
 
-// views total
+
+// FRAGMENT TO SHOW TODAYS AND TOTAL COUNT OF VIEWS
+
 $views_total = $sql->setQuery('SELECT count(*) as "count" from ' . rex::getTable('pagestats_dump'));
 $views_total = $views_total->getValue('count');
 
@@ -90,7 +61,7 @@ $views_today = $views_today->getValue('count');
 
 $table = '
     <p class="h3 my-0">' . $this->i18n('statistics_today') . ' : <b>' . $views_today . '</b></p>
-    <hr>
+    <hr class="hr-margin-small">
     <p class="h3 my-0">' . $this->i18n('statistics_total') . ' : <b>' . $views_total . '</b></p>
 ';
 
@@ -99,26 +70,39 @@ $fragment_views_total->setVar('title', $this->i18n('statistics_pages'));
 $fragment_views_total->setVar('body', $table, false);
 
 
-$browser = new stats_browser($request_date_start, $request_date_end);
+
+
+// CLASSES FOR WIDGETS AND CHARTS
+
+$browser = new stats_browser($filter_date_helper->date_start, $filter_date_helper->date_end);
 $browser_data = $browser->get_data();
 
-$browsertype = new stats_browsertype($request_date_start, $request_date_end);
+$browsertype = new stats_browsertype($filter_date_helper->date_start, $filter_date_helper->date_end);
 $browsertype_data = $browsertype->get_data();
 
-$os = new stats_os($request_date_start, $request_date_end);
+$os = new stats_os($filter_date_helper->date_start, $filter_date_helper->date_end);
 $os_data = $os->get_data();
 
-$brand = new stats_brand($request_date_start, $request_date_end);
+$brand = new stats_brand($filter_date_helper->date_start, $filter_date_helper->date_end);
 $brand_data = $brand->get_data();
 
-$model = new stats_model($request_date_start, $request_date_end);
+$model = new stats_model($filter_date_helper->date_start, $filter_date_helper->date_end);
 $model_data = $model->get_data();
 
-$weekday = new stats_weekday($request_date_start, $request_date_end);
+$weekday = new stats_weekday($filter_date_helper->date_start, $filter_date_helper->date_end);
 $weekday_data = $weekday->get_data();
 
-$hour = new stats_hour($request_date_start, $request_date_end);
+$hour = new stats_hour($filter_date_helper->date_start, $filter_date_helper->date_end);
 $hour_data = $hour->get_data();
+
+
+
+
+// FRAGMENT FOR DATE FILTER
+$filter_fragment = new rex_fragment();
+$filter_fragment->setVar('current_backend_page', $current_backend_page);
+$filter_fragment->setVar('date_start', $filter_date_helper->date_start);
+$filter_fragment->setVar('date_end', $filter_date_helper->date_end);
 
 
 ?>
@@ -127,23 +111,7 @@ $hour_data = $hour->get_data();
 
 <div class="row">
     <div class="col-12 col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading"><?php echo $this->i18n('statistics_filter_date') ?></div>
-            <div class="panel-body">
-                <form class="form-inline" action="<?php echo rex_url::backendPage('statistics/settings') ?>" method="GET">
-                    <input type="hidden" value="statistics/stats" name="page">
-                    <div class="form-group">
-                        <label for="exampleInputName2"><?php echo $this->i18n('statistics_startdate') ?></label>
-                        <input style="line-height: normal;" type="date" value="<?php echo $request_date_start ? $request_date_start : $min_date->format('Y-m-d') ?>" class="form-control" name="date_start">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail2"><?php echo $this->i18n('statistics_enddate') ?></label>
-                        <input style="line-height: normal;" value="<?php echo $request_date_end ? $request_date_end : $max_date->format('Y-m-d') ?>" type="date" class="form-control" name="date_end">
-                    </div>
-                    <button type="submit" class="btn btn-default"><?php echo $this->i18n('statistics_filter') ?></button>
-                </form>
-            </div>
-        </div>
+        <?php echo $filter_fragment->parse('filter.php'); ?>
     </div>
     <div class="col-12 col-md-6">
         <?php echo $fragment_views_total->parse('core/page/section.php'); ?>
@@ -153,21 +121,28 @@ $hour_data = $hour->get_data();
 
 
 <?php
-if ($sum_per_day_labels == "[]") {
-    echo rex_view::error($this->i18n('statistics_no_data'));
-}
+
+// FRAGMENTS FOR
+// - PANEL WITH CHART "VIEWS TOTAL"
+// - TABLE WITH DATA FOR "VIEWS TOTAL"
+
+// TABLE UNDER MAIN CHART
+$list_dates = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "'.$filter_date_helper->date_start->format('Y-m-d') .'" and "'.$filter_date_helper->date_end->format('Y-m-d') .'" GROUP BY date ORDER BY count DESC', 500);
+$list_dates->setColumnLabel('date', 'Datum');
+$list_dates->setColumnLabel('count', 'Anzahl');
+$list_dates->setColumnParams('url', ['url' => '###url###']);
+$list_dates->addTableAttribute('class', 'table-bordered dt_order_first');
 
 $fragment_collapse = new rex_fragment();
 $fragment_collapse->setVar('title', $this->i18n('statistics_views_per_day'));
 $fragment_collapse->setVar('content', $list_dates->get(), false);
-// echo $fragment_collapse->parse('collapse.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('statistics_views_per_day'));
 $fragment->setVar('body', '<div id="chart_visits"></div>' . $fragment_collapse->parse('collapse.php'), false);
 echo $fragment->parse('core/page/section.php');
-?>
 
+?>
 
 <div class="row">
     <div class="col-sm-12 col-lg-6">

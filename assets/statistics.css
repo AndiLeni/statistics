@@ -1,5 +1,15 @@
 td {
-    word-break: break-all;
+  word-break: break-all;
+}
+
+.my-0 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.hr-margin-small {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 /* .d-flex {

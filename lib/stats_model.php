@@ -37,11 +37,7 @@ class stats_model
     {
         $sql = rex_sql::factory();
 
-        if ($this->start_date != '' && $this->end_date != '') {
-            $result = $sql->setQuery('SELECT model, COUNT(model) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY model ORDER BY count DESC', ['start' => $this->start_date, 'end' => $this->end_date]);
-        } else {
-            $result = $sql->setQuery('SELECT model, COUNT(model) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY model ORDER BY count DESC');
-        }
+        $result = $sql->setQuery('SELECT model, COUNT(model) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY model ORDER BY count DESC', ['start' => $this->start_date->format('Y-m-d'), 'end' => $this->end_date->format('Y-m-d')]);
 
         $data = [];
 
@@ -81,12 +77,8 @@ class stats_model
     {
         $addon = rex_addon::get('statistics');
 
-        if ($this->start_date != '' && $this->end_date != '') {
-            $list = rex_list::factory('SELECT model, COUNT(model) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->start_date . '" and "' . $this->end_date . '" GROUP BY model ORDER BY count DESC');
-        } else {
-            $list = rex_list::factory('SELECT model, COUNT(model) as "count" FROM ' . rex::getTable('pagestats_dump') . ' GROUP BY model ORDER BY count DESC');
-        }
-        
+        $list = rex_list::factory('SELECT model, COUNT(model) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->start_date->format('Y-m-d') . '" and "' . $this->end_date->format('Y-m-d') . '" GROUP BY model ORDER BY count DESC');
+
         $list->setColumnLabel('model', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));
         $list->addTableAttribute('class', 'dt_order_second');

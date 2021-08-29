@@ -1,5 +1,6 @@
 <?php
 
+$current_backend_page = rex_get('page', 'string', '');
 $search_string = htmlspecialchars_decode(rex_request('search_string', 'string', ''));
 $request_name = rex_request('name', 'string', '');
 $request_name = htmlspecialchars_decode($request_name);
@@ -7,53 +8,21 @@ $delete_entry = rex_request('delete_entry', 'boolean', false);
 $request_date_start = htmlspecialchars_decode(rex_request('date_start', 'string', ''));
 $request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''));
 
+$filter_date_helper = new filter_date_helper($request_date_start, $request_date_end, 'pagestats_api');
 
-// date filter
-$sql = rex_sql::factory();
-if ($request_date_end == '' || $request_date_start == '') {
 
-    $max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable('pagestats_api'));
-    $max_date = $max_date->getValue('date');
-    $max_date = new DateTime($max_date);
-    $max_date->modify('+1 day');
 
-    $min_date = $sql->setQuery('SELECT MIN(date) AS "date" from ' . rex::getTable('pagestats_api'));
-    $min_date = $min_date->getValue('date');
-    $min_date = new DateTime($min_date);
-} else {
-
-    $max_date = new DateTime($request_date_end);
-    $min_date = new DateTime($request_date_start);
-
-    if ($min_date > $max_date) {
-        echo rex_view::error($this->i18n('statistics_dates'));
-        $min_date = new DateTime();
-        $max_date = new DateTime();
-        $max_date->modify('+1 day');
-    }
-}
+// FRAGMENT FOR DATE FILTER
+$filter_fragment = new rex_fragment();
+$filter_fragment->setVar('current_backend_page', $current_backend_page);
+$filter_fragment->setVar('date_start', $filter_date_helper->date_start);
+$filter_fragment->setVar('date_end', $filter_date_helper->date_end);
 
 ?>
 
 <div class="row">
     <div class="col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading"><?php echo $this->i18n('statistics_filter_date') ?></div>
-            <div class="panel-body">
-                <form class="form-inline" action="<?php echo rex_url::currentBackendPage() ?>" method="GET">
-                    <input type="hidden" value="statistics/api/campaigns" name="page">
-                    <div class="form-group">
-                        <label for="exampleInputName2"><?php echo $this->i18n('statistics_startdate') ?></label>
-                        <input style="line-height: normal;" type="date" value="<?php echo $min_date->format('Y-m-d') ?>" class="form-control" name="date_start">
-                    </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail2"><?php echo $this->i18n('statistics_enddate') ?></label>
-                        <input style="line-height: normal;" value="<?php echo $max_date->format('Y-m-d') ?>" type="date" class="form-control" name="date_end">
-                    </div>
-                    <button type="submit" class="btn btn-default"><?php echo $this->i18n('statistics_filter') ?></button>
-                </form>
-            </div>
-        </div>
+        <?php echo $filter_fragment->parse('filter.php'); ?>
     </div>
 </div>
 
@@ -70,7 +39,7 @@ if ($request_name != '' && $delete_entry === true) {
 if ($request_name != '' && !$delete_entry) {
     // details section for single campaign
 
-    $pagedetails = new stats_campaign_details($request_name, $min_date, $max_date);
+    $pagedetails = new stats_campaign_details($request_name, $filter_date_helper->date_start, $filter_date_helper->date_end);
     $sum_data = $pagedetails->get_sum_per_day();
 
 
@@ -86,11 +55,7 @@ if ($request_name != '' && !$delete_entry) {
 }
 
 
-if ($request_date_start != '' && $request_date_end != '') {
-    $list = rex_list::factory('SELECT name, sum(count) as "count" from ' . rex::getTable('pagestats_api') . ' where date between "' . $min_date->format('Y-m-d') . '" and "' . $max_date->format('Y-m-d') . '" GROUP BY name ORDER BY count DESC', 500);
-} else {
-    $list = rex_list::factory('SELECT name, sum(count) as "count" from ' . rex::getTable('pagestats_api') . ' GROUP BY name ORDER BY count DESC', 500);
-}
+$list = rex_list::factory('SELECT name, sum(count) as "count" from ' . rex::getTable('pagestats_api') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY name ORDER BY count DESC', 500);
 
 
 
