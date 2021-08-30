@@ -39,7 +39,7 @@ class filter_date_helper
             // $this->date_end = $this->getMaxDateFromTable();
 
             $this->date_end = new DateTime();
-            $this->date_end->modify('+1 day');
+            // $this->date_end->modify('+1 day');
         } else {
             $this->date_start = new DateTime($date_start);
             $this->date_end = new DateTime($date_end);

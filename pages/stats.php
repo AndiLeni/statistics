@@ -25,6 +25,8 @@ $period = new DatePeriod(
     $filter_date_helper->date_end
 );
 
+
+$dates_array = [];
 foreach ($period as $value) {
     $dates_array[$value->format("d.m.Y")] = "0";
 }
