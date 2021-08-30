@@ -1,5 +1,5 @@
 package: statistics
-version: dev
+version: dev-0.0.1
 author: Andreas Lenhardt
 supportpage: https://github.com/AndiLeni/statistics
 
@@ -38,3 +38,7 @@ default_config:
     pagestats_chart_padding_bottom: 90
     statistics_log_all: true
     statistics_scroll_pagination: 'none'
+
+installer_ignore:
+    - .git
+    - preview
