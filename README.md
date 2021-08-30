@@ -22,7 +22,7 @@ Dieses Addon arbeitet **OHNE** Cookies und kann somit Datenschutzkonform eingese
 
 Persönlichen Daten (z.B. die IP Adresse des Besuchers) werden nur gehasht gespeichert und können somit nicht ohne großen Aufwand dechiffriert werden.
 
-Die IP Adresse wird genutzt, um ein wiederholtes Aufrufen von Seiten nicht in die Statistik einfließen zu lassen.
+Die IP Adresse des Besuchers wird genutzt, um ein wiederholtes Aufrufen von Seiten nicht in die Statistik einfließen zu lassen.
 
 ## Plugins:
 
@@ -31,7 +31,6 @@ Um Aufrufe von Medien (Bilder, Dokumente, etc.) zu loggen muss das Plugin "Media
 Dieses kann auf zwei Arten verwendet werden:
 1. Alle Medien tracken  
    Dabei werden alle Aufrufe zu Medien in der Statistik erfasst.
-   > **Dies wirkt sich sehr negativ auf die Ladezeit der Website aus und sollte nur mit Bedacht genutzt werden!**
 2. Medien mittles Media-Manager-Effekt tracken  
    Um gezielt Medien erfassen zu können, kann ein Media-Manager-Effekt genutzt werden.
    Dieser wird einfach als weiterer Effekt hinzugefügt und erfasst dann nur die Medien die tatsächlich für die Statistik interessant sind.
