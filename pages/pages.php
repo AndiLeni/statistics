@@ -49,7 +49,7 @@ if ($request_url != '' && $ignore_page === true) {
 if ($request_url != '' && !$ignore_page) {
     // details section for single page
 
-    $pagedetails = new stats_pagedetails($request_url, $pages_helper->min_date, $pages_helper->max_date);
+    $pagedetails = new stats_pagedetails($request_url, $filter_date_helper->date_start, $filter_date_helper->date_end);
     $browsertype_data = $pagedetails->get_browsertype();
     $browser_data = $pagedetails->get_browser();
     $os_data = $pagedetails->get_os();
@@ -89,6 +89,8 @@ if ($request_url != '' && !$ignore_page) {
     $fragment->setVar('body', '<h4>' . $this->i18n('statistics_views_total') . ' <b>' . $pagedetails->get_page_total() . '</b></h4>', false);
     $fragment->setVar('body', $content, false);
     echo $fragment->parse('core/page/section.php');
+
+    dump($pagedetails->get_page_total());
 }
 
 

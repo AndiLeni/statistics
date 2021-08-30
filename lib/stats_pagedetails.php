@@ -134,8 +134,7 @@ class stats_pagedetails
         $list->setColumnLabel('date', 'Datum');
         $list->setColumnLabel('count', 'Anzahl');
         $list->setColumnParams('url', ['url' => '###url###']);
-        $list->addTableAttribute('class', 'table-bordered');
-        $list->addTableAttribute('class', 'dt_order_first');
+        $list->addTableAttribute('class', 'table-bordered dt_order_first');
 
         return $list->get();
     }
@@ -170,20 +169,16 @@ class stats_pagedetails
 
 
         $period = new DatePeriod(
-            new DateTime($this->min_date->format('Y-m-d')),
+            $this->min_date,
             new DateInterval('P1D'),
-            new DateTime($this->max_date->format('Y-m-d'))
+            $this->max_date
         );
 
         foreach ($period as $value) {
             $array[$value->format("d.m.Y")] = "0";
         }
 
-        if ($this->min_date != '' && $this->max_date != '') {
-            $sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url = :url and date between :start and :end GROUP BY date ORDER BY date ASC', ['url' => $this->url, 'start' => $this->min_date->format('Y-m-d'), 'end' => $this->max_date->format('Y-m-d')]);
-        } else {
-            $sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url = :url GROUP BY date ORDER BY date ASC', ['url' => $this->url]);
-        }
+        $sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url = :url and date between :start and :end GROUP BY date ORDER BY date ASC', ['url' => $this->url, 'start' => $this->min_date->format('Y-m-d'), 'end' => $this->max_date->format('Y-m-d')]);
 
         $data = [];
 

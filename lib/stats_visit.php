@@ -314,13 +314,14 @@ class stats_visit
     public function save_referer(string $referer)
     {
         $sql = rex_sql::factory();
-        $result = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_referer') . ' SET count = count + 1 WHERE referer = :referer', ['referer' => $referer]);
+        $result = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_referer') . ' SET count = count + 1 WHERE referer = :referer AND date = :date', ['referer' => $referer, 'date' => $this->datetime_now->format('Y-m-d')]);
 
         if ($result->getRows() === 0) {
             $ref = rex_sql::factory();
             $ref->setTable(rex::getTable('pagestats_referer'));
             $ref->setValue('referer', $referer);
             $ref->setValue('count', 1);
+            $ref->setValue('date', $this->datetime_now->format('Y-m-d'));
             $ref->insert();
         }
     }
