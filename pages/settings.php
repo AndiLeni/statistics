@@ -78,6 +78,13 @@ $field4->addOption ($this->i18n('statistics_scroll_panel'), 'panel');
 $field4->addOption ($this->i18n('statistics_scroll_none'), 'none');
 
 
+$field5 = $form->addRadioField ('statistics_ignore_url_params');
+$field5->setLabel($this->i18n('statistics_statistics_ignore_url_params'));
+$field5->addOption ($this->i18n('statistics_yes'), true);
+$field5->addOption ($this->i18n('statistics_no'), false);
+$field5->setNotice($this->i18n('statistics_statistics_ignore_url_params_note'));
+
+
 $addon = rex_addon::get('statistics');
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'edit', false);

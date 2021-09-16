@@ -76,3 +76,5 @@ statistics_scroll_pagination = Klicken der Paginierung scrollt zu Tabelle / Cont
 statistics_scroll_table = Tabelle
 statistics_scroll_panel = Container
 statistics_scroll_none = Keines von beidem
+statistics_statistics_ignore_url_params = Ignoriere URL-Parameter
+statistics_statistics_ignore_url_params_note = URL-Parameter werden in der Statistik nicht geloggt. Z.b. www.example.com?data=1 wird als www.example.com gespeichert.

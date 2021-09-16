@@ -38,6 +38,7 @@ default_config:
     pagestats_chart_padding_bottom: 90
     statistics_log_all: true
     statistics_scroll_pagination: 'none'
+    statistics_ignore_url_params: false
 
 installer_ignore:
     - .git

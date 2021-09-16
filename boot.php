@@ -73,6 +73,11 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () {
             // page url
             $url = urldecode($_SERVER['REQUEST_URI']);
 
+            // optionally ignore url parameters
+            if ($addon->getConfig('statistics_ignore_url_params')) {
+                $url = stats_visit::remove_url_parameters($url);
+            }
+
             // user agent
             $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 

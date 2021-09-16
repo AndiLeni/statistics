@@ -158,7 +158,7 @@ class stats_visit
         if (trim($ignored_regex != '')) {
             $ignored_regex = explode("\n", str_replace("\r", "", $ignored_regex));
 
-            foreach ($ignored_regex as $regex) {                
+            foreach ($ignored_regex as $regex) {
                 if (preg_match($regex, $this->url) === 1) {
                     return true;
                 }
@@ -336,5 +336,24 @@ class stats_visit
     public function is_bot()
     {
         return $this->DeviceDetector->isBot();
+    }
+
+
+    /**
+     * removes parameters from a url
+     * 
+     * @param mixed $url 
+     * @return string|false 
+     * @author Andreas Lenhardt
+     */
+    public static function remove_url_parameters($url)
+    {
+        $url = strtok($url, '?');
+
+        if ($url === false) {
+            return '/';
+        }
+
+        return $url;
     }
 }
