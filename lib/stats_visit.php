@@ -28,6 +28,8 @@ class stats_visit
         '.css',
         '.js',
         'favicon.ico',
+        '.css.map',
+        '.js.map',
     ];
 
 

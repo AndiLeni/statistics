@@ -4,6 +4,7 @@
 
 ### Added
 - add setting to optionally ignore url parameters
+- ignore `.css.map` and `.js.map` files for logging
 
 ### Changed
 
