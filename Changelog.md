@@ -1,6 +1,6 @@
 # Changelog
 
-## [unreleased] - xx.xx.xxxx
+## [dev-0.0.3] - 16.09.2021
 
 ### Added
 - add setting to optionally ignore url parameters
