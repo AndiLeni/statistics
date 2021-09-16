@@ -18,7 +18,7 @@ class rex_dashboard_hour extends rex_dashboard_item_chart_bar
      */
     public function getChartData()
     {
-        $hour = new stats_hour('1900-01-01', '2100-12-31');
+        $hour = new stats_hour(new DateTime('1900-01-01'), new DateTime('2100-12-31'));
         return $hour->get_data_dashboard();
     }
 }

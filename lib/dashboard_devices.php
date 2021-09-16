@@ -18,7 +18,7 @@ class rex_dashboard_browsertype extends rex_dashboard_item_chart_pie
      */
     public function getChartData()
     {
-        $browsertype = new stats_browsertype('1900-01-01', '2100-12-31');
+        $browsertype = new stats_browsertype(new DateTime('1900-01-01'), new DateTime('2100-12-31'));
         return $browsertype->get_data_dashboard();
     }
 }

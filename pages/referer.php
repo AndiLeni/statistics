@@ -151,7 +151,8 @@ echo $fragment->parse('core/page/section.php');
                 if (rex::getProperty('lang') == 'de_de') {
                     echo '
                     language: {
-                        "search": "Suchen:",
+                        "search": "_INPUT_",
+                        "searchPlaceholder": "Suchen",
                         "decimal": ",",
                         "info": "Einträge _START_-_END_ von _TOTAL_",
                         "emptyTable": "Keine Daten",
@@ -195,7 +196,8 @@ echo $fragment->parse('core/page/section.php');
                 if (rex::getProperty('lang') == 'de_de') {
                     echo '
                     language: {
-                        "search": "Suchen:",
+                        "search": "_INPUT_",
+                        "searchPlaceholder": "Suchen",
                         "decimal": ",",
                         "info": "Einträge _START_-_END_ von _TOTAL_",
                         "emptyTable": "Keine Daten",

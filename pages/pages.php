@@ -90,7 +90,6 @@ if ($request_url != '' && !$ignore_page) {
     $fragment->setVar('body', $content, false);
     echo $fragment->parse('core/page/section.php');
 
-    dump($pagedetails->get_page_total());
 }
 
 
@@ -184,7 +183,8 @@ echo $fragment->parse('core/page/section.php');
                 if (rex::getProperty('lang') == 'de_de') {
                     echo '
                     language: {
-                        "search": "Suchen:",
+                        "search": "_INPUT_",
+                        "searchPlaceholder": "Suchen",
                         "decimal": ",",
                         "info": "Einträge _START_-_END_ von _TOTAL_",
                         "emptyTable": "Keine Daten",
@@ -228,7 +228,8 @@ echo $fragment->parse('core/page/section.php');
                 if (rex::getProperty('lang') == 'de_de') {
                     echo '
                     language: {
-                        "search": "Suchen:",
+                        "search": "_INPUT_",
+                        "searchPlaceholder": "Suchen",
                         "decimal": ",",
                         "info": "Einträge _START_-_END_ von _TOTAL_",
                         "emptyTable": "Keine Daten",
