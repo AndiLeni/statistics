@@ -1,5 +1,18 @@
 # Changelog
 
+## [unreleased] - xx.xx.xxxx
+
+### Added
+
+### Changed
+- change some database fields to "text" type
+
+### Removed
+
+### Vendor Updates
+
+### Notes
+
 ## [dev-0.0.3] - 16.09.2021
 
 ### Added
@@ -14,7 +27,6 @@
 
 ### Notes
 
- ---
 
 ## [dev-0.0.2] - 16.09.2021
 
@@ -32,5 +44,3 @@
 ### Vendor Updates
 
 ### Notes
-
- ---
