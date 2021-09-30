@@ -167,12 +167,18 @@ class stats_pagedetails
     {
         $sql = rex_sql::factory();
 
+        // modify to include end date in period because SQL BETWEEN includes start and end date, but DatePeriod excludes end date
+        // without modification an additional day would be fetched from database
+        $end = clone $this->max_date;
+        $end->modify('+1 day');
 
         $period = new DatePeriod(
             $this->min_date,
             new DateInterval('P1D'),
-            $this->max_date
+            $end
         );
+
+        $array = [];
 
         foreach ($period as $value) {
             $array[$value->format("d.m.Y")] = "0";

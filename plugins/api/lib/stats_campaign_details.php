@@ -8,8 +8,8 @@
 class stats_campaign_details
 {
     private $name;
-    private $min_date;
-    private $max_date;
+    private $date_start;
+    private $date_end;
 
     /**
      *
@@ -18,50 +18,11 @@ class stats_campaign_details
      * @return void
      * @author Andreas Lenhardt
      */
-    public function __construct(string $name, $min_date, $max_date)
+    public function __construct(string $name, $date_start, $date_end)
     {
         $this->name = $name;
-        $this->min_date = $min_date;
-        $this->max_date = $max_date;
-    }
-
-
-    // /**
-    //  *
-    //  *
-    //  * @return string
-    //  * @throws InvalidArgumentException
-    //  * @throws rex_exception
-    //  * @author Andreas Lenhardt
-    //  */
-    // public function get_list()
-    // {
-    //     $list = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = "' . $this->url . '" GROUP BY date ORDER BY count DESC');
-    //     $list->setColumnLabel('date', 'Datum');
-    //     $list->setColumnLabel('count', 'Anzahl');
-    //     $list->setColumnSortable('date', $direction = 'desc');
-    //     $list->setColumnSortable('count', $direction = 'desc');
-    //     $list->setColumnParams('url', ['url' => '###url###']);
-
-    //     return $list->get();
-    // }
-
-
-    /**
-     *
-     *
-     * @return mixed
-     * @throws InvalidArgumentException
-     * @throws rex_sql_exception
-     * @author Andreas Lenhardt
-     */
-    public function get_page_total()
-    {
-        $details_page_total = rex_sql::factory();
-        $details_page_total->setQuery('SELECT SUM(count) as "count" FROM ' . rex::getTable('pagestats_api') . ' WHERE name = :name', ['name' => $this->name]);
-        $details_page_total = $details_page_total->getValue('count');
-
-        return $details_page_total;
+        $this->date_start = $date_start;
+        $this->date_end = $date_end;
     }
 
 
@@ -77,21 +38,22 @@ class stats_campaign_details
     {
         $sql = rex_sql::factory();
 
+        // modify to include end date in period because SQL BETWEEN includes start and end date, but DatePeriod excludes end date
+        // without modification an additional day would be fetched from database
+        $end = clone $this->date_end;
+        $end->modify('+1 day');
+
         $period = new DatePeriod(
-            new DateTime($this->min_date->format('Y-m-d')),
+            $this->date_start,
             new DateInterval('P1D'),
-            new DateTime($this->max_date->format('Y-m-d'))
+            $end
         );
 
         foreach ($period as $value) {
             $array[$value->format("d.m.Y")] = "0";
         }
 
-        if ($this->min_date != '' && $this->max_date != '') {
-            $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_api') . ' WHERE name = :name and date between :start and :end GROUP BY date ORDER BY date ASC', ['name' => $this->name, 'start' => $this->min_date->format('Y-m-d'), 'end' => $this->max_date->format('Y-m-d')]);
-        } else {
-            $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_api') . ' WHERE name = :name GROUP BY date ORDER BY date ASC', ['name' => $this->name]);
-        }
+        $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_api') . ' WHERE name = :name and date between :start and :end GROUP BY date ORDER BY date ASC', ['name' => $this->name, 'start' => $this->date_start->format('Y-m-d'), 'end' => $this->date_end->format('Y-m-d')]);
 
         $data = [];
 

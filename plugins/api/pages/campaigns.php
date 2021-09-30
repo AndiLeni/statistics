@@ -49,8 +49,7 @@ if ($request_name != '' && !$delete_entry) {
     $fragment->setVar('class', 'info', false);
     $fragment->setVar('title', 'Details für:');
     $fragment->setVar('heading', $request_name);
-    $fragment->setVar('body', '<h4>' . $this->i18n('statistics_views_total') . ' <b>' . $pagedetails->get_page_total() . '</b></h4>', false);
-    $fragment->setVar('content', $content, false);
+    $fragment->setVar('body', $content, false);
     echo $fragment->parse('core/page/section.php');
 }
 
@@ -63,7 +62,7 @@ $list->setColumnLabel('name', $this->i18n('statistics_api_name'));
 $list->setColumnLabel('count', $this->i18n('statistics_api_count'));
 // $list->setColumnSortable('name', $direction = 'asc');
 // $list->setColumnSortable('count', $direction = 'asc');
-$list->setColumnParams('name', ['name' => '###name###', 'date_start' => $request_date_start, 'date_end' => $request_date_end]);
+$list->setColumnParams('name', ['name' => '###name###', 'date_start' => $filter_date_helper->date_start->format('Y-m-d'), 'date_end' => $filter_date_helper->date_end->format('Y-m-d')]);
 
 $list->addColumn('edit', $this->i18n('statistics_api_delete'));
 $list->setColumnLabel('edit', $this->i18n('statistics_api_delete'));
@@ -97,7 +96,7 @@ echo $fragment2->parse('core/page/section.php');
             r: 25,
             l: 25,
             t: 25,
-            b: 75,
+            b: 100,
         },
     }
 

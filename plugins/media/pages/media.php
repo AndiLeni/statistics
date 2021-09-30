@@ -61,7 +61,7 @@ $list->setColumnLabel('url', $this->i18n('statistics_media_url'));
 $list->setColumnLabel('count', $this->i18n('statistics_media_count'));
 // $list->setColumnSortable('url', $direction = 'asc');
 // $list->setColumnSortable('count', $direction = 'asc');
-$list->setColumnParams('url', ['url' => '###url###', 'date_start' => $request_date_start, 'date_end' => $request_date_end]);
+$list->setColumnParams('url', ['url' => '###url###', 'date_start' => $filter_date_helper->date_start->format('Y-m-d'), 'date_end' => $filter_date_helper->date_end->format('Y-m-d')]);
 $list->addTableAttribute('class', 'table-bordered');
 
 $fragment2 = new rex_fragment();

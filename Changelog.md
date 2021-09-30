@@ -11,6 +11,8 @@
 - change table search to case-insensitive
 
 ### Removed
+- ``plugins\api\lib\stats_campaign_details.php\get_page_total()``
+- ``plugins\media\lib\stats_media_details.php\get_page_total()``
 
 ### Vendor Updates
 
