@@ -3,9 +3,12 @@
 ## [unreleased] - xx.xx.xxxx
 
 ### Added
+- permissions
 
 ### Changed
 - change some database fields to "text" type
+- change stats layout
+- change table search to case-insensitive
 
 ### Removed
 

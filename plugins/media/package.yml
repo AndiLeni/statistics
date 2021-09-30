@@ -1,20 +1,20 @@
 package: statistics/media
-version: dev-0.0.1
+version: dev-0.0.3
 author: Andreas Lenhardt
 supportpage: https://github.com/AndiLeni/redaxo_analytics
 
 page:
   title: 'translate:statistics_media_access'
   icon: rex-icon fa-image
-  perm: stats[]
+  perm: statistics[]
   subpages:
     media: 
       title: 'translate:statistics_media'
       icon: rex-icon fa-image
     settings: 
       title: 'translate:statistics_media_settings'
-      perm: admin
       icon: rex-icon fa-cog
+      perm: statistics[settings]
 
 requires:
   redaxo: '^5.11'

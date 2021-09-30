@@ -175,7 +175,7 @@ echo $fragment->parse('core/page/section.php');
                 [1, "desc"]
             ],
             "search": {
-                "caseInsensitive": false
+                "caseInsensitive": true
             },
             <?php
 
@@ -220,7 +220,7 @@ echo $fragment->parse('core/page/section.php');
                 [0, "desc"]
             ],
             "search": {
-                "caseInsensitive": false
+                "caseInsensitive": true
             },
             <?php
 

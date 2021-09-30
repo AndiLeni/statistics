@@ -124,7 +124,7 @@ echo $fragment2->parse('core/page/section.php');
                 [10, 20, 50, 100, 200, 'All']
             ],
             "search": {
-                "caseInsensitive": false
+                "caseInsensitive": true
             },
             <?php
 

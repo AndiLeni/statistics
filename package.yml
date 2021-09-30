@@ -6,7 +6,7 @@ supportpage: https://github.com/AndiLeni/statistics
 page:
   title: 'translate:statistics_stats'
   icon: rex-icon fa-line-chart
-  perm: stats[]
+  perm: statistics[]
   subpages:
     stats:
       title: 'translate:statistics_stats'
@@ -19,7 +19,7 @@ page:
       icon: rex-icon fa-external-link
     settings: 
       title: 'translate:statistics_settings'
-      perm: admin
+      perm: statistics[settings]
       icon: rex-icon fa-cog
     help:
       { title: 'translate:statistics_help', icon: rex-icon fa-info-circle, itemclass: pull-right}

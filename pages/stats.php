@@ -1,4 +1,3 @@
-
 <?php
 
 // BASIC INITIALISATION 
@@ -129,7 +128,7 @@ $filter_fragment->setVar('date_end', $filter_date_helper->date_end);
 // - TABLE WITH DATA FOR "VIEWS TOTAL"
 
 // TABLE UNDER MAIN CHART
-$list_dates = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "'.$filter_date_helper->date_start->format('Y-m-d') .'" and "'.$filter_date_helper->date_end->format('Y-m-d') .'" GROUP BY date ORDER BY count DESC', 500);
+$list_dates = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY date ORDER BY count DESC', 500);
 $list_dates->setColumnLabel('date', 'Datum');
 $list_dates->setColumnLabel('count', 'Anzahl');
 $list_dates->setColumnParams('url', ['url' => '###url###']);
@@ -144,103 +143,53 @@ $fragment->setVar('title', $this->i18n('statistics_views_per_day'));
 $fragment->setVar('body', '<div id="chart_visits"></div>' . $fragment_collapse->parse('collapse.php'), false);
 echo $fragment->parse('core/page/section.php');
 
-?>
-
-<div class="row">
-    <div class="col-sm-12 col-lg-6">
-        <?php
-
-        $fragment = new rex_fragment();
-        $fragment->setVar('title', $this->i18n('statistics_browser'));
-        $fragment->setVar('body', '<div id="chart_browser"></div>' . $browser->get_list(), false);
-        echo $fragment->parse('core/page/section.php');
-
-        ?>
-
-    </div>
-    <div class="col-sm-12 col-lg-6">
-        <?php
-
-        $fragment = new rex_fragment();
-        $fragment->setVar('title', $this->i18n('statistics_devicetype'));
-        $fragment->setVar('body', '<div id="chart_browsertype"></div>' . $browsertype->get_list(), false);
-        echo $fragment->parse('core/page/section.php');
-
-        ?>
-
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-12 col-lg-6">
-        <?php
-
-        $fragment = new rex_fragment();
-        $fragment->setVar('title', $this->i18n('statistics_os'));
-        $fragment->setVar('body', '<div id="chart_os"></div>' . $os->get_list(), false);
-        echo $fragment->parse('core/page/section.php');
-
-        ?>
-
-    </div>
-    <div class="col-sm-12 col-lg-6">
-
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-sm-12 col-lg-6">
-        <?php
-
-        $fragment = new rex_fragment();
-        $fragment->setVar('title', $this->i18n('statistics_brand'));
-        $fragment->setVar('body', '<div id="chart_brand"></div>' . $brand->get_list(), false);
-        echo $fragment->parse('core/page/section.php');
-
-        ?>
-
-    </div>
-    <div class="col-sm-12 col-lg-6">
-        <?php
-
-        $fragment = new rex_fragment();
-        $fragment->setVar('title', $this->i18n('statistics_model'));
-        $fragment->setVar('body', '<div id="chart_model"></div>' . $model->get_list(), false);
-        echo $fragment->parse('core/page/section.php');
-
-        ?>
-
-    </div>
-
-</div>
-
-<div class="row">
-    <div class="col-sm-12 col-lg-6">
-        <?php
-
-        $fragment = new rex_fragment();
-        $fragment->setVar('title', $this->i18n('statistics_days'));
-        $fragment->setVar('body', '<div id="chart_weekday"></div>' . $weekday->get_list(), false);
-        echo $fragment->parse('core/page/section.php');
-
-        ?>
-
-    </div>
-    <div class="col-sm-12 col-lg-6">
-        <?php
-
-        $fragment = new rex_fragment();
-        $fragment->setVar('title', $this->i18n('statistics_hours'));
-        $fragment->setVar('body', '<div id="chart_hour"></div>' . $hour->get_list(), false);
-        echo $fragment->parse('core/page/section.php');
-
-        ?>
-
-    </div>
-</div>
 
 
-<?php
+
+$fragment = new rex_fragment();
+$fragment->setVar('title', $this->i18n('statistics_browser'));
+$fragment->setVar('chart', '<div id="chart_browser"></div>', false);
+$fragment->setVar('table', $browser->get_list(), false);
+echo $fragment->parse('data_vertical.php');
+
+$fragment = new rex_fragment();
+$fragment->setVar('title', $this->i18n('statistics_devicetype'));
+$fragment->setVar('chart', '<div id="chart_browsertype"></div>', false);
+$fragment->setVar('table', $browsertype->get_list(), false);
+echo $fragment->parse('data_vertical.php');
+
+$fragment = new rex_fragment();
+$fragment->setVar('title', $this->i18n('statistics_os'));
+$fragment->setVar('chart', '<div id="chart_os"></div>', false);
+$fragment->setVar('table', $os->get_list(), false);
+echo $fragment->parse('data_vertical.php');
+
+$fragment = new rex_fragment();
+$fragment->setVar('title', $this->i18n('statistics_brand'));
+$fragment->setVar('chart', '<div id="chart_brand"></div>', false);
+$fragment->setVar('table', $brand->get_list(), false);
+echo $fragment->parse('data_vertical.php');
+
+$fragment = new rex_fragment();
+$fragment->setVar('title', $this->i18n('statistics_model'));
+$fragment->setVar('chart', '<div id="chart_model"></div>', false);
+$fragment->setVar('table', $model->get_list(), false);
+echo $fragment->parse('data_vertical.php');
+
+$fragment = new rex_fragment();
+$fragment->setVar('title', $this->i18n('statistics_days'));
+$fragment->setVar('chart', '<div id="chart_weekday"></div>', false);
+$fragment->setVar('table', $weekday->get_list(), false);
+echo $fragment->parse('data_vertical.php');
+
+$fragment = new rex_fragment();
+$fragment->setVar('title', $this->i18n('statistics_hours'));
+$fragment->setVar('chart', '<div id="chart_hour"></div>', false);
+$fragment->setVar('table', $hour->get_list(), false);
+echo $fragment->parse('data_vertical.php');
+
+
+
 
 $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_bot') . ' ORDER BY count DESC');
 $list->setColumnLabel('name', $this->i18n('statistics_name'));
@@ -337,14 +286,14 @@ echo $fragment->parse('core/page/section.php');
     $(document).on('rex:ready', function() {
         $('.dt_order_second').DataTable({
             "paging": true,
-            "pageLength": 5,
+            "pageLength": 8,
             "lengthChange": true,
             "lengthMenu": [5, 10, 50, 100],
             "order": [
                 [1, "desc"]
             ],
             "search": {
-                "caseInsensitive": false
+                "caseInsensitive": true
             },
 
             <?php
@@ -380,14 +329,14 @@ echo $fragment->parse('core/page/section.php');
 
         $('.dt_order_first').DataTable({
             "paging": true,
-            "pageLength": 5,
+            "pageLength": 8,
             "lengthChange": true,
             "lengthMenu": [5, 10, 50, 100],
             "order": [
                 [0, "desc"]
             ],
             "search": {
-                "caseInsensitive": false
+                "caseInsensitive": true
             },
 
             <?php
@@ -423,11 +372,11 @@ echo $fragment->parse('core/page/section.php');
 
         $('.dt_order_default').DataTable({
             "paging": true,
-            "pageLength": 5,
+            "pageLength": 8,
             "lengthChange": true,
             "lengthMenu": [5, 10, 50, 100],
             "search": {
-                "caseInsensitive": false
+                "caseInsensitive": true
             },
 
             <?php

@@ -31,6 +31,12 @@ if (rex::isBackend() && rex_addon::get('dashboard')->isAvailable()) {
 if (rex::isBackend()) {
     $addon = rex_addon::get('statistics');
 
+
+    // permissions
+    rex_perm::register('statistics[]', null);
+    rex_perm::register('statistics[settings]', null, rex_perm::OPTIONS);
+
+
     rex_view::addCssFile($addon->getAssetsUrl('datatables.min.css'));
     rex_view::addCssFile($addon->getAssetsUrl('statistics.css'));
 
