@@ -83,8 +83,8 @@ class pages_helper
      */
     public function ignore_page($request_url)
     {
-        $ignored_paths = $this->addon->getConfig('pagestats_ignored_paths');
-        $this->addon->setConfig('pagestats_ignored_paths', $ignored_paths . PHP_EOL . $request_url);
+        $ignored_paths = $this->addon->getConfig('statistics_ignored_paths');
+        $this->addon->setConfig('statistics_ignored_paths', $ignored_paths . PHP_EOL . $request_url);
 
         $sql = rex_sql::factory();
         $sql->setQuery('delete from ' . rex::getTable('pagestats_dump') . ' where url = :url', ['url' => $request_url]);

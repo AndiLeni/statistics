@@ -9,6 +9,8 @@
 - change some database fields to "text" type
 - change stats layout
 - change table search to case-insensitive
+- fix date filtering
+- adjust setting names
 
 ### Removed
 - ``plugins\api\lib\stats_campaign_details.php\get_page_total()``

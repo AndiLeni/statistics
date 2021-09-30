@@ -120,7 +120,7 @@ echo $fragment->parse('core/page/section.php');
             r: 25,
             l: 50,
             t: 25,
-            b: <?php echo $addon->getConfig('pagestats_chart_padding_bottom') ?>,
+            b: <?php echo $addon->getConfig('statistics_chart_padding_bottom') ?>,
         },
     }
 

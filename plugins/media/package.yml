@@ -1,5 +1,5 @@
 package: statistics/media
-version: dev-0.0.3
+version: 1.0.0-rc.1
 author: Andreas Lenhardt
 supportpage: https://github.com/AndiLeni/redaxo_analytics
 
@@ -24,5 +24,5 @@ requires:
     version: '>=7.1'
 
 default_config:
-    pagestats_media_log_all: false
-    pagestats_media_log_mm: true
+    statistics_media_log_all: false
+    statistics_media_log_mm: true

@@ -17,14 +17,14 @@ if (rex_request_method() == 'post') {
 $form = rex_config_form::factory("statistics/media");
 
 
-$field = $form->addRadioField ('pagestats_media_log_all');
+$field = $form->addRadioField ('statistics_media_log_all');
 $field->setLabel($this->i18n('statistics_media_log_all'));
 $field->addOption ($this->i18n('statistics_media_yes'), true);
 $field->addOption ($this->i18n('statistics_media_no'), false);
 $field->setNotice($this->i18n('statistics_media_log_all_note'));
 
 
-$field = $form->addRadioField ('pagestats_media_log_mm');
+$field = $form->addRadioField ('statistics_media_log_mm');
 $field->setLabel($this->i18n('statistics_media_log_mm'));
 $field->addOption ($this->i18n('statistics_media_yes'), true);
 $field->addOption ($this->i18n('statistics_media_no'), false);

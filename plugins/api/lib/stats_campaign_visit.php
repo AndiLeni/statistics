@@ -67,8 +67,8 @@ class stats_campaign_visit
             $interval = $origin->diff($target);
             $minute_diff = $interval->i + ($interval->h * 60) + ($interval->d * 3600) + ($interval->m * 43800) + ($interval->y * 525599);
 
-            // hash was found, if last visit < 'pagestats_visit_duration' min save visit
-            $max_visit_length = intval($this->addon->getConfig('pagestats_visit_duration'));
+            // hash was found, if last visit < 'statistics_visit_duration' min save visit
+            $max_visit_length = intval($this->addon->getConfig('statistics_visit_duration'));
 
             if ($minute_diff > $max_visit_length) {
                 // update set last visit to now

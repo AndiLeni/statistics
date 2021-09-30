@@ -1,5 +1,5 @@
 package: statistics/api
-version: dev-0.0.3
+version: 1.0.0-rc.1
 author: Andreas Lenhardt
 supportpage: https://github.com/AndiLeni/statistics
 
@@ -23,3 +23,5 @@ requires:
   php:
     version: '>=7.1'
 
+default_config:
+    statistics_api_enable: false

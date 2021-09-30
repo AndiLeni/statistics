@@ -37,24 +37,24 @@ if (rex_request_method() == 'post') {
 $form = rex_config_form::factory("statistics");
 
 
-$field2 = $form->addTextField('pagestats_visit_duration');
+$field2 = $form->addTextField('statistics_visit_duration');
 $field2->setLabel($this->i18n('statistics_visit_duration'));
 $field2->setNotice($this->i18n('statistics_duration_note'));
 $field2->getValidator()->add('type', $this->i18n('statistics_duration_validate'), 'int');
 
 
-$field2 = $form->addTextField('pagestats_chart_padding_bottom');
+$field2 = $form->addTextField('statistics_chart_padding_bottom');
 $field2->setLabel($this->i18n('statistics_chart_padding'));
 $field2->setNotice($this->i18n('statistics_padding_note'));
 $field2->getValidator()->add('type', $this->i18n('statistics_pagging_validation'), 'int');
 
 
-$field = $form->addTextAreaField('pagestats_ignored_paths');
+$field = $form->addTextAreaField('statistics_ignored_paths');
 $field->setLabel($this->i18n('statistics_ignore_paths'));
 $field->setNotice($this->i18n('statistics_paths_note'));
 
 
-$field3 = $form->addTextAreaField('pagestats_ignored_ips');
+$field3 = $form->addTextAreaField('statistics_ignored_ips');
 $field3->setLabel($this->i18n('statistics_ignore_ips'));
 $field3->setNotice($this->i18n('statistics_ips_note'));
 

@@ -115,8 +115,8 @@ class stats_visit
     public function ignore_visit()
     {
         // check if visit should be ignored
-        $ignored_paths = $this->addon->getConfig('pagestats_ignored_paths');
-        $ignored_ips = $this->addon->getConfig('pagestats_ignored_ips');
+        $ignored_paths = $this->addon->getConfig('statistics_ignored_paths');
+        $ignored_ips = $this->addon->getConfig('statistics_ignored_ips');
         $ignored_regex = $this->addon->getConfig('pagestats_ignored_regex');
 
         if (trim($ignored_ips != '')) {
@@ -236,8 +236,8 @@ class stats_visit
             $interval = $origin->diff($target);
             $minute_diff = $interval->i + ($interval->h * 60) + ($interval->d * 3600) + ($interval->m * 43800) + ($interval->y * 525599);
 
-            // hash was found, if last visit < 'pagestats_visit_duration' min save visit
-            $max_visit_length = intval($this->addon->getConfig('pagestats_visit_duration'));
+            // hash was found, if last visit < 'statistics_visit_duration' min save visit
+            $max_visit_length = intval($this->addon->getConfig('statistics_visit_duration'));
 
             if ($minute_diff > $max_visit_length) {
                 // update set last visit to now
