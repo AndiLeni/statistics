@@ -1,6 +1,6 @@
 # Changelog
 
-## [unreleased] - xx.xx.xxxx
+## [1.0.0-rc.2] - 04.10.2021
 
 ### Added
 - pagedetails panel headings
