@@ -97,11 +97,7 @@ class stats_pagedetails
     {
         $sql = rex_sql::factory();
 
-        if ($this->min_date != '' && $this->max_date != '') {
-            $result = $sql->setQuery('SELECT os, COUNT(os) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url and date between :start and :end GROUP BY os ORDER BY count DESC', ['url' => $this->url, 'start' => $this->min_date->format('Y-m-d'), 'end' => $this->max_date->format('Y-m-d')]);
-        } else {
-            $result = $sql->setQuery('SELECT os, COUNT(os) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url GROUP BY os ORDER BY count DESC', ['url' => $this->url]);
-        }
+        $result = $sql->setQuery('SELECT os, COUNT(os) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url and date between :start and :end GROUP BY os ORDER BY count DESC', ['url' => $this->url, 'start' => $this->min_date->format('Y-m-d'), 'end' => $this->max_date->format('Y-m-d')]);
 
         $data = [];
 
@@ -125,11 +121,7 @@ class stats_pagedetails
      */
     public function get_list()
     {
-        if ($this->min_date != '' && $this->max_date != '') {
-            $list = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = "' . $this->url . '" and date between "' . $this->min_date->format('Y-m-d') . '" and "' . $this->max_date->format('Y-m-d') . '" GROUP BY date ORDER BY count DESC', 500);
-        } else {
-            $list = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = "' . $this->url . '" GROUP BY date ORDER BY count DESC', 500);
-        }
+        $list = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = "' . $this->url . '" and date between "' . $this->min_date->format('Y-m-d') . '" and "' . $this->max_date->format('Y-m-d') . '" GROUP BY date ORDER BY count DESC', 10000);
 
         $list->setColumnLabel('date', 'Datum');
         $list->setColumnLabel('count', 'Anzahl');

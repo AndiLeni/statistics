@@ -102,7 +102,7 @@ class pages_helper
      */
     public function get_list()
     {
-        $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->date_start->format('Y-m-d') . '" and "' . $this->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC, url ASC', 1000);
+        $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->date_start->format('Y-m-d') . '" and "' . $this->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC, url ASC', 10000);
 
         $list->setColumnLabel('url', $this->addon->i18n('statistics_url'));
         $list->setColumnLabel('count', $this->addon->i18n('statistics_count'));

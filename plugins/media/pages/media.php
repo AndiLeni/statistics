@@ -54,7 +54,7 @@ if ($request_url != '' && !$delete_entry) {
 
 
 
-$list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_media') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC', 500);
+$list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_media') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC', 10000);
 
 
 $list->setColumnLabel('url', $this->i18n('statistics_media_url'));
