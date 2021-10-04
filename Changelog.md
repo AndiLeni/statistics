@@ -3,6 +3,7 @@
 ## [unreleased] - xx.xx.xxxx
 
 ### Added
+- pagedetails panel headings
 
 ### Changed
 - fix for paginations / #57

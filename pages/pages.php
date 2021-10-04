@@ -59,6 +59,9 @@ if ($request_url != '' && !$ignore_page) {
     $content = '<div class="row">
     <div class="col-md-4">
         <div class="panel panel-default">
+            <div class="panel-heading">
+                ' . $addon->i18n('statistics_devicetype') . '
+            </div>
             <div class="panel-body">
                 <div id="chart_details_devicetype"></div>
             </div>
@@ -66,6 +69,9 @@ if ($request_url != '' && !$ignore_page) {
     </div>
     <div class="col-md-4">
         <div class="panel panel-default">
+            <div class="panel-heading">
+                ' . $addon->i18n('statistics_browser') . '
+            </div>
             <div class=" panel-body">
                 <div id="chart_details_browser"></div>
             </div>
@@ -73,6 +79,9 @@ if ($request_url != '' && !$ignore_page) {
     </div>
     <div class="col-md-4">
         <div class="panel panel-default">
+            <div class="panel-heading">
+                ' . $addon->i18n('statistics_os') . '
+            </div>
             <div class=" panel-body">
                 <div id="chart_details_os"></div>
             </div>
@@ -89,7 +98,6 @@ if ($request_url != '' && !$ignore_page) {
     $fragment->setVar('body', '<h4>' . $this->i18n('statistics_views_total') . ' <b>' . $pagedetails->get_page_total() . '</b></h4>', false);
     $fragment->setVar('body', $content, false);
     echo $fragment->parse('core/page/section.php');
-
 }
 
 
