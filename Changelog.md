@@ -1,5 +1,18 @@
 # Changelog
 
+## [unreleased] - xx.xx.xxxx
+
+### Added
+- add "id" column as primary key to all tables to increase performance
+
+### Changed
+
+### Removed
+
+### Vendor Updates
+
+### Notes
+
 ## [1.0.0-rc.2] - 04.10.2021
 
 ### Added

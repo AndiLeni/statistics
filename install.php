@@ -1,6 +1,7 @@
 <?php
 
 rex_sql_table::get(rex::getTable('pagestats_dump'))
+    ->ensureColumn(new rex_sql_column('id', 'int', false, null, 'auto_increment'))
     ->ensureColumn(new rex_sql_column('browser', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('os', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('browsertype', 'varchar(255)'))
@@ -10,22 +11,29 @@ rex_sql_table::get(rex::getTable('pagestats_dump'))
     ->ensureColumn(new rex_sql_column('date', 'date'))
     ->ensureColumn(new rex_sql_column('hour', 'int'))
     ->ensureColumn(new rex_sql_column('weekday', 'int'))
+    ->setPrimaryKey('id')
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_bot'))
+    ->ensureColumn(new rex_sql_column('id', 'int', false, null, 'auto_increment'))
     ->ensureColumn(new rex_sql_column('name', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('category', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('producer', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
+    ->setPrimaryKey('id')
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_hash'))
+    ->ensureColumn(new rex_sql_column('id', 'int', false, null, 'auto_increment'))
     ->ensureColumn(new rex_sql_column('hash', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('datetime', 'datetime'))
+    ->setPrimaryKey('id')
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_referer'))
+    ->ensureColumn(new rex_sql_column('id', 'int', false, null, 'auto_increment'))
     ->ensureColumn(new rex_sql_column('referer', 'text'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->ensureColumn(new rex_sql_column('date', 'date'))
+    ->setPrimaryKey('id')
     ->ensure();
