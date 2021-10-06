@@ -1,6 +1,6 @@
 # Changelog
 
-## [unreleased] - xx.xx.xxxx
+## [1.0.0-rc.3] - 06.10.2021
 
 ### Added
 - add "id" column as primary key to all tables to increase performance
