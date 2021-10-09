@@ -44,7 +44,9 @@ class pages_helper
     {
         $sql = rex_sql::factory();
 
-        $sum_per_page = $sql->setQuery('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY url ORDER BY count DESC, url ASC', ['start' => $this->date_start->format('Y-m-d'), 'end' => $this->date_end->format('Y-m-d')]);
+        // $sum_per_page = $sql->setQuery('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY url ORDER BY count DESC, url ASC', ['start' => $this->date_start->format('Y-m-d'), 'end' => $this->date_end->format('Y-m-d')]);
+
+        $sum_per_page = $sql->setQuery('SELECT url, count from ' . rex::getTable('pagestats_visits_per_url') . ' where date between :start and :end ORDER BY count DESC, url ASC', ['start' => $this->date_start->format('Y-m-d'), 'end' => $this->date_end->format('Y-m-d')]);
 
         $sum_per_page_labels = [];
         $sum_per_page_values = [];
@@ -102,7 +104,9 @@ class pages_helper
      */
     public function get_list()
     {
-        $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->date_start->format('Y-m-d') . '" and "' . $this->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC, url ASC', 10000);
+        // $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->date_start->format('Y-m-d') . '" and "' . $this->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC, url ASC', 10000);
+
+        $list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between "' . $this->date_start->format('Y-m-d') . '" and "' . $this->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC, url ASC', 10000);
 
         $list->setColumnLabel('url', $this->addon->i18n('statistics_url'));
         $list->setColumnLabel('count', $this->addon->i18n('statistics_count'));

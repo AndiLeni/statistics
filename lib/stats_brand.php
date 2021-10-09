@@ -37,12 +37,14 @@ class stats_brand
     {
         $sql = rex_sql::factory();
 
-        $result = $sql->setQuery('SELECT brand, COUNT(brand) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY brand ORDER BY count DESC', ['start' => $this->start_date->format('Y-m-d'), 'end' => $this->end_date->format('Y-m-d')]);
+        // $result = $sql->setQuery('SELECT brand, COUNT(brand) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY brand ORDER BY count DESC', ['start' => $this->start_date->format('Y-m-d'), 'end' => $this->end_date->format('Y-m-d')]);
+
+        $result = $sql->setQuery('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' WHERE type = "brand" ORDER BY count DESC');
 
         $data = [];
 
         foreach ($result as $row) {
-            $data[$row->getValue('brand')] = $row->getValue('count');
+            $data[$row->getValue('name')] = $row->getValue('count');
         }
 
         return $data;
@@ -80,7 +82,9 @@ class stats_brand
     {
         $addon = rex_addon::get('statistics');
 
-        $list = rex_list::factory('SELECT brand, COUNT(brand) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->start_date->format('Y-m-d') . '" and "' . $this->end_date->format('Y-m-d') . '" GROUP BY brand ORDER BY count DESC', 10000);
+        // $list = rex_list::factory('SELECT brand, COUNT(brand) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->start_date->format('Y-m-d') . '" and "' . $this->end_date->format('Y-m-d') . '" GROUP BY brand ORDER BY count DESC', 10000);
+
+        $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "brand" ORDER BY count DESC', 10000);
 
         $list->setColumnLabel('brand', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));

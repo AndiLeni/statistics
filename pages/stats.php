@@ -7,8 +7,9 @@ $request_date_start = htmlspecialchars_decode(rex_request('date_start', 'string'
 $request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''));
 
 $sql = rex_sql::factory();
+// $sql->setDebug(true);
 
-$filter_date_helper = new filter_date_helper($request_date_start, $request_date_end, 'pagestats_dump');
+$filter_date_helper = new filter_date_helper($request_date_start, $request_date_end, 'pagestats_visits_per_day');
 
 
 
@@ -16,7 +17,9 @@ $filter_date_helper = new filter_date_helper($request_date_start, $request_date_
 
 // DATA COLLECTION FOR MAIN CHART, "VIEWS PER DAY"
 
-$sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY date ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
+// $sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY date ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
+
+$sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visits_per_day') . ' where date between :start and :end ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
 
 $period = new DatePeriod(
     $filter_date_helper->date_start,
@@ -54,10 +57,10 @@ if (array_keys($complete_dates_counts) == []) {
 
 // FRAGMENT TO SHOW TODAYS AND TOTAL COUNT OF VIEWS
 
-$views_total = $sql->setQuery('SELECT count(*) as "count" from ' . rex::getTable('pagestats_dump'));
+$views_total = $sql->setQuery('SELECT sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_day'));
 $views_total = $views_total->getValue('count');
 
-$views_today = $sql->setQuery('SELECT count(*) as "count" from ' . rex::getTable('pagestats_dump') . ' where date = :date', ['date' => date('Y-m-d')]);
+$views_today = $sql->setQuery('SELECT count from ' . rex::getTable('pagestats_visits_per_day') . ' where date = :date', ['date' => date('Y-m-d')]);
 $views_today = $views_today->getValue('count');
 
 $table = '
@@ -128,7 +131,8 @@ $filter_fragment->setVar('date_end', $filter_date_helper->date_end);
 // - TABLE WITH DATA FOR "VIEWS TOTAL"
 
 // TABLE UNDER MAIN CHART
-$list_dates = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY date ORDER BY count DESC', 10000);
+// $list_dates = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY date ORDER BY count DESC', 10000);
+$list_dates = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_visits_per_day') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" ORDER BY count DESC', 10000);
 $list_dates->setColumnLabel('date', 'Datum');
 $list_dates->setColumnLabel('count', 'Anzahl');
 $list_dates->setColumnParams('url', ['url' => '###url###']);

@@ -37,12 +37,14 @@ class stats_browser
     {
         $sql = rex_sql::factory();
 
-        $result = $sql->setQuery('SELECT browser, COUNT(browser) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY browser ORDER BY count DESC', ['start' => $this->start_date->format('Y-m-d'), 'end' => $this->end_date->format('Y-m-d')]);
+        // $result = $sql->setQuery('SELECT browser, COUNT(browser) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY browser ORDER BY count DESC', ['start' => $this->start_date->format('Y-m-d'), 'end' => $this->end_date->format('Y-m-d')]);
+
+        $result = $sql->setQuery('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' WHERE type = "browser" ORDER BY count DESC');
 
         $data = [];
 
         foreach ($result as $row) {
-            $data[$row->getValue('browser')] = $row->getValue('count');
+            $data[$row->getValue('name')] = $row->getValue('count');
         }
 
         return $data;
@@ -78,7 +80,9 @@ class stats_browser
     {
         $addon = rex_addon::get('statistics');
 
-        $list = rex_list::factory('SELECT browser, COUNT(browser) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->start_date->format('Y-m-d') . '" and "' . $this->end_date->format('Y-m-d') . '" GROUP BY browser ORDER BY count DESC', 10000);
+        // $list = rex_list::factory('SELECT browser, COUNT(browser) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->start_date->format('Y-m-d') . '" and "' . $this->end_date->format('Y-m-d') . '" GROUP BY browser ORDER BY count DESC', 10000);
+
+        $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "browser" ORDER BY count DESC', 10000);
 
         $list->setColumnLabel('browser', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));

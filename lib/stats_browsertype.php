@@ -37,12 +37,14 @@ class stats_browsertype
     {
         $sql = rex_sql::factory();
 
-        $result = $sql->setQuery('SELECT browsertype, COUNT(browsertype) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY browsertype ORDER BY count DESC', ['start' => $this->start_date->format('Y-m-d'), 'end' => $this->end_date->format('Y-m-d')]);
+        // $result = $sql->setQuery('SELECT browsertype, COUNT(browsertype) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY browsertype ORDER BY count DESC', ['start' => $this->start_date->format('Y-m-d'), 'end' => $this->end_date->format('Y-m-d')]);
+
+        $result = $sql->setQuery('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' WHERE type = "browsertype" ORDER BY count DESC');
 
         $data = [];
 
         foreach ($result as $row) {
-            $data[$row->getValue('browsertype')] = $row->getValue('count');
+            $data[$row->getValue('name')] = $row->getValue('count');
         }
 
         return $data;
@@ -80,7 +82,9 @@ class stats_browsertype
     {
         $addon = rex_addon::get('statistics');
 
-        $list = rex_list::factory('SELECT browsertype, COUNT(browsertype) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->start_date->format('Y-m-d') . '" and "' . $this->end_date->format('Y-m-d') . '" GROUP BY browsertype ORDER BY count DESC', 10000);
+        // $list = rex_list::factory('SELECT browsertype, COUNT(browsertype) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->start_date->format('Y-m-d') . '" and "' . $this->end_date->format('Y-m-d') . '" GROUP BY browsertype ORDER BY count DESC', 10000);
+
+        $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "browsertype" ORDER BY count DESC', 10000);
 
         $list->setColumnLabel('browsertype', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));

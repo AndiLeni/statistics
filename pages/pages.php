@@ -10,7 +10,7 @@ $search_string = htmlspecialchars_decode(rex_request('search_string', 'string', 
 $request_date_start = htmlspecialchars_decode(rex_request('date_start', 'string', ''));
 $request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''));
 
-$filter_date_helper = new filter_date_helper($request_date_start, $request_date_end, 'pagestats_dump');
+$filter_date_helper = new filter_date_helper($request_date_start, $request_date_end, 'pagestats_visits_per_url');
 $pages_helper = new pages_helper($filter_date_helper->date_start, $filter_date_helper->date_end);
 
 
@@ -50,9 +50,9 @@ if ($request_url != '' && !$ignore_page) {
     // details section for single page
 
     $pagedetails = new stats_pagedetails($request_url, $filter_date_helper->date_start, $filter_date_helper->date_end);
-    $browsertype_data = $pagedetails->get_browsertype();
-    $browser_data = $pagedetails->get_browser();
-    $os_data = $pagedetails->get_os();
+    // $browsertype_data = $pagedetails->get_browsertype();
+    // $browser_data = $pagedetails->get_browser();
+    // $os_data = $pagedetails->get_os();
     $sum_data = $pagedetails->get_sum_per_day();
 
 
@@ -148,23 +148,23 @@ echo $fragment->parse('core/page/section.php');
             y:' . $sum_data['values'] . ',
         }], layout, config);';
 
-        echo 'chart_details_devicetype = Plotly.newPlot("chart_details_devicetype", [{
-            type: "pie",
-            labels:' . $browsertype_data['labels'] . ',
-            values:' . $browsertype_data['values'] . ',
-        }], layout, config);';
+        // echo 'chart_details_devicetype = Plotly.newPlot("chart_details_devicetype", [{
+        //     type: "pie",
+        //     labels:' . $browsertype_data['labels'] . ',
+        //     values:' . $browsertype_data['values'] . ',
+        // }], layout, config);';
 
-        echo 'chart_details_browser = Plotly.newPlot("chart_details_browser", [{
-            type: "pie",
-            labels:' . $browser_data['labels'] . ',
-            values:' . $browser_data['values'] . ',
-        }], layout, config);';
+        // echo 'chart_details_browser = Plotly.newPlot("chart_details_browser", [{
+        //     type: "pie",
+        //     labels:' . $browser_data['labels'] . ',
+        //     values:' . $browser_data['values'] . ',
+        // }], layout, config);';
 
-        echo 'chart_details_os = Plotly.newPlot("chart_details_os", [{
-            type: "pie",
-            labels:' . $os_data['labels'] . ',
-            values:' . $os_data['values'] . ',
-        }], layout, config);';
+        // echo 'chart_details_os = Plotly.newPlot("chart_details_os", [{
+        //     type: "pie",
+        //     labels:' . $os_data['labels'] . ',
+        //     values:' . $os_data['values'] . ',
+        // }], layout, config);';
     }
 
 

@@ -197,17 +197,47 @@ class stats_visit
 
 
         $sql = rex_sql::factory();
-        $sql->setTable(rex::getTable('pagestats_dump'));
-        $sql->setValue('browser', $this->browser);
-        $sql->setValue('os', $this->os . " " . $this->osVer);
-        $sql->setValue('browsertype', $this->device_type);
-        $sql->setValue('brand', $this->brand);
-        $sql->setValue('model', $this->brand . ' - ' . $this->model);
-        $sql->setValue('url', $this->url);
-        $sql->setValue('date', $this->datetime_now->format('Y-m-d'));
-        $sql->setValue('hour', $this->datetime_now->format('H'));
-        $sql->setValue('weekday', $this->datetime_now->format('N'));
-        $sql->insert();
+        // $sql->setTable(rex::getTable('pagestats_dump'));
+        // $sql->setValue('browser', $this->browser);
+        // $sql->setValue('os', $this->os . " " . $this->osVer);
+        // $sql->setValue('browsertype', $this->device_type);
+        // $sql->setValue('brand', $this->brand);
+        // $sql->setValue('model', $this->brand . ' - ' . $this->model);
+        // $sql->setValue('url', $this->url);
+        // $sql->setValue('date', $this->datetime_now->format('Y-m-d'));
+        // $sql->setValue('hour', $this->datetime_now->format('H'));
+        // $sql->setValue('weekday', $this->datetime_now->format('N'));
+        // $sql->insert();
+
+
+        // new table style
+
+        $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_data') . ' (type,name,count) VALUES 
+        ("browser","' . $this->browser . '",1), 
+        ("os","' . $this->os . ' ' . $this->osVer . '",1), 
+        ("browsertype","' . $this->device_type . '",1), 
+        ("brand","' . $this->brand . '",1), 
+        ("model","' . $this->brand . ' - ' . $this->model . '",1), 
+        ("date","' . $this->datetime_now->format('Y-m-d') . '",1), 
+        ("hour","' . $this->datetime_now->format('H') . '",1), 
+        ("weekday","' . $this->datetime_now->format('N') . '",1) 
+        ON DUPLICATE KEY UPDATE count = count + 1;';
+
+        $res = $sql->setQuery($sql_insert);
+
+
+        $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_visits_per_day') . ' (date,count) VALUES 
+        ("' . $this->datetime_now->format('Y-m-d') . '",1)  
+        ON DUPLICATE KEY UPDATE count = count + 1;';
+
+        $res = $sql->setQuery($sql_insert);
+
+
+        $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_visits_per_url') . ' (hash,date,url,count) VALUES 
+        ("' . md5($this->datetime_now->format('Y-m-d') . $this->url) . '","' . $this->datetime_now->format('Y-m-d') . '","' . $this->url . '",1) 
+        ON DUPLICATE KEY UPDATE count = count + 1;';
+
+        $res = $sql->setQuery($sql_insert);
     }
 
 
