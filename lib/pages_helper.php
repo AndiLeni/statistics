@@ -44,8 +44,6 @@ class pages_helper
     {
         $sql = rex_sql::factory();
 
-        // $sum_per_page = $sql->setQuery('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY url ORDER BY count DESC, url ASC', ['start' => $this->date_start->format('Y-m-d'), 'end' => $this->date_end->format('Y-m-d')]);
-
         $sum_per_page = $sql->setQuery('SELECT url, count from ' . rex::getTable('pagestats_visits_per_url') . ' where date between :start and :end ORDER BY count DESC, url ASC', ['start' => $this->date_start->format('Y-m-d'), 'end' => $this->date_end->format('Y-m-d')]);
 
         $sum_per_page_labels = [];
@@ -66,7 +64,7 @@ class pages_helper
         }
         $sum_per_page_values = json_encode($sum_per_page_values);
 
-        
+
 
         return [
             'labels' => $sum_per_page_labels,
@@ -89,7 +87,16 @@ class pages_helper
         $this->addon->setConfig('statistics_ignored_paths', $ignored_paths . PHP_EOL . $request_url);
 
         $sql = rex_sql::factory();
-        $sql->setQuery('delete from ' . rex::getTable('pagestats_dump') . ' where url = :url', ['url' => $request_url]);
+
+        // get sum per day for substraction
+        $sum_per_day = $sql->getArray('select date, sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_url') . ' where url = :url group by date', ['url' => $request_url]);
+
+        // reduce visits per day by these factors
+        foreach ($sum_per_day as $e) {
+            $sql->setQuery('update ' . rex::getTable('pagestats_visits_per_day') . ' set count = count - :v where date = :date', ['v' => $e['count'], 'date' => $e['date']]);
+        }
+
+        $sql->setQuery('delete from ' . rex::getTable('pagestats_visits_per_url') . ' where url = :url', ['url' => $request_url]);
 
         return $sql->getRows();
     }
@@ -104,8 +111,6 @@ class pages_helper
      */
     public function get_list()
     {
-        // $list = rex_list::factory('SELECT url, COUNT(url) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->date_start->format('Y-m-d') . '" and "' . $this->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC, url ASC', 10000);
-
         $list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between "' . $this->date_start->format('Y-m-d') . '" and "' . $this->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC, url ASC', 10000);
 
         $list->setColumnLabel('url', $this->addon->i18n('statistics_url'));

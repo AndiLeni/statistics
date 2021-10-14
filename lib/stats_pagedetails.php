@@ -121,8 +121,6 @@ class stats_pagedetails
      */
     public function get_list()
     {
-        // $list = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = "' . $this->url . '" and date between "' . $this->min_date->format('Y-m-d') . '" and "' . $this->max_date->format('Y-m-d') . '" GROUP BY date ORDER BY count DESC', 10000);
-
         $list = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_visits_per_url') . ' WHERE url = "' . $this->url . '" and date between "' . $this->min_date->format('Y-m-d') . '" and "' . $this->max_date->format('Y-m-d') . '" ORDER BY count DESC', 10000);
 
         $list->setColumnLabel('date', 'Datum');
@@ -143,8 +141,6 @@ class stats_pagedetails
     public function get_page_total()
     {
         $details_page_total = rex_sql::factory();
-
-        // $details_page_total->setQuery('SELECT COUNT(url) as "count" FROM ' . rex::getTable('pagestats_dump') . ' WHERE url = :url', ['url' => $this->url]);
 
         $details_page_total->setQuery('SELECT sum(count) as "count" FROM ' . rex::getTable('pagestats_visits_per_url') . ' WHERE url = :url', ['url' => $this->url]);
 
@@ -181,8 +177,6 @@ class stats_pagedetails
         foreach ($period as $value) {
             $array[$value->format("d.m.Y")] = "0";
         }
-
-        // $sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' WHERE url = :url and date between :start and :end GROUP BY date ORDER BY date ASC', ['url' => $this->url, 'start' => $this->min_date->format('Y-m-d'), 'end' => $this->max_date->format('Y-m-d')]);
 
         $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visits_per_url') . ' WHERE url = :url and date between :start and :end ORDER BY date ASC', ['url' => $this->url, 'start' => $this->min_date->format('Y-m-d'), 'end' => $this->max_date->format('Y-m-d')]);
 

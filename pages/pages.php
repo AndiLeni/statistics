@@ -50,52 +50,16 @@ if ($request_url != '' && !$ignore_page) {
     // details section for single page
 
     $pagedetails = new stats_pagedetails($request_url, $filter_date_helper->date_start, $filter_date_helper->date_end);
-    // $browsertype_data = $pagedetails->get_browsertype();
-    // $browser_data = $pagedetails->get_browser();
-    // $os_data = $pagedetails->get_os();
     $sum_data = $pagedetails->get_sum_per_day();
 
-
-    $content = '<div class="row">
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                ' . $addon->i18n('statistics_devicetype') . '
-            </div>
-            <div class="panel-body">
-                <div id="chart_details_devicetype"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                ' . $addon->i18n('statistics_browser') . '
-            </div>
-            <div class=" panel-body">
-                <div id="chart_details_browser"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                ' . $addon->i18n('statistics_os') . '
-            </div>
-            <div class=" panel-body">
-                <div id="chart_details_os"></div>
-            </div>
-        </div>
-    </div>
-    </div>
-    <div id="chart_details"></div>
-    ' . $pagedetails->get_list();
+    $content = '<h4>' . $this->i18n('statistics_views_total') . ' <b>' . $pagedetails->get_page_total() . '</b></h4>';
+    $content .= '<div id="chart_details"></div>';
+    $content .= $pagedetails->get_list();
 
     $fragment = new rex_fragment();
     $fragment->setVar('class', 'info', false);
     $fragment->setVar('title', 'Details für:');
     $fragment->setVar('heading', $request_url);
-    $fragment->setVar('body', '<h4>' . $this->i18n('statistics_views_total') . ' <b>' . $pagedetails->get_page_total() . '</b></h4>', false);
     $fragment->setVar('body', $content, false);
     echo $fragment->parse('core/page/section.php');
 }
@@ -147,24 +111,6 @@ echo $fragment->parse('core/page/section.php');
             x:' . $sum_data['labels'] . ',
             y:' . $sum_data['values'] . ',
         }], layout, config);';
-
-        // echo 'chart_details_devicetype = Plotly.newPlot("chart_details_devicetype", [{
-        //     type: "pie",
-        //     labels:' . $browsertype_data['labels'] . ',
-        //     values:' . $browsertype_data['values'] . ',
-        // }], layout, config);';
-
-        // echo 'chart_details_browser = Plotly.newPlot("chart_details_browser", [{
-        //     type: "pie",
-        //     labels:' . $browser_data['labels'] . ',
-        //     values:' . $browser_data['values'] . ',
-        // }], layout, config);';
-
-        // echo 'chart_details_os = Plotly.newPlot("chart_details_os", [{
-        //     type: "pie",
-        //     labels:' . $os_data['labels'] . ',
-        //     values:' . $os_data['values'] . ',
-        // }], layout, config);';
     }
 
 

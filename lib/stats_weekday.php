@@ -136,9 +136,6 @@ class stats_weekday
      */
     public function get_list()
     {
-
-        // $list = rex_list::factory('SELECT weekday, COUNT(weekday) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->start_date->format('Y-m-d') . '" and "' . $this->end_date->format('Y-m-d') . '" GROUP BY weekday ORDER BY count DESC');
-
         $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "weekday" ORDER BY count DESC', 10000);
 
 

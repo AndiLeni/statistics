@@ -32,7 +32,7 @@ class stats_visitor_counter
     private function get_sql()
     {
         $sql = rex_sql::factory();
-        $result = $sql->setQuery('select count(url) as "count" from rex_pagestats_dump');
+        $result = $sql->setQuery('select sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_day'));
 
         return $result->getValue('count');
     }

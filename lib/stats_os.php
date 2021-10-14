@@ -37,8 +37,6 @@ class stats_os
     {
         $sql = rex_sql::factory();
 
-        // $result = $sql->setQuery('SELECT os, COUNT(os) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY os ORDER BY count DESC', ['start' => $this->start_date->format('Y-m-d'), 'end' => $this->end_date->format('Y-m-d')]);
-
         $result = $sql->setQuery('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' WHERE type = "os" ORDER BY count DESC');
 
         $data = [];
@@ -78,8 +76,6 @@ class stats_os
     public function get_list()
     {
         $addon = rex_addon::get('statistics');
-        
-        // $list = rex_list::factory('SELECT os, COUNT(os) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->start_date->format('Y-m-d') . '" and "' . $this->end_date->format('Y-m-d') . '" GROUP BY os ORDER BY count DESC', 10000);
 
         $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "os" ORDER BY count DESC', 10000);
         

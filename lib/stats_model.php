@@ -37,8 +37,6 @@ class stats_model
     {
         $sql = rex_sql::factory();
 
-        // $result = $sql->setQuery('SELECT model, COUNT(model) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY model ORDER BY count DESC', ['start' => $this->start_date->format('Y-m-d'), 'end' => $this->end_date->format('Y-m-d')]);
-
         $result = $sql->setQuery('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' WHERE type = "model" ORDER BY count DESC');
 
         $data = [];
@@ -78,8 +76,6 @@ class stats_model
     public function get_list()
     {
         $addon = rex_addon::get('statistics');
-
-        // $list = rex_list::factory('SELECT model, COUNT(model) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $this->start_date->format('Y-m-d') . '" and "' . $this->end_date->format('Y-m-d') . '" GROUP BY model ORDER BY count DESC', 10000);
 
         $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "model" ORDER BY count DESC', 10000);
 

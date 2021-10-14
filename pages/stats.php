@@ -61,7 +61,12 @@ $views_total = $sql->setQuery('SELECT sum(count) as "count" from ' . rex::getTab
 $views_total = $views_total->getValue('count');
 
 $views_today = $sql->setQuery('SELECT count from ' . rex::getTable('pagestats_visits_per_day') . ' where date = :date', ['date' => date('Y-m-d')]);
-$views_today = $views_today->getValue('count');
+if ($views_today->getRows() != 0) {
+    $views_today = $views_today->getValue('count');
+} else {
+    $views_today = 0;
+}
+
 
 $table = '
     <p class="h3 my-0">' . $this->i18n('statistics_today') . ' : <b>' . $views_today . '</b></p>
