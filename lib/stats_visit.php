@@ -306,17 +306,11 @@ class stats_visit
         $botproducer = $botInfo['producer']['name'] ?? '-';
 
         $sql = rex_sql::factory();
-        $result = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_bot') . ' SET count = count + 1 WHERE name = :name AND category = :category AND producer = :producer', ['name' => $botname, 'category' => $botcategory, 'producer' => $botproducer]);
 
-        if ($result->getRows() === 0) {
-            $bot = rex_sql::factory();
-            $bot->setTable(rex::getTable('pagestats_bot'));
-            $bot->setValue('name', $botname);
-            $bot->setValue('category', $botcategory);
-            $bot->setValue('producer', $botproducer);
-            $bot->setValue('count', 1);
-            $bot->insert();
-        }
+        $sql->setQuery('
+        INSERT INTO ' . rex::getTable('pagestats_bot') . ' (name,category,producer,count) VALUES 
+        (:botname,:botcategory,:botproducer,1) 
+        ON DUPLICATE KEY UPDATE count = count + 1;', ['botname' => $botname, 'botcategory' => $botcategory, 'botproducer' => $botproducer]);
     }
 
 
@@ -332,16 +326,11 @@ class stats_visit
     public function save_referer(string $referer)
     {
         $sql = rex_sql::factory();
-        $result = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_referer') . ' SET count = count + 1 WHERE referer = :referer AND date = :date', ['referer' => $referer, 'date' => $this->datetime_now->format('Y-m-d')]);
 
-        if ($result->getRows() === 0) {
-            $ref = rex_sql::factory();
-            $ref->setTable(rex::getTable('pagestats_referer'));
-            $ref->setValue('referer', $referer);
-            $ref->setValue('count', 1);
-            $ref->setValue('date', $this->datetime_now->format('Y-m-d'));
-            $ref->insert();
-        }
+        $sql->setQuery('
+        INSERT INTO ' . rex::getTable('pagestats_referer') . ' (referer,date,count) VALUES 
+        (:referer,:date,1) 
+        ON DUPLICATE KEY UPDATE count = count + 1;', ['referer' => $referer, 'date' => $this->datetime_now->format('Y-m-d')]);
     }
 
 

@@ -39,7 +39,7 @@ rex_sql_table::get(rex::getTable('pagestats_hash'))
 rex_sql_table::get(rex::getTable('pagestats_referer'))
     ->ensureColumn(new rex_sql_column('id', 'int', false, null, 'auto_increment'))
     ->ensureColumn(new rex_sql_column('referer', 'varchar(2048)'))
-    ->ensureColumn(new rex_sql_column('count', 'int'))
     ->ensureColumn(new rex_sql_column('date', 'date'))
+    ->ensureColumn(new rex_sql_column('count', 'int'))
     ->setPrimaryKey(['id'])
     ->ensure();
