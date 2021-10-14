@@ -23,6 +23,7 @@ rex_sql_table::get(rex::getTable('pagestats_visits_per_url'))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_bot'))
+    ->removeColumn('id')
     ->ensureColumn(new rex_sql_column('name', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('category', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('producer', 'varchar(255)'))
@@ -31,6 +32,7 @@ rex_sql_table::get(rex::getTable('pagestats_bot'))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_hash'))
+    ->removeColumn('id')
     ->ensureColumn(new rex_sql_column('hash', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('datetime', 'datetime'))
     ->setPrimaryKey(['hash'])
