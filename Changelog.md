@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.0.0-beta.1] - 14.10.2021
+
+### Added
+- table ``pagestats_data``
+- table ``pagestats_visits_per_day``
+- table ``pagestats_visits_per_url``
+
+### Changed
+- visits are now saved directly in a more separated way to achieve better performance on pages with a hight number of visits per day
+- browserdata is not any more separated by date
+
+### Removed
+- table ``pagestats_dump``
+
+### Vendor Updates
+
+### Notes
+Auf Website mit vielen Besuchen pro Tag kam es im Backend zu extremen Ladezeiten um die Daten aufzubereiten.
+Um dem Vorzubeugen werden Besuche nun in passendere Tabellenstrukturen gespeichert um eine Auswertung zu beschleunigen.
+
+Beim Upgrade werden die Daten aus der Tabelle pagestats_dump ausgewertet und auf die neuen Tabellen verteilt.
+> **Hinweis:** Dieser Migrationsvorgang kann je nach Tabellengröße länger dauern, bitte sicherstellen, dass die PHP Laufzeit ausreichend ist.
+
 ## [1.0.0-rc.3] - 06.10.2021
 
 ### Added

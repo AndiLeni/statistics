@@ -1,43 +1,47 @@
 package: statistics
-version: 1.0.0-rc.3
+version: 2.0.0-beta.1
 author: Andreas Lenhardt
 supportpage: https://github.com/AndiLeni/statistics
 
 page:
-  title: 'translate:statistics_stats'
-  icon: rex-icon fa-line-chart
-  perm: statistics[]
-  subpages:
-    stats:
-      title: 'translate:statistics_stats'
-      icon: rex-icon fa-pie-chart
-    pages: 
-      title: 'translate:statistics_pages'
-      icon: rex-icon fa-file-text-o
-    referer: 
-      title: 'translate:statistics_referer'
-      icon: rex-icon fa-external-link
-    settings: 
-      title: 'translate:statistics_settings'
-      perm: statistics[settings]
-      icon: rex-icon fa-cog
-    help:
-      { title: 'translate:statistics_help', icon: rex-icon fa-info-circle, itemclass: pull-right}
+    title: "translate:statistics_stats"
+    icon: rex-icon fa-line-chart
+    perm: statistics[]
+    subpages:
+        stats:
+            title: "translate:statistics_stats"
+            icon: rex-icon fa-pie-chart
+        pages:
+            title: "translate:statistics_pages"
+            icon: rex-icon fa-file-text-o
+        referer:
+            title: "translate:statistics_referer"
+            icon: rex-icon fa-external-link
+        settings:
+            title: "translate:statistics_settings"
+            perm: statistics[settings]
+            icon: rex-icon fa-cog
+        help:
+            {
+                title: "translate:statistics_help",
+                icon: rex-icon fa-info-circle,
+                itemclass: pull-right,
+            }
 
 requires:
-  redaxo: '^5.11'
-  packages:
-    yrewrite: '^2.7'
-  php:
-    version: '>=7.1'
+    redaxo: "^5.11"
+    packages:
+        yrewrite: "^2.7"
+    php:
+        version: ">=7.1"
 
 default_config:
-    statistics_ignored_paths: ''
-    statistics_ignored_ips: ''
+    statistics_ignored_paths: ""
+    statistics_ignored_ips: ""
     statistics_visit_duration: 30
     statistics_chart_padding_bottom: 90
     statistics_log_all: true
-    statistics_scroll_pagination: 'none'
+    statistics_scroll_pagination: "none"
     statistics_ignore_url_params: false
 
 installer_ignore:
