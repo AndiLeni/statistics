@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.0.0-beta.3] - 14.10.2021
+
+### Added
+
+### Changed
+- escape data during migration
+
+### Removed
+
+### Vendor Updates
+
+### Notes
+
 ## [2.0.0-beta.2] - 14.10.2021
 
 ### Added

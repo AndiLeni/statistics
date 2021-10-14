@@ -34,7 +34,7 @@ if (rex_sql_table::get(rex::getTable('pagestats_dump'))->exists()) {
 
     foreach ($data as $e) {
         $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_data') . ' (type,name,count) VALUES 
-        ("os","' . $e['os'] . '",' . $e['count'] . ');';
+        ("os","' . addslashes($e['os']) . '",' . $e['count'] . ');';
 
         $res = $sql->setQuery($sql_insert);
     }
@@ -50,7 +50,7 @@ if (rex_sql_table::get(rex::getTable('pagestats_dump'))->exists()) {
 
     foreach ($data as $e) {
         $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_data') . ' (type,name,count) VALUES 
-        ("browsertype","' . $e['browsertype'] . '",' . $e['count'] . ');';
+        ("browsertype","' . addslashes($e['browsertype']) . '",' . $e['count'] . ');';
 
         $res = $sql->setQuery($sql_insert);
     }
@@ -66,7 +66,7 @@ if (rex_sql_table::get(rex::getTable('pagestats_dump'))->exists()) {
 
     foreach ($data as $e) {
         $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_data') . ' (type,name,count) VALUES 
-        ("brand","' . $e['brand'] . '",' . $e['count'] . ');';
+        ("brand","' . addslashes($e['brand']) . '",' . $e['count'] . ');';
 
         $res = $sql->setQuery($sql_insert);
     }
@@ -82,7 +82,7 @@ if (rex_sql_table::get(rex::getTable('pagestats_dump'))->exists()) {
 
     foreach ($data as $e) {
         $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_data') . ' (type,name,count) VALUES 
-        ("model","' . $e['model'] . '",' . $e['count'] . ');';
+        ("model","' . addslashes($e['model']) . '",' . $e['count'] . ');';
 
         $res = $sql->setQuery($sql_insert);
     }
