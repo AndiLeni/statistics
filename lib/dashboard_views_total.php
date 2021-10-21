@@ -19,14 +19,14 @@ class rex_dashboard_views_total extends rex_dashboard_item
     public function getData()
     {
         $sql = rex_sql::factory();
-        $sql->setTable(rex::getTable('pagestats_dump'));
-        $sql->select('count(url) as "count"');
+        $sql->setTable(rex::getTable('pagestats_visits_per_day'));
+        $sql->select('sum(count) as "count"');
         $total = $sql->getValue('count');
 
         $sql = rex_sql::factory();
-        $sql->setTable(rex::getTable('pagestats_dump'));
+        $sql->setTable(rex::getTable('pagestats_visits_per_day'));
         $sql->setWhere(['date' => date('Y-m-d')]);
-        $sql->select('count(url) as "count"');
+        $sql->select('sum(count) as "count"');
         $today = $sql->getValue('count');
 
         $content = '

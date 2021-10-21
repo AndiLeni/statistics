@@ -7,6 +7,7 @@
 ### Changed
 - escape data before inserted in db / #62 
 - fix data deletion / #63
+- fix dashboard integration
 
 ### Removed
 
