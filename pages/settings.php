@@ -9,27 +9,32 @@ if (rex_request_method() == 'post') {
         $sql = rex_sql::factory();
         $sql->setQuery('delete from ' . rex::getTable('pagestats_hash'));
         echo rex_view::success($sql->getRows() . ' ' . $this->i18n('statistics_deleted_hashes'));
-        
     } elseif ($function == 'delete_dump') {
         $sql = rex_sql::factory();
-        $sql->setQuery('delete from ' . rex::getTable('pagestats_dump'));
-        echo rex_view::success($sql->getRows() . ' ' . $this->i18n('statistics_deleted_dump'));
-        
+        $count = 0;
+
+        $sql->setQuery('delete from ' . rex::getTable('pagestats_data'));
+        $count += $sql->getRows();
+
+        $sql->setQuery('delete from ' . rex::getTable('pagestats_visits_per_day'));
+        $count += $sql->getRows();
+
+        $sql->setQuery('delete from ' . rex::getTable('pagestats_visits_per_url'));
+        $count += $sql->getRows();
+
+        echo rex_view::success($count . ' ' . $this->i18n('statistics_deleted_dump'));
     } elseif ($function == 'delete_media') {
         $sql = rex_sql::factory();
         $sql->setQuery('delete from ' . rex::getTable('pagestats_media'));
         echo rex_view::success($sql->getRows() . ' ' . $this->i18n('statistics_deleted_bots'));
-        
     } elseif ($function == 'delete_bot') {
         $sql = rex_sql::factory();
         $sql->setQuery('delete from ' . rex::getTable('pagestats_bot'));
         echo rex_view::success($sql->getRows() . ' ' . $this->i18n('statistics_deleted_referer'));
-        
     } elseif ($function == 'delete_referer') {
         $sql = rex_sql::factory();
         $sql->setQuery('delete from ' . rex::getTable('pagestats_referer'));
         echo rex_view::success($sql->getRows() . ' ' . $this->i18n('statistics_deleted_media'));
-        
     }
 }
 
@@ -64,24 +69,24 @@ $field3->setLabel($this->i18n('pagestats_ignored_regex'));
 $field3->setNotice($this->i18n('pagestats_ignored_regex_note'));
 
 
-$field4 = $form->addRadioField ('statistics_log_all');
+$field4 = $form->addRadioField('statistics_log_all');
 $field4->setLabel($this->i18n('statistics_log_404'));
-$field4->addOption ($this->i18n('statistics_yes'), true);
-$field4->addOption ($this->i18n('statistics_no'), false);
+$field4->addOption($this->i18n('statistics_yes'), true);
+$field4->addOption($this->i18n('statistics_no'), false);
 $field4->setNotice($this->i18n('statistics_log_404_note'));
 
 
-$field4 = $form->addRadioField ('statistics_scroll_pagination');
+$field4 = $form->addRadioField('statistics_scroll_pagination');
 $field4->setLabel($this->i18n('statistics_scroll_pagination'));
-$field4->addOption ($this->i18n('statistics_scroll_table'), 'table');
-$field4->addOption ($this->i18n('statistics_scroll_panel'), 'panel');
-$field4->addOption ($this->i18n('statistics_scroll_none'), 'none');
+$field4->addOption($this->i18n('statistics_scroll_table'), 'table');
+$field4->addOption($this->i18n('statistics_scroll_panel'), 'panel');
+$field4->addOption($this->i18n('statistics_scroll_none'), 'none');
 
 
-$field5 = $form->addRadioField ('statistics_ignore_url_params');
+$field5 = $form->addRadioField('statistics_ignore_url_params');
 $field5->setLabel($this->i18n('statistics_statistics_ignore_url_params'));
-$field5->addOption ($this->i18n('statistics_yes'), true);
-$field5->addOption ($this->i18n('statistics_no'), false);
+$field5->addOption($this->i18n('statistics_yes'), true);
+$field5->addOption($this->i18n('statistics_no'), false);
 $field5->setNotice($this->i18n('statistics_statistics_ignore_url_params_note'));
 
 

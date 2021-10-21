@@ -1,5 +1,19 @@
 # Changelog
 
+## [unreleased] - xx.xx.xxxx
+
+### Added
+
+### Changed
+- escape data before inserted in db / #62 
+- fix data deletion / #63
+
+### Removed
+
+### Vendor Updates
+
+### Notes
+
 ## [2.0.0-beta.3] - 14.10.2021
 
 ### Added
