@@ -199,11 +199,11 @@ class stats_visit
         $sql = rex_sql::factory();
 
         $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_data') . ' (type,name,count) VALUES 
-        ("browser","' . $this->browser . '",1), 
-        ("os","' . $this->os . ' ' . $this->osVer . '",1), 
-        ("browsertype","' . $this->device_type . '",1), 
-        ("brand","' . $this->brand . '",1), 
-        ("model","' . $this->brand . ' - ' . $this->model . '",1), 
+        ("browser","' . addslashes($this->browser) . '",1), 
+        ("os","' . addslashes($this->os) . ' ' . addslashes($this->osVer) . '",1), 
+        ("browsertype","' . addslashes($this->device_type) . '",1), 
+        ("brand","' . addslashes($this->brand) . '",1), 
+        ("model","' . addslashes($this->brand) . ' - ' . $this->model . '",1), 
         ("date","' . $this->datetime_now->format('Y-m-d') . '",1), 
         ("hour","' . $this->datetime_now->format('H') . '",1), 
         ("weekday","' . $this->datetime_now->format('N') . '",1) 
@@ -220,7 +220,7 @@ class stats_visit
 
 
         $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_visits_per_url') . ' (hash,date,url,count) VALUES 
-        ("' . md5($this->datetime_now->format('Y-m-d') . $this->url) . '","' . $this->datetime_now->format('Y-m-d') . '","' . $this->url . '",1) 
+        ("' . md5($this->datetime_now->format('Y-m-d') . $this->url) . '","' . $this->datetime_now->format('Y-m-d') . '","' . addslashes($this->url) . '",1) 
         ON DUPLICATE KEY UPDATE count = count + 1;';
 
         $sql->setQuery($sql_insert);
