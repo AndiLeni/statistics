@@ -1,6 +1,6 @@
 # Changelog
 
-## [unreleased] - xx.xx.xxxx
+## [2.0.0-beta.4] - 21.10.2021
 
 ### Added
 
