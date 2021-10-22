@@ -75,8 +75,6 @@ class stats_weekday
     {
         $sql = rex_sql::factory();
 
-        // $result = $sql->setQuery('SELECT weekday, COUNT(weekday) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY weekday ORDER BY count DESC', ['start' => $this->start_date->format('Y-m-d'), 'end' => $this->end_date->format('Y-m-d')]);
-
         $result = $sql->setQuery('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' WHERE type = "weekday" ORDER BY count DESC');
 
         $addon = rex_addon::get('statistics');

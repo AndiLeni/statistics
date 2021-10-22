@@ -1,5 +1,21 @@
 # Changelog
 
+## [xx] - xx.xx.xxxx
+
+### Added
+
+### Changed
+
+### Removed
+- `stats_pagedetails.php\get_browser()`
+- `stats_pagedetails.php\get_browsertype()`
+- `stats_pagedetails.php\get_os()`
+
+### Vendor Updates
+
+### Notes
+
+
 ## [2.0.0-beta.4] - 21.10.2021
 
 ### Added
@@ -15,6 +31,8 @@
 
 ### Notes
 
+
+
 ## [2.0.0-beta.3] - 14.10.2021
 
 ### Added
@@ -28,6 +46,7 @@
 
 ### Notes
 
+
 ## [2.0.0-beta.2] - 14.10.2021
 
 ### Added
@@ -40,6 +59,7 @@
 ### Vendor Updates
 
 ### Notes
+
 
 ## [2.0.0-beta.1] - 14.10.2021
 
@@ -64,6 +84,7 @@ Um dem Vorzubeugen werden Besuche nun in passendere Tabellenstrukturen gespeiche
 Beim Upgrade werden die Daten aus der Tabelle pagestats_dump ausgewertet und auf die neuen Tabellen verteilt.
 > **Hinweis:** Dieser Migrationsvorgang kann je nach Tabellengröße länger dauern, bitte sicherstellen, dass die PHP Laufzeit ausreichend ist.
 
+
 ## [1.0.0-rc.3] - 06.10.2021
 
 ### Added
@@ -76,6 +97,7 @@ Beim Upgrade werden die Daten aus der Tabelle pagestats_dump ausgewertet und auf
 ### Vendor Updates
 
 ### Notes
+
 
 ## [1.0.0-rc.2] - 04.10.2021
 
@@ -90,6 +112,7 @@ Beim Upgrade werden die Daten aus der Tabelle pagestats_dump ausgewertet und auf
 ### Vendor Updates
 
 ### Notes
+
 
 ## [1.0.0-rc.1] - 30.09.2021
 
@@ -110,6 +133,7 @@ Beim Upgrade werden die Daten aus der Tabelle pagestats_dump ausgewertet und auf
 ### Vendor Updates
 
 ### Notes
+
 
 ## [dev-0.0.3] - 16.09.2021
 

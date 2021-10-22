@@ -17,8 +17,6 @@ $filter_date_helper = new filter_date_helper($request_date_start, $request_date_
 
 // DATA COLLECTION FOR MAIN CHART, "VIEWS PER DAY"
 
-// $sum_per_day = $sql->setQuery('SELECT date, COUNT(date) AS "count" from ' . rex::getTable('pagestats_dump') . ' where date between :start and :end GROUP BY date ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
-
 $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visits_per_day') . ' where date between :start and :end ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
 
 $period = new DatePeriod(
@@ -135,8 +133,6 @@ $filter_fragment->setVar('date_end', $filter_date_helper->date_end);
 // - PANEL WITH CHART "VIEWS TOTAL"
 // - TABLE WITH DATA FOR "VIEWS TOTAL"
 
-// TABLE UNDER MAIN CHART
-// $list_dates = rex_list::factory('SELECT date, COUNT(date) as "count" FROM ' . rex::getTable('pagestats_dump') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY date ORDER BY count DESC', 10000);
 $list_dates = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_visits_per_day') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" ORDER BY count DESC', 10000);
 $list_dates->setColumnLabel('date', 'Datum');
 $list_dates->setColumnLabel('count', 'Anzahl');
