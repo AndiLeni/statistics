@@ -16,6 +16,7 @@ $filter_fragment = new rex_fragment();
 $filter_fragment->setVar('current_backend_page', $current_backend_page);
 $filter_fragment->setVar('date_start', $filter_date_helper->date_start);
 $filter_fragment->setVar('date_end', $filter_date_helper->date_end);
+$filter_fragment->setVar('wts', $filter_date_helper->whole_time_start->format("Y-m-d"));
 
 ?>
 
@@ -96,7 +97,7 @@ echo $fragment->parse('core/page/section.php');
         // modify to include end date in period because SQL BETWEEN includes start and end date, but DatePeriod excludes end date
         // without modification an additional day would be fetched from database
         $end = clone $filter_date_helper->date_end;
-        $end->modify('+1 day'); 
+        $end->modify('+1 day');
 
         $period = new DatePeriod(
             $filter_date_helper->date_start,

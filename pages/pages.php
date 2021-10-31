@@ -21,6 +21,7 @@ $filter_fragment = new rex_fragment();
 $filter_fragment->setVar('current_backend_page', $current_backend_page);
 $filter_fragment->setVar('date_start', $filter_date_helper->date_start);
 $filter_fragment->setVar('date_end', $filter_date_helper->date_end);
+$filter_fragment->setVar('wts', $filter_date_helper->whole_time_start->format("Y-m-d"));
 
 
 ?>

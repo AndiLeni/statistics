@@ -43,6 +43,8 @@ if (rex::isBackend()) {
     rex_view::addJsFile($addon->getAssetsUrl('plotly.min.js'));
     rex_view::addJsFile($addon->getAssetsUrl('datatables.min.js'));
 
+    rex_view::addJsFile($addon->getAssetsUrl('statistics.js'));
+
     $pagination_scroll = $addon->getConfig('statistics_scroll_pagination');
     if ($pagination_scroll == 'panel') {
         rex_view::addJsFile($addon->getAssetsUrl('statistics_scroll_container.js'));

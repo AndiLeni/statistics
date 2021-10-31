@@ -43,6 +43,7 @@ default_config:
     statistics_log_all: true
     statistics_scroll_pagination: "none"
     statistics_ignore_url_params: false
+    statistics_default_datefilter_range: "thisYear"
 
 installer_ignore:
     - .git

@@ -90,6 +90,15 @@ $field5->addOption($this->i18n('statistics_no'), false);
 $field5->setNotice($this->i18n('statistics_statistics_ignore_url_params_note'));
 
 
+$field6 = $form->addRadioField('statistics_default_datefilter_range');
+$field6->setLabel($this->i18n('statistics_default_datefilter_range'));
+$field6->addOption($this->i18n('statistics_default_datefilter_last7days'), 'last7days');
+$field6->addOption($this->i18n('statistics_default_datefilter_last30days'), 'last30days');
+$field6->addOption($this->i18n('statistics_default_datefilter_thisYear'), 'thisYear');
+$field6->addOption($this->i18n('statistics_default_datefilter_wholeTime'), 'wholeTime');
+$field6->setNotice($this->i18n('statistics_default_datefilter_range_note'));
+
+
 $addon = rex_addon::get('statistics');
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'edit', false);

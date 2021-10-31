@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- add quickselects to datefilter fragment
 
 ### Removed
 - `stats_pagedetails.php\get_browser()`

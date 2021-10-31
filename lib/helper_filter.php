@@ -11,6 +11,8 @@ class filter_date_helper
     public $date_start;
     public $date_end;
 
+    public $whole_time_start;
+
     private $table;
     private $addon;
 
@@ -33,8 +35,25 @@ class filter_date_helper
         $this->addon = rex_addon::get('statistics');
 
         if ($date_start == '') {
-            $this->date_start = $this->getMinDateFromTable();
 
+            // prefered date range
+            $date_range = $this->addon->getConfig('statistics_default_datefilter_range');
+
+            if ($date_range == 'last7days') {
+                $date = new DateTime();
+                $date->modify("-7 day");
+                $this->date_start = $date;
+            } elseif ($date_range == 'last30days') {
+                $date = new DateTime();
+                $date->modify("-30 day");
+                $this->date_start = $date;
+            } elseif ($date_range == 'thisYear') {
+                $date = new DateTime();
+                $date->setTimestamp(strtotime('first day of january this year'));
+                $this->date_start = $date;
+            } else {
+                $this->date_start = $this->getMinDateFromTable();
+            }
             // design decision, uncomment this line to default show only timespan where data was collected
             // $this->date_end = $this->getMaxDateFromTable();
 
@@ -44,6 +63,9 @@ class filter_date_helper
             $this->date_start = new DateTime($date_start);
             $this->date_end = new DateTime($date_end);
         }
+
+        // set total time range to use in datefilter fragment with javascript
+        $this->whole_time_start = $this->getMinDateFromTable();
 
         if ($this->date_start > $this->date_end) {
             echo rex_view::error($this->addon->i18n('statistics_dates'));
