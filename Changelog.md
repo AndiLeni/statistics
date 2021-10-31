@@ -1,6 +1,6 @@
 # Changelog
 
-## [xx] - xx.xx.xxxx
+## [2.0.0-beta.5] - 31.10.2021
 
 ### Added
 
