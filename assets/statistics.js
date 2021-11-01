@@ -27,7 +27,7 @@ $(document).on("rex:ready", function (event, container) {
         var date = new Date();
         date.setDate(date.getDate() - minusDays);
         day = ("0" + date.getDate()).slice(-2);
-        month = ("0" + date.getMonth()).slice(-2);
+        month = ("0" + (date.getMonth() + 1)).slice(-2);
         year = date.getFullYear();
         str = year + "-" + month + "-" + day;
 
