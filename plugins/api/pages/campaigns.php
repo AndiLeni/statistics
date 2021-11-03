@@ -71,9 +71,15 @@ $list->addLinkAttribute('edit', 'data-confirm', '###name###' . PHP_EOL . $this->
 $list->setColumnParams('edit', ['name' => '###name###', 'delete_entry' => true]);
 $list->addTableAttribute('class', 'table-bordered');
 
+if ($list->getRows() == 0) {
+    $table = rex_view::info($this->i18n('statistics_no_data'));
+} else {
+    $table = $list->get();
+}
+
 $fragment2 = new rex_fragment();
 $fragment2->setVar('title', $this->i18n('statistics_api_campaign_views'));
-$fragment2->setVar('body', $list->get(), false);
+$fragment2->setVar('body', $table, false);
 echo $fragment2->parse('core/page/section.php');
 
 ?>

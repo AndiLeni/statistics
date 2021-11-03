@@ -78,7 +78,7 @@ class stats_hour
         $addon = rex_addon::get('statistics');
 
         $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "hour" ORDER BY count DESC', 10000);
-        
+
         $list->setColumnLabel('hour', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));
         $list->setColumnFormat('hour', 'custom',  function ($params) {
@@ -92,7 +92,13 @@ class stats_hour
         });
         $list->addTableAttribute('class', 'dt_order_second');
 
-        return $list->get();
+        if ($list->getRows() == 0) {
+            $table = rex_view::info($addon->i18n('statistics_no_data'));
+        } else {
+            $table = $list->get();
+        }
+
+        return $table;
     }
 
     /**

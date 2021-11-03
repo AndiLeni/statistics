@@ -1,5 +1,7 @@
 <?php
 
+$addon = rex_addon::get('statistics');
+
 // BASIC INITIALISATION 
 
 $current_backend_page = rex_get('page', 'string', '');
@@ -140,9 +142,15 @@ $list_dates->setColumnLabel('count', 'Anzahl');
 $list_dates->setColumnParams('url', ['url' => '###url###']);
 $list_dates->addTableAttribute('class', 'table-bordered dt_order_first');
 
+if ($list_dates->getRows() == 0) {
+    $table = rex_view::info($this->i18n('statistics_no_data'));
+} else {
+    $table = $list_dates->get();
+}
+
 $fragment_collapse = new rex_fragment();
 $fragment_collapse->setVar('title', $this->i18n('statistics_views_per_day'));
-$fragment_collapse->setVar('content', $list_dates->get(), false);
+$fragment_collapse->setVar('content', $table, false);
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('statistics_views_per_day'));
@@ -204,9 +212,15 @@ $list->setColumnLabel('category', $this->i18n('statistics_category'));
 $list->setColumnLabel('producer', $this->i18n('statistics_producer'));
 $list->addTableAttribute('class', 'dt_order_default');
 
+if ($list->getRows() == 0) {
+    $table = rex_view::info($addon->i18n('statistics_no_data'));
+} else {
+    $table = $list->get();
+}
+
 $fragment = new rex_fragment();
 $fragment->setVar('title', 'Bots:');
-$fragment->setVar('body', '<div id="chart_hour"></div>' . $list->get(), false);
+$fragment->setVar('body', '<div id="chart_hour"></div>' . $table, false);
 echo $fragment->parse('core/page/section.php');
 
 ?>

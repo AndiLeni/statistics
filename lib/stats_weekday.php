@@ -166,7 +166,13 @@ class stats_weekday
         });
         $list->addTableAttribute('class', 'dt_order_second');
 
-        return $list->get();
+        if ($list->getRows() == 0) {
+            $table = rex_view::info($this->addon->i18n('statistics_no_data'));
+        } else {
+            $table = $list->get();
+        }
+
+        return $table;
     }
 
 

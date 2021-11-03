@@ -7,6 +7,7 @@
 ### Changed
 - fix js error for datefilter quickselect
 - datefilter is applied instantly
+- fix more js errors, datatables was throwing an error when table was empty
 
 ### Removed
 

@@ -56,9 +56,15 @@ $list->setColumnLabel('count', $this->i18n('statistics_count'));
 $list->setColumnParams('referer', ['referer' => '###referer###', 'date_start' => $filter_date_helper->date_start->format('Y-m-d'), 'date_end' => $filter_date_helper->date_end->format('Y-m-d')]);
 $list->addTableAttribute('class', 'table-bordered dt_order_first');
 
+if ($list->getRows() == 0) {
+    $table = rex_view::info($this->i18n('statistics_no_data'));
+} else {
+    $table = $list->get();
+}
+
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('statistics_all_referer'));
-$fragment->setVar('body', $list->get(), false);
+$fragment->setVar('body', $table, false);
 echo $fragment->parse('core/page/section.php');
 
 

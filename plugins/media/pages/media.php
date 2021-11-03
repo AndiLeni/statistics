@@ -65,9 +65,15 @@ $list->setColumnLabel('count', $this->i18n('statistics_media_count'));
 $list->setColumnParams('url', ['url' => '###url###', 'date_start' => $filter_date_helper->date_start->format('Y-m-d'), 'date_end' => $filter_date_helper->date_end->format('Y-m-d')]);
 $list->addTableAttribute('class', 'table-bordered');
 
+if ($list->getRows() == 0) {
+    $table = rex_view::info($this->i18n('statistics_no_data'));
+} else {
+    $table = $list->get();
+}
+
 $fragment2 = new rex_fragment();
 $fragment2->setVar('title', $this->i18n('statistics_media_views'));
-$fragment2->setVar('body', $list->get(), false);
+$fragment2->setVar('body', $table, false);
 echo $fragment2->parse('core/page/section.php');
 
 ?>

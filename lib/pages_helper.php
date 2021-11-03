@@ -124,6 +124,12 @@ class pages_helper
         $list->addFormAttribute('style', 'margin-top: 3rem');
         $list->addTableAttribute('class', 'table-bordered dt_order_second');
 
-        return $list->get();
+        if ($list->getRows() == 0) {
+            $table = rex_view::info($this->addon->i18n('statistics_no_data'));
+        } else {
+            $table = $list->get();
+        }
+
+        return $table;
     }
 }
