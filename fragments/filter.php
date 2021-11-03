@@ -8,7 +8,7 @@
             <a data-start="<?php echo $this->wts ?>" class="btn btn-default btn-sm" id="statistics_df_wt">Gesamt</a>
         </p>
         <hr>
-        <form class="form-inline" method="GET">
+        <form id="statistics_df_form" class="form-inline" method="GET">
             <input type="hidden" value="<?php echo $this->current_backend_page ?>" name="page">
             <div class="form-group" style="margin-right: 1rem;">
                 <label for="date_start"><?php echo $this->i18n('statistics_startdate') ?></label>

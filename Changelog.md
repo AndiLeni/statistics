@@ -1,4 +1,19 @@
-# Changelog
+# Changelog 
+
+## [xx] - xx.xx.xxxx
+
+### Added
+
+### Changed
+- fix js error for datefilter quickselect
+- datefilter is applied instantly
+
+### Removed
+
+### Vendor Updates
+
+### Notes
+
 
 ## [2.0.0-beta.6] - 01.11.2021
 
