@@ -1,6 +1,6 @@
 # Changelog 
 
-## [xx] - xx.xx.xxxx
+## [2.0.0-beta.8] - 09.11.2021
 
 ### Added
 
