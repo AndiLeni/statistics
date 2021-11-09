@@ -122,7 +122,7 @@ class pages_helper
         $list->addLinkAttribute('edit', 'data-confirm', '###url###:' . PHP_EOL . $this->addon->i18n('statistics_confirm_ignore_delete'));
         $list->setColumnParams('edit', ['url' => '###url###', 'ignore_page' => true]);
         $list->addFormAttribute('style', 'margin-top: 3rem');
-        $list->addTableAttribute('class', 'table-bordered dt_order_second');
+        $list->addTableAttribute('class', 'table-bordered dt_order_second statistics_table');
 
         if ($list->getRows() == 0) {
             $table = rex_view::info($this->addon->i18n('statistics_no_data'));

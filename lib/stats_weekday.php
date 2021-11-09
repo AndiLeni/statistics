@@ -164,7 +164,7 @@ class stats_weekday
                     break;
             }
         });
-        $list->addTableAttribute('class', 'dt_order_second');
+        $list->addTableAttribute('class', 'dt_order_second statistics_table');
 
         if ($list->getRows() == 0) {
             $table = rex_view::info($this->addon->i18n('statistics_no_data'));

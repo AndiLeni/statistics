@@ -90,7 +90,7 @@ class stats_hour
                 return $hour . ' Uhr';
             }
         });
-        $list->addTableAttribute('class', 'dt_order_second');
+        $list->addTableAttribute('class', 'dt_order_second statistics_table');
 
         if ($list->getRows() == 0) {
             $table = rex_view::info($addon->i18n('statistics_no_data'));

@@ -42,7 +42,7 @@ class stats_pagedetails
         $list->setColumnLabel('date', 'Datum');
         $list->setColumnLabel('count', 'Anzahl');
         $list->setColumnParams('url', ['url' => '###url###']);
-        $list->addTableAttribute('class', 'table-bordered dt_order_first');
+        $list->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
 
         return $list->get();
     }

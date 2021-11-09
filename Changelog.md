@@ -1,5 +1,18 @@
 # Changelog 
 
+## [xx] - xx.xx.xxxx
+
+### Added
+
+### Changed
+- fix css interfering with redaxo's backend css
+
+### Removed
+
+### Vendor Updates
+
+### Notes
+
 ## [2.0.0-beta.7] - 03.11.2021
 
 ### Added

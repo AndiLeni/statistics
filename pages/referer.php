@@ -33,7 +33,7 @@ if ($request_ref != '') {
     // details section for single page
 
     $list = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_referer') . ' WHERE referer = "' . $request_ref . '" and date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY date ORDER BY count DESC', 10000);
-    $list->addTableAttribute('class', 'table-bordered dt_order_first');
+    $list->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
     $list->setColumnLabel('date', 'Datum');
     $list->setColumnLabel('count', 'Anzahl');
 
@@ -54,7 +54,7 @@ $list = rex_list::factory('SELECT referer, SUM(count) as "count" from ' . rex::g
 $list->setColumnLabel('referer', 'Referer');
 $list->setColumnLabel('count', $this->i18n('statistics_count'));
 $list->setColumnParams('referer', ['referer' => '###referer###', 'date_start' => $filter_date_helper->date_start->format('Y-m-d'), 'date_end' => $filter_date_helper->date_end->format('Y-m-d')]);
-$list->addTableAttribute('class', 'table-bordered dt_order_first');
+$list->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
 
 if ($list->getRows() == 0) {
     $table = rex_view::info($this->i18n('statistics_no_data'));

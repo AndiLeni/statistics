@@ -69,9 +69,9 @@ if ($views_today->getRows() != 0) {
 
 
 $table = '
-    <p class="h3 my-0">' . $this->i18n('statistics_today') . ' : <b>' . $views_today . '</b></p>
-    <hr class="hr-margin-small">
-    <p class="h3 my-0">' . $this->i18n('statistics_total') . ' : <b>' . $views_total . '</b></p>
+    <p class="h3 statistics_my-0">' . $this->i18n('statistics_today') . ' : <b>' . $views_today . '</b></p>
+    <hr class="statistics_hr-margin-small">
+    <p class="h3 statistics_my-0">' . $this->i18n('statistics_total') . ' : <b>' . $views_total . '</b></p>
 ';
 
 $fragment_views_total = new rex_fragment();
@@ -140,7 +140,7 @@ $list_dates = rex_list::factory('SELECT date, count FROM ' . rex::getTable('page
 $list_dates->setColumnLabel('date', 'Datum');
 $list_dates->setColumnLabel('count', 'Anzahl');
 $list_dates->setColumnParams('url', ['url' => '###url###']);
-$list_dates->addTableAttribute('class', 'table-bordered dt_order_first');
+$list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
 
 if ($list_dates->getRows() == 0) {
     $table = rex_view::info($this->i18n('statistics_no_data'));
@@ -210,7 +210,7 @@ $list->setColumnLabel('name', $this->i18n('statistics_name'));
 $list->setColumnLabel('count', $this->i18n('statistics_count'));
 $list->setColumnLabel('category', $this->i18n('statistics_category'));
 $list->setColumnLabel('producer', $this->i18n('statistics_producer'));
-$list->addTableAttribute('class', 'dt_order_default');
+$list->addTableAttribute('class', 'dt_order_default statistics_table');
 
 if ($list->getRows() == 0) {
     $table = rex_view::info($addon->i18n('statistics_no_data'));

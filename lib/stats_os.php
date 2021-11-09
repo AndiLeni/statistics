@@ -81,7 +81,7 @@ class stats_os
         
         $list->setColumnLabel('os', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));
-        $list->addTableAttribute('class', 'dt_order_second');
+        $list->addTableAttribute('class', 'dt_order_second statistics_table');
 
         if ($list->getRows() == 0) {
             $table = rex_view::info($addon->i18n('statistics_no_data'));
