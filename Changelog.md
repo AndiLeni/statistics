@@ -1,5 +1,20 @@
 # Changelog 
 
+## [unreleased] - xx.xx.xxxx
+
+### Added
+
+### Changed
+- fix incorrect presentation of hours / #71
+
+### Removed
+
+### Vendor Updates
+
+### Notes
+
+
+
 ## [2.0.0-beta.8] - 09.11.2021
 
 ### Added
@@ -12,6 +27,8 @@
 ### Vendor Updates
 
 ### Notes
+
+
 
 ## [2.0.0-beta.7] - 03.11.2021
 
@@ -29,6 +46,7 @@
 ### Notes
 
 
+
 ## [2.0.0-beta.6] - 01.11.2021
 
 ### Added
@@ -41,6 +59,8 @@
 ### Vendor Updates
 
 ### Notes
+
+
 
 ## [2.0.0-beta.5] - 31.10.2021
 
@@ -57,6 +77,7 @@
 ### Vendor Updates
 
 ### Notes
+
 
 
 ## [2.0.0-beta.4] - 21.10.2021
@@ -90,6 +111,7 @@
 ### Notes
 
 
+
 ## [2.0.0-beta.2] - 14.10.2021
 
 ### Added
@@ -102,6 +124,7 @@
 ### Vendor Updates
 
 ### Notes
+
 
 
 ## [2.0.0-beta.1] - 14.10.2021
@@ -128,6 +151,7 @@ Beim Upgrade werden die Daten aus der Tabelle pagestats_dump ausgewertet und auf
 > **Hinweis:** Dieser Migrationsvorgang kann je nach Tabellengröße länger dauern, bitte sicherstellen, dass die PHP Laufzeit ausreichend ist.
 
 
+
 ## [1.0.0-rc.3] - 06.10.2021
 
 ### Added
@@ -140,6 +164,7 @@ Beim Upgrade werden die Daten aus der Tabelle pagestats_dump ausgewertet und auf
 ### Vendor Updates
 
 ### Notes
+
 
 
 ## [1.0.0-rc.2] - 04.10.2021
@@ -155,6 +180,7 @@ Beim Upgrade werden die Daten aus der Tabelle pagestats_dump ausgewertet und auf
 ### Vendor Updates
 
 ### Notes
+
 
 
 ## [1.0.0-rc.1] - 30.09.2021
@@ -178,6 +204,7 @@ Beim Upgrade werden die Daten aus der Tabelle pagestats_dump ausgewertet und auf
 ### Notes
 
 
+
 ## [dev-0.0.3] - 16.09.2021
 
 ### Added
@@ -191,6 +218,7 @@ Beim Upgrade werden die Daten aus der Tabelle pagestats_dump ausgewertet und auf
 ### Vendor Updates
 
 ### Notes
+
 
 
 ## [dev-0.0.2] - 16.09.2021
