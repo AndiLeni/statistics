@@ -203,7 +203,7 @@ class stats_visit
         ("os","' . addslashes($this->os) . ' ' . addslashes($this->osVer) . '",1), 
         ("browsertype","' . addslashes($this->device_type) . '",1), 
         ("brand","' . addslashes($this->brand) . '",1), 
-        ("model","' . addslashes($this->brand) . ' - ' . $this->model . '",1),  
+        ("model","' . addslashes($this->brand) . ' - ' . addslashes($this->model) . '",1),  
         ("hour","' . $this->datetime_now->format('H') . '",1), 
         ("weekday","' . $this->datetime_now->format('N') . '",1) 
         ON DUPLICATE KEY UPDATE count = count + 1;';

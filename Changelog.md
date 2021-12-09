@@ -7,6 +7,7 @@
 ### Changed
 - fix incorrect presentation of hours / #71
 - date is not any longer inserted in pagstats_data since it is not required there / #69
+- device model is now escaped properly / #74
 
 ### Removed
 
