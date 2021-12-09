@@ -79,7 +79,7 @@ class stats_model
 
         $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "model" ORDER BY count DESC', 10000);
 
-        $list->setColumnLabel('model', $addon->i18n('statistics_name'));
+        $list->setColumnLabel('name', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));
         $list->addTableAttribute('class', 'dt_order_second statistics_table');
 

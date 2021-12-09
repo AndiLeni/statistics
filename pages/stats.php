@@ -141,6 +141,7 @@ $list_dates->setColumnLabel('date', 'Datum');
 $list_dates->setColumnLabel('count', 'Anzahl');
 $list_dates->setColumnParams('url', ['url' => '###url###']);
 $list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
+$list_dates->setColumnFormat('date', 'date', 'd.m.Y');
 
 if ($list_dates->getRows() == 0) {
     $table = rex_view::info($this->i18n('statistics_no_data'));
@@ -220,7 +221,7 @@ if ($list->getRows() == 0) {
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', 'Bots:');
-$fragment->setVar('body', '<div id="chart_hour"></div>' . $table, false);
+$fragment->setVar('body', $table, false);
 echo $fragment->parse('core/page/section.php');
 
 ?>

@@ -137,9 +137,9 @@ class stats_weekday
         $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "weekday" ORDER BY count DESC', 10000);
 
 
-        $list->setColumnLabel('weekday', $this->addon->i18n('statistics_name'));
+        $list->setColumnLabel('name', $this->addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $this->addon->i18n('statistics_count'));
-        $list->setColumnFormat('weekday', 'custom',  function ($params) {
+        $list->setColumnFormat('name', 'custom',  function ($params) {
             switch ($params['value']) {
                 case 1:
                     return $this->addon->i18n('statistics_monday');

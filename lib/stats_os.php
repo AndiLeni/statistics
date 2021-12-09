@@ -78,8 +78,8 @@ class stats_os
         $addon = rex_addon::get('statistics');
 
         $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "os" ORDER BY count DESC', 10000);
-        
-        $list->setColumnLabel('os', $addon->i18n('statistics_name'));
+
+        $list->setColumnLabel('name', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));
         $list->addTableAttribute('class', 'dt_order_second statistics_table');
 
