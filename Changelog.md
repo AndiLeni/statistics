@@ -14,6 +14,8 @@
 ### Notes
 Dieses Update ändert die tabellenstruktur, es sollte nicht übersprungen werden
 
+
+
 ## [2.0.0-beta.9] - 09.12.2021
 
 ### Added
