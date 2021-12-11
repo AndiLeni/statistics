@@ -327,9 +327,9 @@ class stats_visit
         $sql = rex_sql::factory();
 
         $sql->setQuery('
-        INSERT INTO ' . rex::getTable('pagestats_referer') . ' (referer,date,count) VALUES 
-        (:referer,:date,1) 
-        ON DUPLICATE KEY UPDATE count = count + 1;', ['referer' => $referer, 'date' => $this->datetime_now->format('Y-m-d')]);
+        INSERT INTO ' . rex::getTable('pagestats_referer') . ' (hash,referer,date,count) VALUES 
+        (:hash,:referer,:date,1) 
+        ON DUPLICATE KEY UPDATE count = count + 1;', ['hash' => md5($this->datetime_now->format('Y-m-d') . $referer), 'referer' => $referer, 'date' => $this->datetime_now->format('Y-m-d')]);
     }
 
 

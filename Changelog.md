@@ -1,5 +1,19 @@
 # Changelog 
 
+## [2.0.0-beta.10] - 11.12.2021
+
+### Added
+
+### Changed
+- pagstats-referer table changed / #70
+
+### Removed
+
+### Vendor Updates
+
+### Notes
+Dieses Update ändert die tabellenstruktur, es sollte nicht übersprungen werden
+
 ## [2.0.0-beta.9] - 09.12.2021
 
 ### Added

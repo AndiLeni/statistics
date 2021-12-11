@@ -23,7 +23,6 @@ rex_sql_table::get(rex::getTable('pagestats_visits_per_url'))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_bot'))
-    ->removeColumn('id')
     ->ensureColumn(new rex_sql_column('name', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('category', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('producer', 'varchar(255)'))
@@ -32,16 +31,15 @@ rex_sql_table::get(rex::getTable('pagestats_bot'))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_hash'))
-    ->removeColumn('id')
     ->ensureColumn(new rex_sql_column('hash', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('datetime', 'datetime'))
     ->setPrimaryKey(['hash'])
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_referer'))
-    ->ensureColumn(new rex_sql_column('id', 'int', false, null, 'auto_increment'))
+    ->ensureColumn(new rex_sql_column('hash', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('referer', 'varchar(2048)'))
     ->ensureColumn(new rex_sql_column('date', 'date'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
-    ->setPrimaryKey(['id'])
+    ->setPrimaryKey(['hash'])
     ->ensure();
