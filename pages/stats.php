@@ -52,6 +52,36 @@ if (array_keys($complete_dates_counts) == []) {
 }
 
 
+// DATA COLLECTION FOR MAIN CHART, "VISITORS PER DAY"
+$visitors_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visitors_per_day') . ' where date between :start and :end ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
+
+$period = new DatePeriod(
+    $filter_date_helper->date_start,
+    new DateInterval('P1D'),
+    $filter_date_helper->date_end
+);
+
+$dates_array = [];
+foreach ($period as $value) {
+    $dates_array[$value->format("d.m.Y")] = "0";
+}
+
+$complete_dates_counts = [];
+$date_counts = [];
+
+if ($visitors_per_day->getRows() != 0) {
+    foreach ($visitors_per_day as $row) {
+        $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
+        $date_counts[$date] = $row->getValue('count');
+    }
+
+    $complete_dates_counts = array_merge($dates_array, $date_counts);
+}
+
+$visitors_per_day_labels = json_encode(array_keys($complete_dates_counts));
+$visitors_per_day_values = json_encode(array_values($complete_dates_counts));
+
+
 
 
 
@@ -67,11 +97,25 @@ if ($views_today->getRows() != 0) {
     $views_today = 0;
 }
 
+$visitors_total = $sql->setQuery('SELECT sum(count) as "count" from ' . rex::getTable('pagestats_visitors_per_day'));
+$visitors_total = $visitors_total->getValue('count');
+
+$visitors_today = $sql->setQuery('SELECT count from ' . rex::getTable('pagestats_visitors_per_day') . ' where date = :date', ['date' => date('Y-m-d')]);
+if ($visitors_today->getRows() != 0) {
+    $visitors_today = $visitors_today->getValue('count');
+} else {
+    $visitors_today = 0;
+}
+
 
 $table = '
-    <p class="h3 statistics_my-0">' . $this->i18n('statistics_today') . ' : <b>' . $views_today . '</b></p>
+    <p class="h3 statistics_my-0">' . $this->i18n('statistics_visits_today') . ' : <b>' . $views_today . '</b></p>
     <hr class="statistics_hr-margin-small">
-    <p class="h3 statistics_my-0">' . $this->i18n('statistics_total') . ' : <b>' . $views_total . '</b></p>
+    <p class="h3 statistics_my-0">' . $this->i18n('statistics_visits_total') . ' : <b>' . $views_total . '</b></p>
+    <hr class="statistics_hr-margin-small">
+    <p class="h3 statistics_my-0">' . $this->i18n('statistics_visitors_today') . ' : <b>' . $visitors_today . '</b></p>
+    <hr class="statistics_hr-margin-small">
+    <p class="h3 statistics_my-0">' . $this->i18n('statistics_visitors_total') . ' : <b>' . $visitors_total . '</b></p>
 ';
 
 $fragment_views_total = new rex_fragment();
@@ -144,9 +188,23 @@ $list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistic
 $list_dates->setColumnFormat('date', 'date', 'd.m.Y');
 
 if ($list_dates->getRows() == 0) {
-    $table = rex_view::info($this->i18n('statistics_no_data'));
+    $table = '<h3>Besuche:</h3>' . rex_view::info($this->i18n('statistics_no_data'));
 } else {
-    $table = $list_dates->get();
+    $table = '<h3>Besuche:</h3>' . $list_dates->get();
+}
+
+$table .= '<hr>';
+
+$list_dates = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_visitors_per_day') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" ORDER BY count DESC', 10000);
+$list_dates->setColumnLabel('date', 'Datum');
+$list_dates->setColumnLabel('count', 'Anzahl');
+$list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
+$list_dates->setColumnFormat('date', 'date', 'd.m.Y');
+
+if ($list_dates->getRows() == 0) {
+    $table .= '<h3>Besucher:</h3>' . rex_view::info($this->i18n('statistics_no_data'));
+} else {
+    $table .= '<h3>Besucher:</h3>' . $list_dates->get();
 }
 
 $fragment_collapse = new rex_fragment();
@@ -250,11 +308,23 @@ echo $fragment->parse('core/page/section.php');
     }
 
 
-    chart_visits = Plotly.newPlot('chart_visits', [{
-        type: 'line',
+    var visits = {
         x: <?php echo $sum_per_day_labels ?>,
         y: <?php echo $sum_per_day_values ?>,
-    }], layout, config);
+        type: 'line',
+        name: 'Besuche'
+    };
+
+    var visitors = {
+        x: <?php echo $visitors_per_day_labels ?>,
+        y: <?php echo $visitors_per_day_values ?>,
+        type: 'line',
+        name: 'Besucher'
+    };
+
+    var data = [visits, visitors];
+
+    chart_visits = Plotly.newPlot('chart_visits', data, layout, config);
 
     chart_browser = Plotly.newPlot('chart_browser', [{
         type: 'pie',

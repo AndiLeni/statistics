@@ -122,6 +122,14 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () {
                         }
 
 
+                        // check if unique visitor
+                        if ($visit->save_visitor()) {
+
+                            // save visitor
+                            $visit->persist_visitor();
+                        }
+
+
                         $visit->persist();
                     }
                 }

@@ -227,6 +227,19 @@ class stats_visit
 
 
 
+    public function persist_visitor()
+    {
+        $sql = rex_sql::factory();
+
+        $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_visitors_per_day') . ' (date,count) VALUES 
+        ("' . $this->datetime_now->format('Y-m-d') . '",1)  
+        ON DUPLICATE KEY UPDATE count = count + 1;';
+
+        $sql->setQuery($sql_insert);
+    }
+
+
+
     /**
      *
      *
@@ -267,6 +280,49 @@ class stats_visit
             $sql->setTable(rex::getTable('pagestats_hash'));
             $sql->setValue('hash', $hash);
             $sql->setValue('datetime', $this->datetime_now->format('Y-m-d H:i:s'));
+            $sql->insert();
+
+            return true;
+        }
+    }
+
+
+    /**
+     *
+     *
+     * @return bool
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
+     * @author Andreas Lenhardt
+     */
+    public function save_visitor()
+    {
+        $hash_string = $this->userAgent . $this->browser . $this->os . " " . $this->osVer . $this->device_type . $this->brand . $this->model . $this->clientIPAddress;
+        $hash = hash('sha1', $hash_string);
+
+        $sql = rex_sql::factory();
+        $sql->setTable(rex::getTable('pagestats_hash'));
+        $sql->setWhere(['hash' => $hash]);
+        $sql->select();
+
+        if ($sql->getRows() == 1) {
+            $origin = new DateTime($sql->getValue('datetime'));
+            $today = new DateTime('today midnight');
+
+            if ($origin->format('d.m.Y') != $today->format('d.m.Y')) {
+                // update set last visit to now
+                $sql->setQuery('UPDATE ' . rex::getTable('pagestats_hash') . ' SET datetime = :datetime WHERE hash = :hash ', ['hash' => $hash, 'datetime' => $today->format('Y-m-d H:i:s')]);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            // hash was not found, save hash with current datetime, then save visit
+            $today = new DateTime('today midnight');
+            $sql = rex_sql::factory();
+            $sql->setTable(rex::getTable('pagestats_hash'));
+            $sql->setValue('hash', $hash);
+            $sql->setValue('datetime', $today->format('Y-m-d H:i:s'));
             $sql->insert();
 
             return true;

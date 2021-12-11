@@ -1,5 +1,20 @@
 # Changelog 
 
+## [2.0.0-beta.11] - 11.12.2021
+
+### Added
+- statistics for visitors per day / #56
+
+### Changed
+
+### Removed
+
+### Vendor Updates
+
+### Notes
+
+
+
 ## [2.0.0-beta.10] - 11.12.2021
 
 ### Added
