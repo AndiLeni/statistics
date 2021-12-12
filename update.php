@@ -19,7 +19,7 @@ $this->includeFile(__DIR__ . '/install.php');
 
 foreach ($data as $e) {
     $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_referer') . ' (hash,referer,date,count) VALUES 
-    ("' . md5($e['date'] . $e['referer']) . '","' . $e['referer'] . '","' . $e['date'] . '",' . $e['count'] . ');';
+    ("' . md5($e['date'] . $e['referer']) . '","' . addslashes($e['referer']) . '","' . $e['date'] . '",' . $e['count'] . ');';
 
     $res = $sql->setQuery($sql_insert);
 }
