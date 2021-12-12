@@ -1,5 +1,21 @@
 # Changelog 
 
+## [2.0.0-beta.12] - 12.12.2021
+
+### Added
+
+### Changed
+- fix update script
+
+### Removed
+
+### Vendor Updates
+
+### Notes
+Dieses Update beinhaltet auch die Änderungen aus den Betas von 2.0.0-beta.11 und 2.0.0-beta.10.
+In diesesn war allerdings die update.php fehlerhaft, weswegen die Referer-Daten nicht korrekt migriert wurden.
+
+
 ## [2.0.0-beta.11] - 11.12.2021
 
 ### Added
