@@ -43,6 +43,7 @@ rex_sql_table::get(rex::getTable('pagestats_hash'))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_referer'))
+    ->removeColumn('id')
     ->ensureColumn(new rex_sql_column('hash', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('referer', 'varchar(2048)'))
     ->ensureColumn(new rex_sql_column('date', 'date'))
