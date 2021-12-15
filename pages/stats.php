@@ -185,6 +185,7 @@ $list_dates->setColumnLabel('date', 'Datum');
 $list_dates->setColumnLabel('count', 'Anzahl');
 $list_dates->setColumnParams('url', ['url' => '###url###']);
 $list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
+$list_dates->setColumnLayout('date', ['<th>###VALUE###</th>', '<td data-sort="###date###">###VALUE###</td>']);
 $list_dates->setColumnFormat('date', 'date', 'd.m.Y');
 
 if ($list_dates->getRows() == 0) {
@@ -199,6 +200,7 @@ $list_dates = rex_list::factory('SELECT date, count FROM ' . rex::getTable('page
 $list_dates->setColumnLabel('date', 'Datum');
 $list_dates->setColumnLabel('count', 'Anzahl');
 $list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
+$list_dates->setColumnLayout('date', ['<th>###VALUE###</th>', '<td data-sort="###date###">###VALUE###</td>']);
 $list_dates->setColumnFormat('date', 'date', 'd.m.Y');
 
 if ($list_dates->getRows() == 0) {
