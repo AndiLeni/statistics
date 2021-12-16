@@ -36,6 +36,8 @@ if ($request_ref != '') {
     $list->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
     $list->setColumnLabel('date', 'Datum');
     $list->setColumnLabel('count', 'Anzahl');
+    $list->setColumnFormat('date', 'date', 'd.m.Y');
+    $list->setColumnLayout('date', ['<th>###VALUE###</th>', '<td data-sort="###date###">###VALUE###</td>']);
 
 
     $fragment = new rex_fragment();

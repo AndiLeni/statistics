@@ -25,7 +25,7 @@ class stats_pagedetails
         $this->max_date = $max_date;
     }
 
-    
+
 
     /**
      *
@@ -43,6 +43,8 @@ class stats_pagedetails
         $list->setColumnLabel('count', 'Anzahl');
         $list->setColumnParams('url', ['url' => '###url###']);
         $list->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
+        $list->setColumnFormat('date', 'date', 'd.m.Y');
+        $list->setColumnLayout('date', ['<th>###VALUE###</th>', '<td data-sort="###date###">###VALUE###</td>']);
 
         return $list->get();
     }
