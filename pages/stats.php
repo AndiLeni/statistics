@@ -18,69 +18,163 @@ $filter_date_helper = new filter_date_helper($request_date_start, $request_date_
 
 
 // DATA COLLECTION FOR MAIN CHART, "VIEWS PER DAY"
+$sql = rex_sql::factory();
+$domains = $sql->getArray('select distinct domain from ' . rex::getTable('pagestats_visits_per_day'));
+$data_all_domains_visits = [];
 
-$sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visits_per_day') . ' where date between :start and :end ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
+foreach ($domains as $domain) {
+    $visits_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visits_per_day') . ' where date between :start and :end and domain = :domain ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d'), 'domain' => $domain['domain']]);
 
-$period = new DatePeriod(
-    $filter_date_helper->date_start,
-    new DateInterval('P1D'),
-    $filter_date_helper->date_end
-);
+    $period = new DatePeriod(
+        $filter_date_helper->date_start,
+        new DateInterval('P1D'),
+        $filter_date_helper->date_end
+    );
 
-
-$dates_array = [];
-foreach ($period as $value) {
-    $dates_array[$value->format("d.m.Y")] = "0";
-}
-
-$complete_dates_counts = [];
-
-if ($sum_per_day->getRows() != 0) {
-    foreach ($sum_per_day as $row) {
-        $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
-        $date_counts[$date] = $row->getValue('count');
+    $dates_array = [];
+    foreach ($period as $value) {
+        $dates_array[$value->format("d.m.Y")] = "0";
     }
 
-    $complete_dates_counts = array_merge($dates_array, $date_counts);
+    $complete_dates_counts = [];
+    $date_counts = [];
+
+    if ($visits_per_day->getRows() != 0) {
+        foreach ($visits_per_day as $row) {
+            $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
+            $date_counts[$date] = $row->getValue('count');
+        }
+
+        $complete_dates_counts = array_merge($dates_array, $date_counts);
+    }
+
+    $labels = json_encode(array_keys($complete_dates_counts));
+    $values = json_encode(array_values($complete_dates_counts));
+
+    $data_all_domains_visits[$domain['domain']] = [
+        'labels' => $labels,
+        'values' => $values,
+    ];
 }
 
-$sum_per_day_labels = json_encode(array_keys($complete_dates_counts));
-$sum_per_day_values = json_encode(array_values($complete_dates_counts));
+// One line for total visits
+if (count($domains) > 1) {
+    $visits_per_day = $sql->setQuery('SELECT date, sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_day') . ' where date between :start and :end group by date ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
 
-if (array_keys($complete_dates_counts) == []) {
-    echo rex_view::error($this->i18n('statistics_no_data'));
+    $period = new DatePeriod(
+        $filter_date_helper->date_start,
+        new DateInterval('P1D'),
+        $filter_date_helper->date_end
+    );
+
+    $dates_array = [];
+    foreach ($period as $value) {
+        $dates_array[$value->format("d.m.Y")] = "0";
+    }
+
+    $complete_dates_counts = [];
+    $date_counts = [];
+
+    if ($visits_per_day->getRows() != 0) {
+        foreach ($visits_per_day as $row) {
+            $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
+            $date_counts[$date] = $row->getValue('count');
+        }
+
+        $complete_dates_counts = array_merge($dates_array, $date_counts);
+    }
+
+    $labels = json_encode(array_keys($complete_dates_counts));
+    $values = json_encode(array_values($complete_dates_counts));
+
+    $data_all_domains_visits['Gesamt'] = [
+        'labels' => $labels,
+        'values' => $values,
+    ];
 }
+
+
+
+
 
 
 // DATA COLLECTION FOR MAIN CHART, "VISITORS PER DAY"
-$visitors_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visitors_per_day') . ' where date between :start and :end ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
+$sql = rex_sql::factory();
+$domains = $sql->getArray('select distinct domain from ' . rex::getTable('pagestats_visitors_per_day'));
 
-$period = new DatePeriod(
-    $filter_date_helper->date_start,
-    new DateInterval('P1D'),
-    $filter_date_helper->date_end
-);
+$data_all_domains_visitors = [];
 
-$dates_array = [];
-foreach ($period as $value) {
-    $dates_array[$value->format("d.m.Y")] = "0";
-}
+foreach ($domains as $domain) {
+    $visitors_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visitors_per_day') . ' where date between :start and :end and domain = :domain ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d'), 'domain' => $domain['domain']]);
 
-$complete_dates_counts = [];
-$date_counts = [];
+    $period = new DatePeriod(
+        $filter_date_helper->date_start,
+        new DateInterval('P1D'),
+        $filter_date_helper->date_end
+    );
 
-if ($visitors_per_day->getRows() != 0) {
-    foreach ($visitors_per_day as $row) {
-        $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
-        $date_counts[$date] = $row->getValue('count');
+    $dates_array = [];
+    foreach ($period as $value) {
+        $dates_array[$value->format("d.m.Y")] = "0";
     }
 
-    $complete_dates_counts = array_merge($dates_array, $date_counts);
+    $complete_dates_counts = [];
+    $date_counts = [];
+
+    if ($visitors_per_day->getRows() != 0) {
+        foreach ($visitors_per_day as $row) {
+            $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
+            $date_counts[$date] = $row->getValue('count');
+        }
+
+        $complete_dates_counts = array_merge($dates_array, $date_counts);
+    }
+
+    $labels = json_encode(array_keys($complete_dates_counts));
+    $values = json_encode(array_values($complete_dates_counts));
+
+    $data_all_domains_visitors[$domain['domain']] = [
+        'labels' => $labels,
+        'values' => $values,
+    ];
 }
 
-$visitors_per_day_labels = json_encode(array_keys($complete_dates_counts));
-$visitors_per_day_values = json_encode(array_values($complete_dates_counts));
 
+// One line for total visitors
+if (count($domains) > 1) {
+    $visitors_per_day = $sql->setQuery('SELECT date, sum(count) as "count" from ' . rex::getTable('pagestats_visitors_per_day') . ' where date between :start and :end group by date ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
+
+    $period = new DatePeriod(
+        $filter_date_helper->date_start,
+        new DateInterval('P1D'),
+        $filter_date_helper->date_end
+    );
+
+    $dates_array = [];
+    foreach ($period as $value) {
+        $dates_array[$value->format("d.m.Y")] = "0";
+    }
+
+    $complete_dates_counts = [];
+    $date_counts = [];
+
+    if ($visitors_per_day->getRows() != 0) {
+        foreach ($visitors_per_day as $row) {
+            $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
+            $date_counts[$date] = $row->getValue('count');
+        }
+
+        $complete_dates_counts = array_merge($dates_array, $date_counts);
+    }
+
+    $labels = json_encode(array_keys($complete_dates_counts));
+    $values = json_encode(array_values($complete_dates_counts));
+
+    $data_all_domains_visitors['Gesamt'] = [
+        'labels' => $labels,
+        'values' => $values,
+    ];
+}
 
 
 
@@ -180,7 +274,7 @@ $filter_fragment->setVar('wts', $filter_date_helper->whole_time_start->format("Y
 // - PANEL WITH CHART "VIEWS TOTAL"
 // - TABLE WITH DATA FOR "VIEWS TOTAL"
 
-$list_dates = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_visits_per_day') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" ORDER BY count DESC', 10000);
+$list_dates = rex_list::factory('SELECT date, sum(count) as "count" FROM ' . rex::getTable('pagestats_visits_per_day') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" group by date ORDER BY count DESC', 10000);
 $list_dates->setColumnLabel('date', 'Datum');
 $list_dates->setColumnLabel('count', 'Anzahl');
 $list_dates->setColumnParams('url', ['url' => '###url###']);
@@ -196,7 +290,7 @@ if ($list_dates->getRows() == 0) {
 
 $table .= '<hr>';
 
-$list_dates = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_visitors_per_day') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" ORDER BY count DESC', 10000);
+$list_dates = rex_list::factory('SELECT date, sum(count) as "count" FROM ' . rex::getTable('pagestats_visitors_per_day') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" group by date ORDER BY count DESC', 10000);
 $list_dates->setColumnLabel('date', 'Datum');
 $list_dates->setColumnLabel('count', 'Anzahl');
 $list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
@@ -310,23 +404,43 @@ echo $fragment->parse('core/page/section.php');
     }
 
 
-    var visits = {
-        x: <?php echo $sum_per_day_labels ?>,
-        y: <?php echo $sum_per_day_values ?>,
-        type: 'line',
-        name: 'Besuche'
-    };
+    <?php
+    // VISITS
+    foreach ($data_all_domains_visits as $name => $domain) {
+        echo 'var stats_chart_visits_' . str_replace('.', '_', $name) . ' = {
+            x: ' . $domain['labels'] . ',
+            y: ' . $domain['values'] . ',
+            type: \'line\',
+            name: \'Aufrufe ' . $name . '\'
+        };' . PHP_EOL;
+    }
 
-    var visitors = {
-        x: <?php echo $visitors_per_day_labels ?>,
-        y: <?php echo $visitors_per_day_values ?>,
-        type: 'line',
-        name: 'Besucher'
-    };
+    // VISITORS
+    foreach ($data_all_domains_visitors as $name => $domain) {
+        echo 'var stats_chart_visitors_' . str_replace('.', '_', $name) . ' = {
+            x: ' . $domain['labels'] . ',
+            y: ' . $domain['values'] . ',
+            type: \'line\',
+            name: \'Besucher ' . $name . '\'
+        };' . PHP_EOL;
+    }
 
-    var data = [visits, visitors];
+
+    // js array
+    $js_vars = 'var data = [';
+    foreach (array_keys($data_all_domains_visits) as $domain) {
+        $js_vars .= 'stats_chart_visits_' . str_replace('.', '_', $domain) . ', ';
+    }
+    foreach (array_keys($data_all_domains_visitors) as $domain) {
+        $js_vars .= 'stats_chart_visitors_' . str_replace('.', '_', $domain) . ', ';
+    }
+    $js_vars .= ']';
+    echo $js_vars . PHP_EOL;
+    ?>
+
 
     chart_visits = Plotly.newPlot('chart_visits', data, layout, config);
+
 
     chart_browser = Plotly.newPlot('chart_browser', [{
         type: 'pie',

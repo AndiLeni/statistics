@@ -67,9 +67,19 @@ if ($request_url != '' && !$ignore_page) {
 
 
 // list of all pages
+$domains = rex_yrewrite::getDomains();
+array_shift($domains);
+$domain_select = '
+<select id="stats_domain_select" class="form-control">
+<option value="">Alle Domains</option>
+';
+foreach ($domains as $domain) {
+    $domain_select .= '<option value="' . $domain->getName() . '">' . $domain->getName() . '</option>';
+}
+$domain_select .= '</select>';
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('statistics_sum_per_page'));
-$fragment->setVar('body', '<div id="chart_visits_per_page"></div>' . $pages_helper->get_list(), false);
+$fragment->setVar('body', '<div id="chart_visits_per_page"></div>' . $domain_select . $pages_helper->get_list(), false);
 echo $fragment->parse('core/page/section.php');
 
 ?>
@@ -118,7 +128,7 @@ echo $fragment->parse('core/page/section.php');
     ?>
 
     $(document).ready(function() {
-        $('.dt_order_second').DataTable({
+        stats_table_all_pages = $('.dt_order_second').DataTable({
             "paging": true,
             "pageLength": 20,
             "lengthChange": true,
@@ -207,5 +217,12 @@ echo $fragment->parse('core/page/section.php');
 
             ?>
         });
+
+        var stats_domain_select = document.getElementById('stats_domain_select');
+        stats_domain_select.addEventListener('change', function() {
+            var domain = this.value;
+            stats_table_all_pages.search(domain).draw();
+        });
+
     });
 </script>

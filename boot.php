@@ -79,7 +79,7 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () {
             $clientAddress = $clientAddress ? $clientAddress : '0.0.0.0';
 
             // page url
-            $url = urldecode($_SERVER['REQUEST_URI']);
+            $url = rex_yrewrite::getHost() . rex_server('REQUEST_URI', 'string', '');
 
             // optionally ignore url parameters
             if ($addon->getConfig('statistics_ignore_url_params')) {
@@ -89,7 +89,10 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () {
             // user agent
             $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
-            $visit = new stats_visit($clientAddress, $url, $userAgent);
+            // yrewrite domain
+            $domain = rex_yrewrite::getHost();
+
+            $visit = new stats_visit($clientAddress, $url, $userAgent, $domain);
 
 
             // Track only frontend requests if page url should not be ignored

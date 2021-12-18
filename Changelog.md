@@ -4,6 +4,7 @@
 ## [xx] - xx.xx.xxxx
 
 ### Added
+- statistics can be filtered by domain
 
 ### Changed
 - sortable lists now sort dates correctly

@@ -84,7 +84,7 @@ class stats_visit
      */
     private $model = 'Undefiniert';
 
-
+    private $domain = '';
 
     /**
      *
@@ -96,13 +96,14 @@ class stats_visit
      * @throws InvalidArgumentException
      * @author Andreas Lenhardt
      */
-    public function __construct(string $clientIPAddress, string $url, string $userAgent)
+    public function __construct(string $clientIPAddress, string $url, string $userAgent, string $domain)
     {
         $this->addon = rex_addon::get('statistics');
         $this->clientIPAddress = $clientIPAddress;
         $this->url = $url;
         $this->datetime_now = new DateTime();
         $this->userAgent = $userAgent;
+        $this->domain = $domain;
     }
 
 
@@ -211,8 +212,8 @@ class stats_visit
         $sql->setQuery($sql_insert);
 
 
-        $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_visits_per_day') . ' (date,count) VALUES 
-        ("' . $this->datetime_now->format('Y-m-d') . '",1)  
+        $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_visits_per_day') . ' (date,domain,count) VALUES 
+        ("' . $this->datetime_now->format('Y-m-d') . '","' . addslashes($this->domain) . '",1)  
         ON DUPLICATE KEY UPDATE count = count + 1;';
 
         $sql->setQuery($sql_insert);
@@ -231,8 +232,8 @@ class stats_visit
     {
         $sql = rex_sql::factory();
 
-        $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_visitors_per_day') . ' (date,count) VALUES 
-        ("' . $this->datetime_now->format('Y-m-d') . '",1)  
+        $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_visitors_per_day') . ' (date,domain,count) VALUES 
+        ("' . $this->datetime_now->format('Y-m-d') . '","' . addslashes($this->domain) . '",1)  
         ON DUPLICATE KEY UPDATE count = count + 1;';
 
         $sql->setQuery($sql_insert);
