@@ -1,7 +1,7 @@
 # Changelog 
 
 
-## [xx] - xx.xx.xxxx
+## [2.0.0-beta.13] - 18.12.2021
 
 ### Added
 - statistics can be filtered by domain
