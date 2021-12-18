@@ -409,7 +409,7 @@ echo $fragment->parse('core/page/section.php');
     <?php
     // VISITS
     foreach ($data_all_domains_visits as $name => $domain) {
-        echo 'var stats_chart_visits_' . str_replace('.', '_', $name) . ' = {
+        echo 'var stats_chart_visits_' . str_replace(['.', '-', 'ä', 'ö', 'ü', 'ß'], '_', $name) . ' = {
             x: ' . $domain['labels'] . ',
             y: ' . $domain['values'] . ',
             type: \'line\',
@@ -419,7 +419,7 @@ echo $fragment->parse('core/page/section.php');
 
     // VISITORS
     foreach ($data_all_domains_visitors as $name => $domain) {
-        echo 'var stats_chart_visitors_' . str_replace('.', '_', $name) . ' = {
+        echo 'var stats_chart_visitors_' . str_replace(['.', '-', 'ä', 'ö', 'ü', 'ß'], '_', $name) . ' = {
             x: ' . $domain['labels'] . ',
             y: ' . $domain['values'] . ',
             type: \'line\',
@@ -431,10 +431,10 @@ echo $fragment->parse('core/page/section.php');
     // js array
     $js_vars = 'var data = [';
     foreach (array_keys($data_all_domains_visits) as $domain) {
-        $js_vars .= 'stats_chart_visits_' . str_replace('.', '_', $domain) . ', ';
+        $js_vars .= 'stats_chart_visits_' . str_replace(['.', '-', 'ä', 'ö', 'ü', 'ß'], '_', $domain) . ', ';
     }
     foreach (array_keys($data_all_domains_visitors) as $domain) {
-        $js_vars .= 'stats_chart_visitors_' . str_replace('.', '_', $domain) . ', ';
+        $js_vars .= 'stats_chart_visitors_' . str_replace(['.', '-', 'ä', 'ö', 'ü', 'ß'], '_', $domain) . ', ';
     }
     $js_vars .= ']';
     echo $js_vars . PHP_EOL;

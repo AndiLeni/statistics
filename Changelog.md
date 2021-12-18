@@ -1,6 +1,19 @@
 # Changelog 
 
 
+## [2.0.0-beta.14] - 18.12.2021
+
+### Added
+
+### Changed
+- fix js code generation
+
+### Removed
+
+### Vendor Updates
+
+
+
 ## [2.0.0-beta.13] - 18.12.2021
 
 ### Added
@@ -13,7 +26,6 @@
 ### Removed
 
 ### Vendor Updates
-
 
 
 
