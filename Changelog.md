@@ -5,6 +5,7 @@
 
 ### Added
 - statistics can be filtered by domain
+- overview for statistics
 
 ### Changed
 - sortable lists now sort dates correctly

@@ -181,14 +181,14 @@ if (count($domains) > 1) {
 
 // FRAGMENT TO SHOW TODAYS AND TOTAL COUNT OF VIEWS
 
-$views_total = $sql->setQuery('SELECT sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_day'));
-$views_total = $views_total->getValue('count');
+$visits_total = $sql->setQuery('SELECT sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_day'));
+$visits_total = $visits_total->getValue('count');
 
-$views_today = $sql->setQuery('SELECT count from ' . rex::getTable('pagestats_visits_per_day') . ' where date = :date', ['date' => date('Y-m-d')]);
-if ($views_today->getRows() != 0) {
-    $views_today = $views_today->getValue('count');
+$visits_today = $sql->setQuery('SELECT count from ' . rex::getTable('pagestats_visits_per_day') . ' where date = :date', ['date' => date('Y-m-d')]);
+if ($visits_today->getRows() != 0) {
+    $visits_today = $visits_today->getValue('count');
 } else {
-    $views_today = 0;
+    $visits_today = 0;
 }
 
 $visitors_total = $sql->setQuery('SELECT sum(count) as "count" from ' . rex::getTable('pagestats_visitors_per_day'));
@@ -202,19 +202,30 @@ if ($visitors_today->getRows() != 0) {
 }
 
 
-$table = '
-    <p class="h3 statistics_my-0">' . $this->i18n('statistics_visits_today') . ' : <b>' . $views_today . '</b></p>
-    <hr class="statistics_hr-margin-small">
-    <p class="h3 statistics_my-0">' . $this->i18n('statistics_visits_total') . ' : <b>' . $views_total . '</b></p>
-    <hr class="statistics_hr-margin-small">
-    <p class="h3 statistics_my-0">' . $this->i18n('statistics_visitors_today') . ' : <b>' . $visitors_today . '</b></p>
-    <hr class="statistics_hr-margin-small">
-    <p class="h3 statistics_my-0">' . $this->i18n('statistics_visitors_total') . ' : <b>' . $visitors_total . '</b></p>
-';
+$visits_datefilter = $sql->setQuery('SELECT sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_day') . ' where date between :start and :end', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
+if ($visits_datefilter->getRows() != 0) {
+    $visits_datefilter = $visits_datefilter->getValue('count');
+} else {
+    $visits_datefilter = 0;
+}
 
-$fragment_views_total = new rex_fragment();
-$fragment_views_total->setVar('title', $this->i18n('statistics_pages'));
-$fragment_views_total->setVar('body', $table, false);
+$visitors_datefilter = $sql->setQuery('SELECT sum(count) as "count" from ' . rex::getTable('pagestats_visitors_per_day') . ' where date between :start and :end', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
+if ($visitors_datefilter->getRows() != 0) {
+    $visitors_datefilter = $visitors_datefilter->getValue('count');
+} else {
+    $visitors_datefilter = 0;
+}
+
+$fragment_overview = new rex_fragment();
+$fragment_overview->setVar('date_start', $filter_date_helper->date_start);
+$fragment_overview->setVar('date_end', $filter_date_helper->date_end);
+$fragment_overview->setVar('filtered_visits', $visits_datefilter);
+$fragment_overview->setVar('filtered_visitors', $visitors_datefilter);
+$fragment_overview->setVar('today_visits', $visits_today);
+$fragment_overview->setVar('today_visitors', $visitors_today);
+$fragment_overview->setVar('total_visits', $visits_total);
+$fragment_overview->setVar('total_visitors', $visitors_total);
+
 
 
 
@@ -253,22 +264,13 @@ $filter_fragment->setVar('date_end', $filter_date_helper->date_end);
 $filter_fragment->setVar('wts', $filter_date_helper->whole_time_start->format("Y-m-d"));
 
 
-?>
+
+echo $filter_fragment->parse('filter.php');
+
+echo $fragment_overview->parse('overview.php');
 
 
 
-<div class="row">
-    <div class="col-12 col-md-6">
-        <?php echo $filter_fragment->parse('filter.php'); ?>
-    </div>
-    <div class="col-12 col-md-6">
-        <?php echo $fragment_views_total->parse('core/page/section.php'); ?>
-    </div>
-</div>
-
-
-
-<?php
 
 // FRAGMENTS FOR
 // - PANEL WITH CHART "VIEWS TOTAL"
@@ -308,7 +310,7 @@ $fragment_collapse->setVar('title', $this->i18n('statistics_views_per_day'));
 $fragment_collapse->setVar('content', $table, false);
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', $this->i18n('statistics_views_per_day'));
+$fragment->setVar('title', '<b>' . $this->i18n('statistics_views_per_day') . '</b>', false);
 $fragment->setVar('body', '<div id="chart_visits"></div>' . $fragment_collapse->parse('collapse.php'), false);
 echo $fragment->parse('core/page/section.php');
 
