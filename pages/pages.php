@@ -67,14 +67,14 @@ if ($request_url != '' && !$ignore_page) {
 
 
 // list of all pages
-$domains = rex_yrewrite::getDomains();
-array_shift($domains);
+$sql = rex_sql::factory();
+$domains = $sql->getArray('SELECT distinct domain FROM ' . rex::getTable('pagestats_visits_per_day'));
 $domain_select = '
 <select id="stats_domain_select" class="form-control">
 <option value="">Alle Domains</option>
 ';
 foreach ($domains as $domain) {
-    $domain_select .= '<option value="' . $domain->getName() . '">' . $domain->getName() . '</option>';
+    $domain_select .= '<option value="' . $domain['domain'] . '">' . $domain['domain'] . '</option>';
 }
 $domain_select .= '</select>';
 $fragment = new rex_fragment();

@@ -1,6 +1,19 @@
 # Changelog 
 
 
+## [2.0.0-beta.15] - 19.12.2021
+
+### Added
+
+### Changed
+- pages: domain selector now gets domains from db
+
+### Removed
+
+### Vendor Updates
+
+
+
 ## [2.0.0-beta.14] - 18.12.2021
 
 ### Added
