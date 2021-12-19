@@ -390,19 +390,32 @@ echo $fragment->parse('core/page/section.php');
             format: 'jpeg',
             filename: 'plot',
             height: 750,
-            width: 1000,
+            width: 1500,
             scale: 1,
         },
         displaylogo: false,
         displayModeBar: true,
     }
     var layout = {
+        // autosize: true,
+        // modebar: {
+        //     orientation: 'h',
+        // },
         margin: {
-            r: 40,
-            l: 40,
+            r: 40, // r: 5,
+            l: 40, // l: 35,
             t: 40,
             b: 90,
         },
+        // legend: {
+        //     bgcolor: '#f0f0f0',
+        //     valign: 'bottom',
+        //     xanchor: "left",
+        //     yanchor: "bottom",
+        //     y: 1.1,
+        //     x: 0,
+        //     orientation: "h"
+        // },
     }
 
 
