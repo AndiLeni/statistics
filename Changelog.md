@@ -1,6 +1,19 @@
 # Changelog 
 
 
+## [xx] - xx.xx.xxxx
+
+### Added
+
+### Changed
+- fix chart javascript generation (#81, #83)
+
+### Removed
+
+### Vendor Updates
+
+
+
 ## [2.0.0-beta.15] - 19.12.2021
 
 ### Added
