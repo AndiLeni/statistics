@@ -1,7 +1,7 @@
 # Changelog 
 
 
-## [xx] - xx.xx.xxxx
+## [2.0.0] - 13.03.2022
 
 ### Added
 
