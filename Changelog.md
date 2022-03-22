@@ -1,6 +1,18 @@
 # Changelog 
 
 
+## [x.x.x] - xx.xx.xxxx
+
+### Added
+
+### Changed
+- fix sql query for todays count of visits / #85
+
+### Removed
+
+### Vendor Updates
+
+
 ## [2.0.0] - 13.03.2022
 
 ### Added

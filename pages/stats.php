@@ -184,7 +184,7 @@ if (count($domains) > 1) {
 $visits_total = $sql->setQuery('SELECT sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_day'));
 $visits_total = $visits_total->getValue('count');
 
-$visits_today = $sql->setQuery('SELECT count from ' . rex::getTable('pagestats_visits_per_day') . ' where date = :date', ['date' => date('Y-m-d')]);
+$visits_today = $sql->setQuery('SELECT sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_day') . ' where date = :date', ['date' => date('Y-m-d')]);
 if ($visits_today->getRows() != 0) {
     $visits_today = $visits_today->getValue('count');
 } else {
