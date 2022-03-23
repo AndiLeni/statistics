@@ -20,7 +20,7 @@ $filter_date_helper = new filter_date_helper($request_date_start, $request_date_
 // DATA COLLECTION FOR MAIN CHART, "VIEWS PER DAY"
 $sql = rex_sql::factory();
 $domains = $sql->getArray('select distinct domain from ' . rex::getTable('pagestats_visits_per_day'));
-$data_all_domains_visits = [];
+$data_chart_visits_visitors = [];
 
 foreach ($domains as $domain) {
     $visits_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visits_per_day') . ' where date between :start and :end and domain = :domain ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d'), 'domain' => $domain['domain']]);
@@ -48,12 +48,13 @@ foreach ($domains as $domain) {
         $complete_dates_counts = array_merge($dates_array, $date_counts);
     }
 
-    $labels = json_encode(array_keys($complete_dates_counts));
-    $values = json_encode(array_values($complete_dates_counts));
+    $labels = array_keys($complete_dates_counts);
+    $values = array_values($complete_dates_counts);
 
-    $data_all_domains_visits[$domain['domain']] = [
-        'labels' => $labels,
-        'values' => $values,
+    $data_chart_visits_visitors[] = [
+        'x' => $labels,
+        'y' => $values,
+        'name' => 'Aufrufe ' . $domain['domain'],
     ];
 }
 
@@ -84,12 +85,13 @@ if (count($domains) > 1) {
         $complete_dates_counts = array_merge($dates_array, $date_counts);
     }
 
-    $labels = json_encode(array_keys($complete_dates_counts));
-    $values = json_encode(array_values($complete_dates_counts));
+    $labels = array_keys($complete_dates_counts);
+    $values = array_values($complete_dates_counts);
 
-    $data_all_domains_visits['Gesamt'] = [
-        'labels' => $labels,
-        'values' => $values,
+    $data_chart_visits_visitors[] = [
+        'x' => $labels,
+        'y' => $values,
+        'name' => 'Aufrufe Gesamt',
     ];
 }
 
@@ -102,7 +104,6 @@ if (count($domains) > 1) {
 $sql = rex_sql::factory();
 $domains = $sql->getArray('select distinct domain from ' . rex::getTable('pagestats_visitors_per_day'));
 
-$data_all_domains_visitors = [];
 
 foreach ($domains as $domain) {
     $visitors_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visitors_per_day') . ' where date between :start and :end and domain = :domain ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d'), 'domain' => $domain['domain']]);
@@ -130,12 +131,14 @@ foreach ($domains as $domain) {
         $complete_dates_counts = array_merge($dates_array, $date_counts);
     }
 
-    $labels = json_encode(array_keys($complete_dates_counts));
-    $values = json_encode(array_values($complete_dates_counts));
+    $labels = array_keys($complete_dates_counts);
+    $values = array_values($complete_dates_counts);
 
-    $data_all_domains_visitors[$domain['domain']] = [
-        'labels' => $labels,
-        'values' => $values,
+
+    $data_chart_visits_visitors[] = [
+        'x' => $labels,
+        'y' => $values,
+        'name' => 'Besucher ' . $domain['domain'],
     ];
 }
 
@@ -167,12 +170,13 @@ if (count($domains) > 1) {
         $complete_dates_counts = array_merge($dates_array, $date_counts);
     }
 
-    $labels = json_encode(array_keys($complete_dates_counts));
-    $values = json_encode(array_values($complete_dates_counts));
+    $labels = array_keys($complete_dates_counts);
+    $values = array_values($complete_dates_counts);
 
-    $data_all_domains_visitors['Gesamt'] = [
-        'labels' => $labels,
-        'values' => $values,
+    $data_chart_visits_visitors[] = [
+        'x' => $labels,
+        'y' => $values,
+        'name' => 'Besucher Gesamt',
     ];
 }
 
@@ -404,42 +408,9 @@ echo $fragment->parse('core/page/section.php');
     }
 
 
-    <?php
-    // VISITS
-    foreach ($data_all_domains_visits as $name => $domain) {
-        echo 'var stats_chart_visits_' . preg_replace('/[^a-zA-Z0-9]+/', '_', $name) . ' = {
-            x: ' . $domain['labels'] . ',
-            y: ' . $domain['values'] . ',
-            type: \'line\',
-            name: \'Aufrufe ' . $name . '\'
-        };' . PHP_EOL;
-    }
 
-    // VISITORS
-    foreach ($data_all_domains_visitors as $name => $domain) {
-        echo 'var stats_chart_visitors_' . preg_replace('/[^a-zA-Z0-9]+/', '_', $name) . ' = {
-            x: ' . $domain['labels'] . ',
-            y: ' . $domain['values'] . ',
-            type: \'line\',
-            name: \'Besucher ' . $name . '\'
-        };' . PHP_EOL;
-    }
-
-
-    // js array
-    $js_vars = 'var data = [';
-    foreach (array_keys($data_all_domains_visits) as $domain) {
-        $js_vars .= 'stats_chart_visits_' . preg_replace('/[^a-zA-Z0-9]+/', '_', $domain) . ', ';
-    }
-    foreach (array_keys($data_all_domains_visitors) as $domain) {
-        $js_vars .= 'stats_chart_visitors_' . preg_replace('/[^a-zA-Z0-9]+/', '_', $domain) . ', ';
-    }
-    $js_vars .= ']';
-    echo $js_vars . PHP_EOL;
-    ?>
-
-
-    chart_visits = Plotly.newPlot('chart_visits', data, layout, config);
+    chart_visitors_visits_data = <?php echo json_encode($data_chart_visits_visitors); ?>;
+    chart_visits = Plotly.newPlot('chart_visits', chart_visitors_visits_data, layout, config);
 
 
     chart_browser = Plotly.newPlot('chart_browser', [{
