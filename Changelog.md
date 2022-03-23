@@ -1,12 +1,13 @@
 # Changelog 
 
 
-## [x.x.x] - xx.xx.xxxx
+## [2.0.1] - 23.03.2022
 
 ### Added
 
 ### Changed
 - fix sql query for todays count of visits / #85
+- code cleanups (für das chart der besucher und aufrufe werden nun nicht mehr JS-variablen mit php generiert)
 
 ### Removed
 
