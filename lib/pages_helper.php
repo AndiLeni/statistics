@@ -10,8 +10,7 @@ class pages_helper
 {
 
     private $addon;
-    public $date_start;
-    public $date_end;
+    private $filter_date_helper;
 
 
 
@@ -24,11 +23,10 @@ class pages_helper
      * @throws InvalidArgumentException 
      * @author Andreas Lenhardt
      */
-    public function __construct($date_start, $date_end)
+    public function __construct($filter_date_helper)
     {
         $this->addon = rex_addon::get('statistics');
-        $this->date_start = $date_start;
-        $this->date_end = $date_end;
+        $this->filter_date_helper = $filter_date_helper;
     }
 
 
@@ -44,7 +42,7 @@ class pages_helper
     {
         $sql = rex_sql::factory();
 
-        $sum_per_page = $sql->setQuery('SELECT url, ifnull(sum(count),0) as "count" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between :start and :end group by url ORDER BY count DESC, url ASC', ['start' => $this->date_start->format('Y-m-d'), 'end' => $this->date_end->format('Y-m-d')]);
+        $sum_per_page = $sql->setQuery('SELECT url, ifnull(sum(count),0) as "count" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between :start and :end group by url ORDER BY count DESC, url ASC', ['start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
 
         $sum_per_page_labels = [];
         $sum_per_page_values = [];
@@ -111,11 +109,11 @@ class pages_helper
      */
     public function get_list()
     {
-        $list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between "' . $this->date_start->format('Y-m-d') . '" and "' . $this->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC, url ASC', 10000);
+        $list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between "' . $this->filter_date_helper->date_start->format('Y-m-d') . '" and "' . $this->filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC, url ASC', 10000);
 
         $list->setColumnLabel('url', $this->addon->i18n('statistics_url'));
         $list->setColumnLabel('count', $this->addon->i18n('statistics_count'));
-        $list->setColumnParams('url', ['url' => '###url###', 'date_start' => $this->date_start->format('Y-m-d'), 'date_end' => $this->date_end->format('Y-m-d')]);
+        $list->setColumnParams('url', ['url' => '###url###', 'date_start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'date_end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
 
         $list->addColumn('edit', $this->addon->i18n('statistics_ignore_and_delete'));
         $list->setColumnLabel('edit', $this->addon->i18n('statistics_ignore'));

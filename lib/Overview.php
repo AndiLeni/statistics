@@ -7,7 +7,7 @@ class StatsOverview
 
     public function __construct($filter_date_helper)
     {
-        $this->filter_date_helper = clone $filter_date_helper;
+        $this->filter_date_helper = $filter_date_helper;
     }
 
     public function get_overview_data()

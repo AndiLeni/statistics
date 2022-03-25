@@ -5,6 +5,7 @@
 
 ### Added
 - new heatmap chart for "visits per day"
+- setting "Fasse alle Domains zusammen" which combines all domains into a single chart when detailed distinction is not required
 
 ### Changed
 - replaced plotly with echarts (reducing js size from 3,5MB (plotly) to 1MB (echarts))

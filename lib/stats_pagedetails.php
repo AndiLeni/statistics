@@ -81,8 +81,8 @@ class stats_pagedetails
 
         // modify to include end date in period because SQL BETWEEN includes start and end date, but DatePeriod excludes end date
         // without modification an additional day would be fetched from database
-        $end = clone $this->max_date;
-        $end->modify('+1 day');
+        $end = $this->max_date;
+        $end = $end->modify('+1 day');
 
         $period = new DatePeriod(
             $this->min_date,

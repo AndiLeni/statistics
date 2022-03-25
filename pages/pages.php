@@ -11,7 +11,7 @@ $request_date_start = htmlspecialchars_decode(rex_request('date_start', 'string'
 $request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''));
 
 $filter_date_helper = new filter_date_helper($request_date_start, $request_date_end, 'pagestats_visits_per_url');
-$pages_helper = new pages_helper($filter_date_helper->date_start, $filter_date_helper->date_end);
+$pages_helper = new pages_helper($filter_date_helper);
 
 
 

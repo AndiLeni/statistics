@@ -7,20 +7,17 @@ class ChartData
 
     public function __construct($filter_date_helper)
     {
-        $this->filter_date_helper = clone $filter_date_helper;
+        $this->filter_date_helper = $filter_date_helper;
         $this->addon = rex_addon::get('statistics');
     }
 
     private function get_labels()
     {
-        $date_start = $this->filter_date_helper->date_start;
-        $date_end = $this->filter_date_helper->date_end;
-
         // modify end date, because sql includes start and end, php ommits end
         $period = new DatePeriod(
-            $date_start,
+            $this->filter_date_helper->date_start,
             new DateInterval('P1D'),
-            $date_end
+            $this->filter_date_helper->date_end->modify('+1 day')
         );
 
         $labels = [];
@@ -54,14 +51,11 @@ class ChartData
     {
         // DATA COLLECTION FOR MAIN CHART, "VIEWS PER DAY"
 
-        $date_start = $this->filter_date_helper->date_start;
-        $date_end = $this->filter_date_helper->date_end;
-
         // modify end date, because sql includes start and end, php ommits end
         $period = new DatePeriod(
-            $date_start,
+            $this->filter_date_helper->date_start,
             new DateInterval('P1D'),
-            $date_end->modify('+1 day')
+            $this->filter_date_helper->date_end->modify('+1 day')
         );
 
         $sql = rex_sql::factory();
@@ -92,7 +86,6 @@ class ChartData
         $values = array_values($complete_dates_counts);
 
         $data_chart_visits[] = [
-            // 'x' => $labels,
             'data' => $values,
             'name' => 'Aufrufe Gesamt',
             'type' => 'line',
@@ -136,14 +129,11 @@ class ChartData
     {
         // DATA COLLECTION FOR MAIN CHART, "VISITORS PER DAY"
 
-        $date_start = $this->filter_date_helper->date_start;
-        $date_end = $this->filter_date_helper->date_end;
-
         // modify end date, because sql includes start and end, php ommits end
         $period = new DatePeriod(
-            $date_start,
+            $this->filter_date_helper->date_start,
             new DateInterval('P1D'),
-            $date_end
+            $this->filter_date_helper->date_end->modify('+1 day')
         );
 
 
