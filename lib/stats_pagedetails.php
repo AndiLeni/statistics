@@ -110,8 +110,8 @@ class stats_pagedetails
         }
 
         return [
-            'labels' => json_encode(array_keys($data)),
-            'values' => json_encode(array_values($data)),
+            'labels' => array_keys($data),
+            'values' => array_values($data),
         ];
     }
 }

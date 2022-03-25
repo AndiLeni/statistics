@@ -44,7 +44,7 @@ class pages_helper
     {
         $sql = rex_sql::factory();
 
-        $sum_per_page = $sql->setQuery('SELECT url, count from ' . rex::getTable('pagestats_visits_per_url') . ' where date between :start and :end ORDER BY count DESC, url ASC', ['start' => $this->date_start->format('Y-m-d'), 'end' => $this->date_end->format('Y-m-d')]);
+        $sum_per_page = $sql->setQuery('SELECT url, ifnull(sum(count),0) as "count" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between :start and :end group by url ORDER BY count DESC, url ASC', ['start' => $this->date_start->format('Y-m-d'), 'end' => $this->date_end->format('Y-m-d')]);
 
         $sum_per_page_labels = [];
         $sum_per_page_values = [];
@@ -56,13 +56,13 @@ class pages_helper
         if (array_keys($sum_per_page_labels) == []) {
             echo rex_view::error($this->addon->i18n('statistics_no_data'));
         }
-        $sum_per_page_labels = json_encode($sum_per_page_labels);
+        $sum_per_page_labels = $sum_per_page_labels;
 
 
         foreach ($sum_per_page as $row) {
             $sum_per_page_values[] = $row->getValue('count');
         }
-        $sum_per_page_values = json_encode($sum_per_page_values);
+        $sum_per_page_values = $sum_per_page_values;
 
 
 

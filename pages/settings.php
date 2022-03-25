@@ -48,12 +48,6 @@ $field2->setNotice($this->i18n('statistics_duration_note'));
 $field2->getValidator()->add('type', $this->i18n('statistics_duration_validate'), 'int');
 
 
-$field2 = $form->addTextField('statistics_chart_padding_bottom');
-$field2->setLabel($this->i18n('statistics_chart_padding'));
-$field2->setNotice($this->i18n('statistics_padding_note'));
-$field2->getValidator()->add('type', $this->i18n('statistics_pagging_validation'), 'int');
-
-
 $field = $form->addTextAreaField('statistics_ignored_paths');
 $field->setLabel($this->i18n('statistics_ignore_paths'));
 $field->setNotice($this->i18n('statistics_paths_note'));
@@ -97,6 +91,13 @@ $field6->addOption($this->i18n('statistics_default_datefilter_last30days'), 'las
 $field6->addOption($this->i18n('statistics_default_datefilter_thisYear'), 'thisYear');
 $field6->addOption($this->i18n('statistics_default_datefilter_wholeTime'), 'wholeTime');
 $field6->setNotice($this->i18n('statistics_default_datefilter_range_note'));
+
+
+$field7 = $form->addRadioField('statistics_combine_all_domains');
+$field7->setLabel('Fasse alle Domains zusammen');
+$field7->addOption($this->i18n('statistics_yes'), true);
+$field7->addOption($this->i18n('statistics_no'), false);
+$field7->setNotice('Alle Domains werden zu einer "Gesamt" Anzahl zusammengefasst. Deaktivieren um Statistiken für alle Domains einzeln anzuzeigen.');
 
 
 $addon = rex_addon::get('statistics');

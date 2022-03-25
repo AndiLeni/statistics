@@ -15,212 +15,17 @@ $filter_date_helper = new filter_date_helper($request_date_start, $request_date_
 
 
 
+// data for charts
+$chart_data = new ChartData($filter_date_helper);
 
 
-// DATA COLLECTION FOR MAIN CHART, "VIEWS PER DAY"
-$sql = rex_sql::factory();
-$domains = $sql->getArray('select distinct domain from ' . rex::getTable('pagestats_visits_per_day'));
-$data_chart_visits_visitors = [];
+// main chart data for visits and visitors
+$main_chart_data = $chart_data->get_main_chart_data();
 
-foreach ($domains as $domain) {
-    $visits_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visits_per_day') . ' where date between :start and :end and domain = :domain ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d'), 'domain' => $domain['domain']]);
+// heatmap data for visits per day in this year
+$data_heatmap = $chart_data->get_heatmap_visits();
 
-    $period = new DatePeriod(
-        $filter_date_helper->date_start,
-        new DateInterval('P1D'),
-        $filter_date_helper->date_end
-    );
-
-    $dates_array = [];
-    foreach ($period as $value) {
-        $dates_array[$value->format("d.m.Y")] = "0";
-    }
-
-    $complete_dates_counts = [];
-    $date_counts = [];
-
-    if ($visits_per_day->getRows() != 0) {
-        foreach ($visits_per_day as $row) {
-            $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
-            $date_counts[$date] = $row->getValue('count');
-        }
-
-        $complete_dates_counts = array_merge($dates_array, $date_counts);
-    }
-
-    $labels = array_keys($complete_dates_counts);
-    $values = array_values($complete_dates_counts);
-
-    $data_chart_visits_visitors[] = [
-        'x' => $labels,
-        'y' => $values,
-        'name' => 'Aufrufe ' . $domain['domain'],
-    ];
-}
-
-// One line for total visits
-if (count($domains) > 1) {
-    $visits_per_day = $sql->setQuery('SELECT date, sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_day') . ' where date between :start and :end group by date ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
-
-    $period = new DatePeriod(
-        $filter_date_helper->date_start,
-        new DateInterval('P1D'),
-        $filter_date_helper->date_end
-    );
-
-    $dates_array = [];
-    foreach ($period as $value) {
-        $dates_array[$value->format("d.m.Y")] = "0";
-    }
-
-    $complete_dates_counts = [];
-    $date_counts = [];
-
-    if ($visits_per_day->getRows() != 0) {
-        foreach ($visits_per_day as $row) {
-            $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
-            $date_counts[$date] = $row->getValue('count');
-        }
-
-        $complete_dates_counts = array_merge($dates_array, $date_counts);
-    }
-
-    $labels = array_keys($complete_dates_counts);
-    $values = array_values($complete_dates_counts);
-
-    $data_chart_visits_visitors[] = [
-        'x' => $labels,
-        'y' => $values,
-        'name' => 'Aufrufe Gesamt',
-    ];
-}
-
-
-
-
-
-
-// DATA COLLECTION FOR MAIN CHART, "VISITORS PER DAY"
-$sql = rex_sql::factory();
-$domains = $sql->getArray('select distinct domain from ' . rex::getTable('pagestats_visitors_per_day'));
-
-
-foreach ($domains as $domain) {
-    $visitors_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visitors_per_day') . ' where date between :start and :end and domain = :domain ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d'), 'domain' => $domain['domain']]);
-
-    $period = new DatePeriod(
-        $filter_date_helper->date_start,
-        new DateInterval('P1D'),
-        $filter_date_helper->date_end
-    );
-
-    $dates_array = [];
-    foreach ($period as $value) {
-        $dates_array[$value->format("d.m.Y")] = "0";
-    }
-
-    $complete_dates_counts = [];
-    $date_counts = [];
-
-    if ($visitors_per_day->getRows() != 0) {
-        foreach ($visitors_per_day as $row) {
-            $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
-            $date_counts[$date] = $row->getValue('count');
-        }
-
-        $complete_dates_counts = array_merge($dates_array, $date_counts);
-    }
-
-    $labels = array_keys($complete_dates_counts);
-    $values = array_values($complete_dates_counts);
-
-
-    $data_chart_visits_visitors[] = [
-        'x' => $labels,
-        'y' => $values,
-        'name' => 'Besucher ' . $domain['domain'],
-    ];
-}
-
-
-// One line for total visitors
-if (count($domains) > 1) {
-    $visitors_per_day = $sql->setQuery('SELECT date, sum(count) as "count" from ' . rex::getTable('pagestats_visitors_per_day') . ' where date between :start and :end group by date ORDER BY date ASC', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
-
-    $period = new DatePeriod(
-        $filter_date_helper->date_start,
-        new DateInterval('P1D'),
-        $filter_date_helper->date_end
-    );
-
-    $dates_array = [];
-    foreach ($period as $value) {
-        $dates_array[$value->format("d.m.Y")] = "0";
-    }
-
-    $complete_dates_counts = [];
-    $date_counts = [];
-
-    if ($visitors_per_day->getRows() != 0) {
-        foreach ($visitors_per_day as $row) {
-            $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
-            $date_counts[$date] = $row->getValue('count');
-        }
-
-        $complete_dates_counts = array_merge($dates_array, $date_counts);
-    }
-
-    $labels = array_keys($complete_dates_counts);
-    $values = array_values($complete_dates_counts);
-
-    $data_chart_visits_visitors[] = [
-        'x' => $labels,
-        'y' => $values,
-        'name' => 'Besucher Gesamt',
-    ];
-}
-
-
-
-
-// FRAGMENT TO SHOW TODAYS AND TOTAL COUNT OF VIEWS
-
-$visits_total = $sql->setQuery('SELECT ifnull(sum(count),0) as "count" from ' . rex::getTable('pagestats_visits_per_day'));
-$visits_total = $visits_total->getValue('count');
-
-$visits_today = $sql->setQuery('SELECT ifnull(sum(count),0) as "count" from ' . rex::getTable('pagestats_visits_per_day') . ' where date = :date', ['date' => date('Y-m-d')]);
-$visits_today = $visits_today->getValue('count');
-
-$visitors_total = $sql->setQuery('SELECT ifnull(sum(count),0) as "count" from ' . rex::getTable('pagestats_visitors_per_day'));
-$visitors_total = $visitors_total->getValue('count');
-
-$visitors_today = $sql->setQuery('SELECT ifnull(sum(count),0) as "count" from ' . rex::getTable('pagestats_visitors_per_day') . ' where date = :date', ['date' => date('Y-m-d')]);
-$visitors_today = $visitors_today->getValue('count');
-
-
-$visits_datefilter = $sql->setQuery('SELECT ifnull(sum(count),0) as "count" from ' . rex::getTable('pagestats_visits_per_day') . ' where date between :start and :end', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
-$visits_datefilter = $visits_datefilter->getValue('count');
-
-$visitors_datefilter = $sql->setQuery('SELECT ifnull(sum(count),0) as "count" from ' . rex::getTable('pagestats_visitors_per_day') . ' where date between :start and :end', ['start' => $filter_date_helper->date_start->format('Y-m-d'), ':end' => $filter_date_helper->date_end->format('Y-m-d')]);
-$visitors_datefilter = $visitors_datefilter->getValue('count');
-
-
-$fragment_overview = new rex_fragment();
-$fragment_overview->setVar('date_start', $filter_date_helper->date_start);
-$fragment_overview->setVar('date_end', $filter_date_helper->date_end);
-$fragment_overview->setVar('filtered_visits', $visits_datefilter);
-$fragment_overview->setVar('filtered_visitors', $visitors_datefilter);
-$fragment_overview->setVar('today_visits', $visits_today);
-$fragment_overview->setVar('today_visitors', $visitors_today);
-$fragment_overview->setVar('total_visits', $visits_total);
-$fragment_overview->setVar('total_visitors', $visitors_total);
-
-
-
-
-
-// CLASSES FOR WIDGETS AND CHARTS
-
+// device specific data
 $browser = new stats_browser($filter_date_helper->date_start, $filter_date_helper->date_end);
 $browser_data = $browser->get_data();
 
@@ -242,6 +47,21 @@ $weekday_data = $weekday->get_data();
 $hour = new stats_hour($filter_date_helper->date_start, $filter_date_helper->date_end);
 $hour_data = $hour->get_data();
 
+
+
+// overview of visits and visitors of today, total and filered by date
+$overview = new StatsOverview($filter_date_helper);
+$overview_data = $overview->get_overview_data();
+
+$fragment_overview = new rex_fragment();
+$fragment_overview->setVar('date_start', $filter_date_helper->date_start);
+$fragment_overview->setVar('date_end', $filter_date_helper->date_end);
+$fragment_overview->setVar('filtered_visits', $overview_data['visits_datefilter']);
+$fragment_overview->setVar('filtered_visitors', $overview_data['visitors_datefilter']);
+$fragment_overview->setVar('today_visits', $overview_data['visits_today']);
+$fragment_overview->setVar('today_visitors', $overview_data['visitors_today']);
+$fragment_overview->setVar('total_visits', $overview_data['visits_total']);
+$fragment_overview->setVar('total_visitors', $overview_data['visitors_total']);
 
 
 
@@ -300,7 +120,7 @@ $fragment_collapse->setVar('content', $table, false);
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', '<b>' . $this->i18n('statistics_views_per_day') . '</b>', false);
-$fragment->setVar('body', '<div id="chart_visits"></div>' . $fragment_collapse->parse('collapse.php'), false);
+$fragment->setVar('body', '<div id="chart_visits" style="width: 100%;height:500px;"></div><hr><div id="chart_visits_heatmap" style="width: 100%;height:250px;"></div>' . $fragment_collapse->parse('collapse.php'), false);
 echo $fragment->parse('core/page/section.php');
 
 
@@ -308,50 +128,50 @@ echo $fragment->parse('core/page/section.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('statistics_browser'));
-$fragment->setVar('chart', '<div id="chart_browser"></div>', false);
+$fragment->setVar('chart', '<div id="chart_browser" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $browser->get_list(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('statistics_devicetype'));
-$fragment->setVar('chart', '<div id="chart_browsertype"></div>', false);
+$fragment->setVar('chart', '<div id="chart_browsertype" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $browsertype->get_list(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('statistics_os'));
-$fragment->setVar('chart', '<div id="chart_os"></div>', false);
+$fragment->setVar('chart', '<div id="chart_os" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $os->get_list(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('statistics_brand'));
-$fragment->setVar('chart', '<div id="chart_brand"></div>', false);
+$fragment->setVar('chart', '<div id="chart_brand" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $brand->get_list(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('statistics_model'));
-$fragment->setVar('chart', '<div id="chart_model"></div>', false);
+$fragment->setVar('chart', '<div id="chart_model" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $model->get_list(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('statistics_days'));
-$fragment->setVar('chart', '<div id="chart_weekday"></div>', false);
+$fragment->setVar('chart', '<div id="chart_weekday" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $weekday->get_list(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $this->i18n('statistics_hours'));
-$fragment->setVar('chart', '<div id="chart_hour"></div>', false);
+$fragment->setVar('chart', '<div id="chart_hour" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $hour->get_list(), false);
 echo $fragment->parse('data_vertical.php');
 
 
 
 
-$list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_bot') . ' ORDER BY count DESC');
+$list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_bot') . ' ORDER BY count DESC', 1000);
 $list->setColumnLabel('name', $this->i18n('statistics_name'));
 $list->setColumnLabel('count', $this->i18n('statistics_count'));
 $list->setColumnLabel('category', $this->i18n('statistics_category'));
@@ -373,98 +193,488 @@ echo $fragment->parse('core/page/section.php');
 
 
 <script>
-    var config = {
-        responsive: true,
-        toImageButtonOptions: {
-            format: 'jpeg',
-            filename: 'plot',
-            height: 750,
-            width: 1500,
-            scale: 1,
+    var main_chart = echarts.init(document.getElementById('chart_visits'));
+    var main_chart_option = {
+        title: {},
+        tooltip: {
+            trigger: 'axis',
         },
-        displaylogo: false,
-        displayModeBar: true,
-    }
-    var layout = {
-        // autosize: true,
-        // modebar: {
-        //     orientation: 'h',
-        // },
-        margin: {
-            r: 40, // r: 5,
-            l: 40, // l: 35,
-            t: 40,
-            b: 90,
+        dataZoom: [{
+            id: 'dataZoomX',
+            type: 'slider',
+            xAxisIndex: [0],
+            filterMode: 'filter'
+        }],
+        grid: {
+            left: '5%',
+            right: '5%',
+            // bottom: '10%',
+            // top: '12%',
         },
-        // legend: {
-        //     bgcolor: '#f0f0f0',
-        //     valign: 'bottom',
-        //     xanchor: "left",
-        //     yanchor: "bottom",
-        //     y: 1.1,
-        //     x: 0,
-        //     orientation: "h"
-        // },
-    }
+        toolbox: {
+            show: true,
+            feature: {
+                dataZoom: {
+                    yAxisIndex: "none"
+                },
+                dataView: {
+                    readOnly: false
+                },
+                magicType: {
+                    type: ["line", "bar", 'stack']
+                },
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        legend: {
+            data: <?php echo json_encode($main_chart_data['legend']) ?>,
+            // orient: 'vertical',
+            right: '20%',
+            // top: 20,
+            // bottom: 20,
+            // align: 'left',
+        },
+        xAxis: {
+            data: <?php echo json_encode($main_chart_data['xaxis']) ?>,
+            type: 'category',
+        },
+        yAxis: {},
+        series: <?php echo json_encode($main_chart_data['series']) ?>
+    };
+
+    // Display the chart using the configuration items and data just specified.
+    main_chart.setOption(main_chart_option);
 
 
 
-    chart_visitors_visits_data = <?php echo json_encode($data_chart_visits_visitors); ?>;
-    chart_visits = Plotly.newPlot('chart_visits', chart_visitors_visits_data, layout, config);
+    var visits_heatmap = echarts.init(document.getElementById('chart_visits_heatmap'));
+    var option_heatmap = {
+        title: {},
+        tooltip: {
+            show: true,
+            formatter: function(p) {
+                var format = echarts.format.formatTime('dd.MM.yyyy', p.data[0]);
+                return format + '<br><b>' + p.data[1] + ' Aufrufe</b>';
+            }
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: {
+                    readOnly: false
+                },
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        calendar: {
+            // top: 120,
+            top: '90',
+            left: '5%',
+            right: '5%',
+            cellSize: ['auto', 15],
+            range: <?php echo date('Y') ?>,
+            itemStyle: {
+                borderWidth: 0.5
+            },
+            yearLabel: {
+                show: false
+            },
+            monthLabel: {
+                nameMap: [
+                    'Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'
+                ],
+            },
+            dayLabel: {
+                nameMap: [
+                    'So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'
+                ]
+            }
+        },
+        series: {
+            data: <?php echo json_encode($data_heatmap['data']) ?>,
+            type: 'heatmap',
+            coordinateSystem: 'calendar',
+        },
+        visualMap: {
+            type: 'continuous',
+            itemWidth: 20,
+            itemHeight: 250,
+            min: 0,
+            max: <?php echo $data_heatmap['max'] ?>,
+            calculable: true,
+            orient: 'horizontal',
+            left: 'center',
+            top: 'top'
+        },
+    };
+    visits_heatmap.setOption(option_heatmap);
 
 
-    chart_browser = Plotly.newPlot('chart_browser', [{
-        type: 'pie',
-        labels: <?php echo $browser_data['labels'] ?>,
-        values: <?php echo $browser_data['values'] ?>,
-        textposition: "inside",
-    }], layout, config);
 
-    chart_browsertype = Plotly.newPlot('chart_browsertype', [{
-        type: 'pie',
-        labels: <?php echo $browsertype_data['labels'] ?>,
-        values: <?php echo $browsertype_data['values'] ?>,
-        textposition: "inside",
-    }], layout, config);
+    var chart_browser = echarts.init(document.getElementById('chart_browser'));
+    var chart_browser_option = {
+        title: {},
+        tooltip: {
+            trigger: 'item',
+            formatter: "{b}: <b>{c}</b> ({d}%)"
+        },
+        legend: {
+            show: false,
+            orient: 'vertical',
+            left: 'left',
+            type: 'scroll',
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: {
+                    readOnly: false
+                },
+                saveAsImage: {}
+            }
+        },
+        series: [{
+            type: 'pie',
+            radius: '85%',
+            data: <?php echo json_encode($browser_data) ?>,
+            labelLine: {
+                show: false
+            },
+            label: {
+                show: true,
+                position: 'inside',
+                formatter: '{b}: {c} \n ({d}%)',
+            },
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }]
+    };
+    chart_browser.setOption(chart_browser_option);
 
-    chart_os = Plotly.newPlot('chart_os', [{
-        type: 'pie',
-        labels: <?php echo $os_data['labels'] ?>,
-        values: <?php echo $os_data['values'] ?>,
-        textposition: "inside",
-    }], layout, config);
 
-    chart_brand = Plotly.newPlot('chart_brand', [{
-        type: 'pie',
-        labels: <?php echo $brand_data['labels'] ?>,
-        values: <?php echo $brand_data['values'] ?>,
-        textposition: "inside",
-    }], layout, config);
 
-    chart_model = Plotly.newPlot('chart_model', [{
-        type: 'pie',
-        labels: <?php echo $model_data['labels'] ?>,
-        values: <?php echo $model_data['values'] ?>,
-        textposition: "inside",
-    }], layout, config);
+    var chart_browsertype = echarts.init(document.getElementById('chart_browsertype'));
+    var chart_browsertype_option = {
+        title: {},
+        tooltip: {
+            trigger: 'item',
+            formatter: "{b}: <b>{c}</b> ({d}%)"
+        },
+        legend: {
+            show: false,
+            orient: 'vertical',
+            left: 'left',
+            type: 'scroll',
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: {
+                    readOnly: false
+                },
+                saveAsImage: {}
+            }
+        },
+        series: [{
+            type: 'pie',
+            radius: '85%',
+            data: <?php echo json_encode($browsertype_data) ?>,
+            labelLine: {
+                show: false
+            },
+            label: {
+                show: true,
+                position: 'inside',
+                formatter: '{b}: {c} \n ({d}%)',
+            },
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }]
+    };
+    chart_browsertype.setOption(chart_browsertype_option);
 
-    chart_weekday = Plotly.newPlot('chart_weekday', [{
-        type: 'bar',
-        x: <?php echo $weekday_data['labels'] ?>,
-        y: <?php echo $weekday_data['values'] ?>,
-    }], layout, config);
 
-    chart_hour = Plotly.newPlot('chart_hour', [{
-        type: 'bar',
-        x: <?php echo $hour_data['labels'] ?>,
-        y: <?php echo $hour_data['values'] ?>,
-    }], layout, config);
+
+    var chart_os = echarts.init(document.getElementById('chart_os'));
+    var chart_os_option = {
+        title: {},
+        tooltip: {
+            trigger: 'item',
+            formatter: "{b}: <b>{c}</b> ({d}%)"
+        },
+        legend: {
+            show: false,
+            orient: 'vertical',
+            left: 'left',
+            type: 'scroll',
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: {
+                    readOnly: false
+                },
+                saveAsImage: {}
+            }
+        },
+        series: [{
+            type: 'pie',
+            radius: '85%',
+            data: <?php echo json_encode($os_data) ?>,
+            labelLine: {
+                show: false
+            },
+            label: {
+                show: true,
+                position: 'inside',
+                formatter: '{b}: {c} \n ({d}%)',
+            },
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }]
+    };
+    chart_os.setOption(chart_os_option);
+
+
+
+    var chart_brand = echarts.init(document.getElementById('chart_brand'));
+    var chart_brand_option = {
+        title: {},
+        tooltip: {
+            trigger: 'item',
+            formatter: "{b}: <b>{c}</b> ({d}%)"
+        },
+        legend: {
+            show: false,
+            orient: 'vertical',
+            left: 'left',
+            type: 'scroll',
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: {
+                    readOnly: false
+                },
+                saveAsImage: {}
+            }
+        },
+        series: [{
+            type: 'pie',
+            radius: '85%',
+            data: <?php echo json_encode($brand_data) ?>,
+            labelLine: {
+                show: false
+            },
+            label: {
+                show: true,
+                position: 'inside',
+                formatter: '{b}: {c} \n ({d}%)',
+            },
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }]
+    };
+    chart_brand.setOption(chart_brand_option);
+
+
+
+    var chart_model = echarts.init(document.getElementById('chart_model'));
+    var chart_model_option = {
+        title: {},
+        tooltip: {
+            trigger: 'item',
+            formatter: "{b}: <b>{c}</b> ({d}%)"
+        },
+        legend: {
+            show: false,
+            orient: 'vertical',
+            left: 'left',
+            type: 'scroll',
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataView: {
+                    readOnly: false
+                },
+                saveAsImage: {}
+            }
+        },
+        series: [{
+            type: 'pie',
+            radius: '85%',
+            data: <?php echo json_encode($model_data) ?>,
+            labelLine: {
+                show: false
+            },
+            label: {
+                show: true,
+                position: 'inside',
+                formatter: '{b}: {c} \n ({d}%)',
+            },
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }]
+    };
+    chart_model.setOption(chart_model_option);
+
+
+
+    var chart_weekday = echarts.init(document.getElementById('chart_weekday'));
+    var chart_weekday_option = {
+        title: {},
+        tooltip: {
+            trigger: 'axis',
+            formatter: "{b}: <b>{c}</b>",
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            containLabel: true,
+            left: '3%',
+            right: '3%',
+            bottom: '3%',
+        },
+        xAxis: [{
+            type: 'category',
+            data: ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'],
+            axisTick: {
+                alignWithLabel: true
+            }
+        }],
+        yAxis: [{
+            type: 'value'
+        }],
+        toolbox: {
+            show: true,
+            feature: {
+                dataZoom: {
+                    yAxisIndex: "none"
+                },
+                dataView: {
+                    readOnly: false
+                },
+                magicType: {
+                    type: ["line", "bar"]
+                },
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        series: [{
+            type: 'bar',
+            data: <?php echo json_encode($weekday_data) ?>,
+            label: {
+                show: false,
+            },
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }]
+    };
+    chart_weekday.setOption(chart_weekday_option);
+
+
+
+    var chart_hour = echarts.init(document.getElementById('chart_hour'));
+    var chart_hour_option = {
+        title: {},
+        tooltip: {
+            trigger: 'axis',
+            formatter: "{b} Uhr: <b>{c}</b>",
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            containLabel: true,
+            left: '3%',
+            right: '3%',
+            bottom: '3%',
+        },
+        xAxis: [{
+            type: 'category',
+            data: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
+            axisTick: {
+                alignWithLabel: true
+            }
+        }],
+        yAxis: [{
+            type: 'value'
+        }],
+        toolbox: {
+            show: true,
+            feature: {
+                dataZoom: {
+                    yAxisIndex: "none"
+                },
+                dataView: {
+                    readOnly: false
+                },
+                magicType: {
+                    type: ["line", "bar"]
+                },
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        series: [{
+            type: 'bar',
+            data: <?php echo json_encode($hour_data) ?>,
+            label: {
+                show: false,
+            },
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }]
+    };
+    chart_hour.setOption(chart_hour_option);
+
 
 
     $(document).on('rex:ready', function() {
         $('.dt_order_second').DataTable({
             "paging": true,
-            "pageLength": 8,
+            "pageLength": 10,
             "lengthChange": true,
             "lengthMenu": [5, 10, 50, 100],
             "order": [
@@ -507,7 +717,7 @@ echo $fragment->parse('core/page/section.php');
 
         $('.dt_order_first').DataTable({
             "paging": true,
-            "pageLength": 8,
+            "pageLength": 10,
             "lengthChange": true,
             "lengthMenu": [5, 10, 50, 100],
             "order": [
@@ -550,7 +760,7 @@ echo $fragment->parse('core/page/section.php');
 
         $('.dt_order_default').DataTable({
             "paging": true,
-            "pageLength": 8,
+            "pageLength": 10,
             "lengthChange": true,
             "lengthMenu": [5, 10, 50, 100],
             "search": {

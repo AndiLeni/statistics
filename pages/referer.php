@@ -44,7 +44,7 @@ if ($request_ref != '') {
     $fragment->setVar('class', 'info', false);
     $fragment->setVar('title', 'Details für:');
     $fragment->setVar('heading', $request_ref);
-    $fragment->setVar('body', '<div id="chart_details"></div>' . $list->get(), false);
+    $fragment->setVar('body', '<a target="_blank" href="' . $request_ref . '">' . $request_ref . '</a><div id="chart_details" style="height:500px; width:auto"></div>' . $list->get(), false);
     echo $fragment->parse('core/page/section.php');
 }
 
@@ -74,28 +74,6 @@ echo $fragment->parse('core/page/section.php');
 
 
 <script>
-    var config = {
-        responsive: true,
-        toImageButtonOptions: {
-            format: 'jpeg',
-            filename: 'plot',
-            height: 750,
-            width: 1000,
-            scale: 1,
-        },
-        displaylogo: false,
-        displayModeBar: true,
-    }
-    var layout = {
-        margin: {
-            r: 25,
-            l: 50,
-            t: 25,
-            b: <?php echo $addon->getConfig('statistics_chart_padding_bottom') ?>,
-        },
-    }
-
-
     <?php
 
     if ($request_ref != '') {
@@ -131,15 +109,56 @@ echo $fragment->parse('core/page/section.php');
         }
 
         $sum_data = [
-            'labels' => json_encode(array_keys($data)),
-            'values' => json_encode(array_values($data)),
+            'labels' => array_keys($data),
+            'values' => array_values($data),
         ];
 
-        echo 'chart_details = Plotly.newPlot("chart_details", [{
-            type: "line",
-            x:' . $sum_data['labels'] . ',
-            y:' . $sum_data['values'] . ',
-        }], layout, config);';
+        echo "var chart_details = echarts.init(document.getElementById('chart_details'));
+        var chart_details_option = {
+            title: {},
+            tooltip: {
+                trigger: 'axis',
+            },
+            dataZoom: [{
+                id: 'dataZoomX',
+                type: 'slider',
+                xAxisIndex: [0],
+                filterMode: 'filter'
+            }],
+            grid: {
+                left: '5%',
+                right: '5%',
+                // bottom: '10%',
+                // top: '12%',
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+                    dataView: {
+                        readOnly: false
+                    },
+                    magicType: {
+                        type: ['line', 'bar', 'stack']
+                    },
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            legend: {},
+            xAxis: {
+                data:" . json_encode($sum_data['labels']) . ",
+                type: 'category',
+            },
+            yAxis: {},
+            series: [{
+                data:" . json_encode($sum_data['values']) . ",
+                type: 'line',
+            }]
+        };
+        chart_details.setOption(chart_details_option);";
     }
 
     ?>

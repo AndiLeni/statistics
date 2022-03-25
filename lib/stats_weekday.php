@@ -77,23 +77,7 @@ class stats_weekday
 
         $result = $sql->setQuery('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' WHERE type = "weekday" ORDER BY count DESC');
 
-        $addon = rex_addon::get('statistics');
-
-        $data = [
-            $addon->i18n('statistics_monday') => 0,
-            $addon->i18n('statistics_tuesday') => 0,
-            $addon->i18n('statistics_wednesday') => 0,
-            $addon->i18n('statistics_thursday') => 0,
-            $addon->i18n('statistics_friday') => 0,
-            $addon->i18n('statistics_saturday') => 0,
-            $addon->i18n('statistics_sunday') => 0
-        ];
-
-        foreach ($result as $row) {
-            $data[$this->get_weekday_string(['value' => $row->getValue('name')])] = $row->getValue('count');
-        }
-
-        return $data;
+        return $sql;
     }
 
 
@@ -107,20 +91,23 @@ class stats_weekday
      */
     public function get_data()
     {
-        $data = $this->get_sql();
+        $sql = $this->get_sql();
 
-        return [
-            'labels' => json_encode([
-                $this->addon->i18n('statistics_monday'),
-                $this->addon->i18n('statistics_tuesday'),
-                $this->addon->i18n('statistics_wednesday'),
-                $this->addon->i18n('statistics_thursday'),
-                $this->addon->i18n('statistics_friday'),
-                $this->addon->i18n('statistics_saturday'),
-                $this->addon->i18n('statistics_sunday')
-            ]),
-            'values' => json_encode(array_values($data)),
+        $data = [
+            0 => 0,
+            1 => 0,
+            2 => 0,
+            3 => 0,
+            4 => 0,
+            5 => 0,
+            6 => 0,
         ];
+
+        foreach ($sql as $row) {
+            $data[intval($row->getValue('name')) - 1] = $row->getValue('count');
+        }
+
+        return $data;
     }
 
 
@@ -186,7 +173,21 @@ class stats_weekday
      */
     public function get_data_dashboard()
     {
-        $data = $this->get_sql();
+        $sql = $this->get_sql();
+
+        $data = [
+            0 => 0,
+            1 => 0,
+            2 => 0,
+            3 => 0,
+            4 => 0,
+            5 => 0,
+            6 => 0,
+        ];
+
+        foreach ($sql as $row) {
+            $data[intval($row->getValue('name')) - 1] = $row->getValue('count');
+        }
 
         return $data;
     }

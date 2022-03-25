@@ -43,7 +43,7 @@ if ($request_url != '' && !$delete_entry) {
     $pagedetails = new stats_media_details($request_url, $filter_date_helper->date_start, $filter_date_helper->date_end);
     $sum_data = $pagedetails->get_sum_per_day();
 
-    $content = '<div id="chart_details"></div>';
+    $content = '<div id="chart_details" style="height:500px; width:auto"></div>';
 
     $fragment = new rex_fragment();
     $fragment->setVar('class', 'info', false);
@@ -105,11 +105,52 @@ echo $fragment2->parse('core/page/section.php');
     <?php
 
     if ($request_url != '' && !$delete_entry) {
-        echo 'chart_details = Plotly.newPlot("chart_details", [{
-            type: "line",
-            x:' . $sum_data['labels'] . ',
-            y:' . $sum_data['values'] . ',
-        }], layout, config);';
+        echo "var chart_details = echarts.init(document.getElementById('chart_details'));
+        var chart_details_option = {
+            title: {},
+            tooltip: {
+                trigger: 'axis',
+            },
+            dataZoom: [{
+                id: 'dataZoomX',
+                type: 'slider',
+                xAxisIndex: [0],
+                filterMode: 'filter'
+            }],
+            grid: {
+                left: '5%',
+                right: '5%',
+                // bottom: '10%',
+                // top: '12%',
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+                    dataView: {
+                        readOnly: false
+                    },
+                    magicType: {
+                        type: ['line', 'bar', 'stack']
+                    },
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            legend: {},
+            xAxis: {
+                data:" . json_encode($sum_data['labels']) . ",
+                type: 'category',
+            },
+            yAxis: {},
+            series: [{
+                data:" . json_encode($sum_data['values']) . ",
+                type: 'line',
+            }]
+        };
+        chart_details.setOption(chart_details_option);";
     }
 
     ?>

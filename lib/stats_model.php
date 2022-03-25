@@ -39,13 +39,7 @@ class stats_model
 
         $result = $sql->setQuery('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' WHERE type = "model" ORDER BY count DESC');
 
-        $data = [];
-
-        foreach ($result as $row) {
-            $data[$row->getValue('name')] = $row->getValue('count');
-        }
-
-        return $data;
+        return $result;
     }
     /**
      *
@@ -57,12 +51,18 @@ class stats_model
      */
     public function get_data()
     {
-        $data = $this->get_sql();
+        $sql = $this->get_sql();
 
-        return [
-            'labels' => json_encode(array_keys($data)),
-            'values' => json_encode(array_values($data)),
-        ];
+        $data = [];
+
+        foreach ($sql as $row) {
+            $data[] = [
+                'name' => $row->getValue('name'),
+                'value' => $row->getValue('count')
+            ];
+        }
+
+        return $data;
     }
 
     /**
