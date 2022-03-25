@@ -1,7 +1,7 @@
 # Changelog 
 
 
-## [x.x.x] - x.x.x
+## [2.1.0] - 25.03.2022
 
 ### Added
 - new heatmap chart for "visits per day"
@@ -10,9 +10,11 @@
 ### Changed
 - replaced plotly with echarts (reducing js size from 3,5MB (plotly) to 1MB (echarts))
 - code cleanup, some data generation was moved from the statistic pages to classes to make the templates less bloated
+- filter_date_helper now uses DateTimeImmutable for more logical handling
 
 ### Removed
 - plotly js asset
+- setting "statistics_chart_padding_bottom"
 
 ### Vendor Updates
 - using echarts 5.3.1 
