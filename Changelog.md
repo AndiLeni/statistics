@@ -1,6 +1,6 @@
 # Changelog 
 
-## [x] - x
+## [2.2.0] - 30.03.2022
 
 ### Added
 - charts for visits and visitors are now available in "daily", "monthly" and "yearly" / #86
