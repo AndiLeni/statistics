@@ -25,6 +25,14 @@ $main_chart_data = $chart_data->get_main_chart_data();
 // heatmap data for visits per day in this year
 $data_heatmap = $chart_data->get_heatmap_visits();
 
+// chart data monthly
+$chart_data_monthly = $chart_data->get_chart_data_monthly();
+
+// chart data yearly
+$chart_data_yearly = $chart_data->get_chart_data_yearly();
+
+
+
 // device specific data
 $browser = new stats_browser($filter_date_helper->date_start, $filter_date_helper->date_end);
 $browser_data = $browser->get_data();
@@ -85,43 +93,20 @@ echo $fragment_overview->parse('overview.php');
 // - PANEL WITH CHART "VIEWS TOTAL"
 // - TABLE WITH DATA FOR "VIEWS TOTAL"
 
-$list_dates = rex_list::factory('SELECT date, sum(count) as "count" FROM ' . rex::getTable('pagestats_visits_per_day') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" group by date ORDER BY count DESC', 10000);
-$list_dates->setColumnLabel('date', 'Datum');
-$list_dates->setColumnLabel('count', 'Anzahl');
-$list_dates->setColumnParams('url', ['url' => '###url###']);
-$list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
-$list_dates->setColumnLayout('date', ['<th>###VALUE###</th>', '<td data-sort="###date###">###VALUE###</td>']);
-$list_dates->setColumnFormat('date', 'date', 'd.m.Y');
+$lists_data = new ListData($filter_date_helper);
 
-if ($list_dates->getRows() == 0) {
-    $table = '<h3>Besuche:</h3>' . rex_view::info($this->i18n('statistics_no_data'));
-} else {
-    $table = '<h3>Besuche:</h3>' . $list_dates->get();
-}
+$lists_daily = $lists_data->get_lists_daily();
+$lists_monthly = $lists_data->get_lists_monthly();
+$lists_yearly = $lists_data->get_lists_yearly();
 
-$table .= '<hr>';
 
-$list_dates = rex_list::factory('SELECT date, sum(count) as "count" FROM ' . rex::getTable('pagestats_visitors_per_day') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" group by date ORDER BY count DESC', 10000);
-$list_dates->setColumnLabel('date', 'Datum');
-$list_dates->setColumnLabel('count', 'Anzahl');
-$list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
-$list_dates->setColumnLayout('date', ['<th>###VALUE###</th>', '<td data-sort="###date###">###VALUE###</td>']);
-$list_dates->setColumnFormat('date', 'date', 'd.m.Y');
 
-if ($list_dates->getRows() == 0) {
-    $table .= '<h3>Besucher:</h3>' . rex_view::info($this->i18n('statistics_no_data'));
-} else {
-    $table .= '<h3>Besucher:</h3>' . $list_dates->get();
-}
 
-$fragment_collapse = new rex_fragment();
-$fragment_collapse->setVar('title', $this->i18n('statistics_views_per_day'));
-$fragment_collapse->setVar('content', $table, false);
-
-$fragment = new rex_fragment();
-$fragment->setVar('title', '<b>' . $this->i18n('statistics_views_per_day') . '</b>', false);
-$fragment->setVar('body', '<div id="chart_visits" style="width: 100%;height:500px;"></div><hr><div id="chart_visits_heatmap" style="width: 100%;height:250px;"></div>' . $fragment_collapse->parse('collapse.php'), false);
-echo $fragment->parse('core/page/section.php');
+$fragment_main_chart = new rex_fragment();
+$fragment_main_chart->setVar('daily', '<div id="chart_visits_daily" style="width: 100%;height:500px;"></div><hr><div id="chart_visits_heatmap" style="width: 100%;height:250px;"></div>' . $lists_daily->parse('collapse.php'), false);
+$fragment_main_chart->setVar('monthly', '<div id="chart_visits_monthly" style="width: 100%;height:500px;"></div>' . $lists_monthly->parse('collapse.php'), false);
+$fragment_main_chart->setVar('yearly', '<div id="chart_visits_yearly" style="width: 100%;height:500px;"></div>' . $lists_yearly->parse('collapse.php'), false);
+echo $fragment_main_chart->parse('main_chart.php');
 
 
 
@@ -193,8 +178,8 @@ echo $fragment->parse('core/page/section.php');
 
 
 <script>
-    var main_chart = echarts.init(document.getElementById('chart_visits'));
-    var main_chart_option = {
+    var chart_visits_daily = echarts.init(document.getElementById('chart_visits_daily'));
+    var chart_visits_daily_option = {
         title: {},
         tooltip: {
             trigger: 'axis',
@@ -244,7 +229,101 @@ echo $fragment->parse('core/page/section.php');
     };
 
     // Display the chart using the configuration items and data just specified.
-    main_chart.setOption(main_chart_option);
+    chart_visits_daily.setOption(chart_visits_daily_option);
+
+
+
+    var chart_visits_monthly = echarts.init(document.getElementById('chart_visits_monthly'));
+    var chart_visits_monthly_option = {
+        title: {},
+        tooltip: {
+            trigger: 'axis',
+        },
+        dataZoom: [{
+            id: 'dataZoomX',
+            type: 'slider',
+            xAxisIndex: [0],
+            filterMode: 'filter'
+        }],
+        grid: {
+            left: '5%',
+            right: '5%',
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataZoom: {
+                    yAxisIndex: "none"
+                },
+                dataView: {
+                    readOnly: false
+                },
+                magicType: {
+                    type: ["line", "bar", 'stack']
+                },
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        legend: {
+            data: <?php echo json_encode($chart_data_monthly['legend']) ?>,
+            right: '20%',
+        },
+        xAxis: {
+            data: <?php echo json_encode($chart_data_monthly['xaxis']) ?>,
+            type: 'category',
+        },
+        yAxis: {},
+        series: <?php echo json_encode($chart_data_monthly['series']) ?>
+    };
+    chart_visits_monthly.setOption(chart_visits_monthly_option);
+
+
+
+    var chart_visits_yearly = echarts.init(document.getElementById('chart_visits_yearly'));
+    var chart_visits_yearly_option = {
+        title: {},
+        tooltip: {
+            trigger: 'axis',
+        },
+        dataZoom: [{
+            id: 'dataZoomX',
+            type: 'slider',
+            xAxisIndex: [0],
+            filterMode: 'filter'
+        }],
+        grid: {
+            left: '5%',
+            right: '5%',
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                dataZoom: {
+                    yAxisIndex: "none"
+                },
+                dataView: {
+                    readOnly: false
+                },
+                magicType: {
+                    type: ["line", "bar", 'stack']
+                },
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        legend: {
+            data: <?php echo json_encode($chart_data_yearly['legend']) ?>,
+            right: '20%',
+        },
+        xAxis: {
+            data: <?php echo json_encode($chart_data_yearly['xaxis']) ?>,
+            type: 'category',
+        },
+        yAxis: {},
+        series: <?php echo json_encode($chart_data_yearly['series']) ?>
+    };
+    chart_visits_yearly.setOption(chart_visits_yearly_option);
 
 
 
@@ -668,6 +747,14 @@ echo $fragment->parse('core/page/section.php');
         }]
     };
     chart_hour.setOption(chart_hour_option);
+
+
+    // resize visits chart when tabs change
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+        chart_visits_daily.resize();
+        chart_visits_monthly.resize();
+        chart_visits_yearly.resize();
+    })
 
 
 

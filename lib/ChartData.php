@@ -241,4 +241,295 @@ class ChartData
             'max' => $max_value,
         ];
     }
+
+    public function get_chart_data_monthly()
+    {
+        $legend = [];
+        $xaxis = [];
+        $series = [];
+
+        // VISITS
+
+        $sql = rex_sql::factory();
+        $domains = $sql->getArray('select distinct domain from ' . rex::getTable('pagestats_visitors_per_day'));
+
+        $min_max_date = $sql->getArray('SELECT MIN(date) AS "min_date", MAX(date) AS "max_date" FROM ' . rex::getTable('pagestats_visits_per_day'));
+
+
+        if ($min_max_date[0]['min_date'] == null) {
+            $min_date = new DateTimeImmutable();
+            $max_date = new DateTimeImmutable();
+        } else {
+            $min_date = DateTimeImmutable::createFromFormat('Y-m-d', $min_max_date[0]['min_date']);
+            $max_date = DateTimeImmutable::createFromFormat('Y-m-d', $min_max_date[0]['max_date']);
+        }
+
+
+        $period = new DatePeriod(
+            $min_date,
+            new DateInterval('P1M'),
+            $max_date
+        );
+
+        $serie_data = [];
+        foreach ($period as $value) {
+            $xaxis[] = $value->format("M Y"); // generate xaxis values once
+            $serie_data[$value->format("M Y")] = 0; // initialize each month with 0
+        }
+
+        // get total visits
+        $result_total = $sql->getArray('SELECT DATE_FORMAT(date,"%b %Y") AS "month", IFNULL(SUM(count),0) AS "count" FROM ' . rex::getTable('pagestats_visits_per_day') . ' GROUP BY month ORDER BY date ASC');
+
+        // set count to each month
+        foreach ($result_total as $row) {
+            $serie_data[$row['month']] = $row['count'];
+        }
+
+        // combine data to series array for chart
+        $serie = [
+            'data' => array_values($serie_data),
+            'name' => 'Aufrufe Gesamt',
+            'type' => 'line',
+        ];
+
+        // append to legend
+        $legend[] = 'Aufrufe Gesamt';
+
+        // add serie to series
+        $series[] = $serie;
+
+        // do this procedure for each domain
+        if ($this->addon->getConfig('statistics_combine_all_domains') == false) {
+            foreach ($domains as $domain) {
+                $result_domain = $sql->getArray('SELECT DATE_FORMAT(date,"%b %Y") AS "month", IFNULL(SUM(count),0) AS "count" FROM ' . rex::getTable('pagestats_visits_per_day') . ' WHERE domain = :domain GROUP BY month ORDER BY date ASC', ['domain' => $domain['domain']]);
+
+                $serie_data = [];
+                foreach ($period as $value) {
+                    $serie_data[$value->format("M Y")] = "0";
+                }
+
+                foreach ($result_domain as $row) {
+                    $serie_data[$row['month']] = $row['count'];
+                }
+
+                $serie = [
+                    'data' => array_values($serie_data),
+                    'name' => 'Aufrufe ' . $domain['domain'],
+                    'type' => 'line',
+                ];
+
+                $legend[] = 'Aufrufe ' . $domain['domain'];
+
+                $series[] = $serie;
+            }
+        }
+
+
+
+        // VISITORS
+
+        // get total visits
+        $result_total = $sql->getArray('SELECT DATE_FORMAT(date,"%b %Y") AS "month", IFNULL(SUM(count),0) AS "count" FROM ' . rex::getTable('pagestats_visitors_per_day') . ' GROUP BY month ORDER BY date ASC');
+
+        $serie_data = [];
+        foreach ($period as $value) {
+            $serie_data[$value->format("M Y")] = 0; // initialize each month with 0
+        }
+
+        // set count to each month
+        foreach ($result_total as $row) {
+            $serie_data[$row['month']] = $row['count'];
+        }
+
+        // combine data to series array for chart
+        $serie = [
+            'data' => array_values($serie_data),
+            'name' => 'Besucher Gesamt',
+            'type' => 'line',
+        ];
+
+        // append to legend
+        $legend[] = 'Besucher Gesamt';
+
+        // add serie to series
+        $series[] = $serie;
+
+        // do this procedure for each domain
+        if ($this->addon->getConfig('statistics_combine_all_domains') == false) {
+            foreach ($domains as $domain) {
+                $result_domain = $sql->getArray('SELECT DATE_FORMAT(date,"%b %Y") AS "month", IFNULL(SUM(count),0) AS "count" FROM ' . rex::getTable('pagestats_visitors_per_day') . ' WHERE domain = :domain GROUP BY month ORDER BY date ASC', ['domain' => $domain['domain']]);
+
+                $serie_data = [];
+                foreach ($period as $value) {
+                    $serie_data[$value->format("M Y")] = "0";
+                }
+
+                foreach ($result_domain as $row) {
+                    $serie_data[$row['month']] = $row['count'];
+                }
+
+                $serie = [
+                    'data' => array_values($serie_data),
+                    'name' => 'Besucher ' . $domain['domain'],
+                    'type' => 'line',
+                ];
+
+                $legend[] = 'Besucher ' . $domain['domain'];
+
+                $series[] = $serie;
+            }
+        }
+
+
+        return [
+            'series' => $series,
+            'legend' => $legend,
+            'xaxis' => $xaxis,
+        ];
+    }
+
+    public function get_chart_data_yearly()
+    {
+
+        $legend = [];
+        $xaxis = [];
+        $series = [];
+
+        // VISITS
+
+        $sql = rex_sql::factory();
+        $domains = $sql->getArray('select distinct domain from ' . rex::getTable('pagestats_visitors_per_day'));
+
+        $min_max_date = $sql->getArray('SELECT MIN(date) AS "min_date", MAX(date) AS "max_date" FROM ' . rex::getTable('pagestats_visits_per_day') . '');
+
+        if ($min_max_date[0]['min_date'] == null) {
+            $min_date = new DateTimeImmutable();
+            $max_date = new DateTimeImmutable();
+        } else {
+            $min_date = DateTimeImmutable::createFromFormat('Y-m-d', $min_max_date[0]['min_date']);
+            $max_date = DateTimeImmutable::createFromFormat('Y-m-d', $min_max_date[0]['max_date']);
+        }
+
+        $period = new DatePeriod(
+            $min_date,
+            new DateInterval('P1Y'),
+            $max_date->modify('+1 year')
+        );
+
+        $serie_data = [];
+        foreach ($period as $value) {
+            $xaxis[] = $value->format("Y"); // generate xaxis values once
+            $serie_data[$value->format("Y")] = 0; // initialize each year with 0
+        }
+
+        // get total visits
+        $result_total = $sql->getArray('SELECT DATE_FORMAT(date,"%Y") AS "year", IFNULL(SUM(count),0) AS "count" FROM ' . rex::getTable('pagestats_visits_per_day') . ' GROUP BY year ORDER BY date ASC');
+
+        // set count to each year
+        foreach ($result_total as $row) {
+            $serie_data[$row['year']] = $row['count'];
+        }
+
+        // combine data to series array for chart
+        $serie = [
+            'data' => array_values($serie_data),
+            'name' => 'Aufrufe Gesamt',
+            'type' => 'line',
+        ];
+
+        // append to legend
+        $legend[] = 'Aufrufe Gesamt';
+
+        // add serie to series
+        $series[] = $serie;
+
+        // do this procedure for each domain
+        if ($this->addon->getConfig('statistics_combine_all_domains') == false) {
+            foreach ($domains as $domain) {
+                $result_domain = $sql->getArray('SELECT DATE_FORMAT(date,"%Y") AS "year", IFNULL(SUM(count),0) AS "count" FROM ' . rex::getTable('pagestats_visits_per_day') . ' WHERE domain = :domain GROUP BY year ORDER BY date ASC', ['domain' => $domain['domain']]);
+
+                $serie_data = [];
+                foreach ($period as $value) {
+                    $serie_data[$value->format("Y")] = "0";
+                }
+
+                foreach ($result_domain as $row) {
+                    $serie_data[$row['year']] = $row['count'];
+                }
+
+                $serie = [
+                    'data' => array_values($serie_data),
+                    'name' => 'Aufrufe ' . $domain['domain'],
+                    'type' => 'line',
+                ];
+
+                $legend[] = 'Aufrufe ' . $domain['domain'];
+
+                $series[] = $serie;
+            }
+        }
+
+
+
+        // VISITORS
+
+        // get total visits
+        $result_total = $sql->getArray('SELECT DATE_FORMAT(date,"%Y") AS "year", IFNULL(SUM(count),0) AS "count" FROM ' . rex::getTable('pagestats_visitors_per_day') . ' GROUP BY year ORDER BY date ASC');
+
+        $serie_data = [];
+        foreach ($period as $value) {
+            $serie_data[$value->format("Y")] = 0; // initialize each year with 0
+        }
+
+        // set count to each year
+        foreach ($result_total as $row) {
+            $serie_data[$row['year']] = $row['count'];
+        }
+
+        // combine data to series array for chart
+        $serie = [
+            'data' => array_values($serie_data),
+            'name' => 'Besucher Gesamt',
+            'type' => 'line',
+        ];
+
+        // append to legend
+        $legend[] = 'Besucher Gesamt';
+
+        // add serie to series
+        $series[] = $serie;
+
+        // do this procedure for each domain
+        if ($this->addon->getConfig('statistics_combine_all_domains') == false) {
+            foreach ($domains as $domain) {
+                $result_domain = $sql->getArray('SELECT DATE_FORMAT(date,"%Y") AS "year", IFNULL(SUM(count),0) AS "count" FROM ' . rex::getTable('pagestats_visitors_per_day') . ' WHERE domain = :domain GROUP BY year ORDER BY date ASC', ['domain' => $domain['domain']]);
+
+                $serie_data = [];
+                foreach ($period as $value) {
+                    $serie_data[$value->format("Y")] = "0";
+                }
+
+                foreach ($result_domain as $row) {
+                    $serie_data[$row['year']] = $row['count'];
+                }
+
+                $serie = [
+                    'data' => array_values($serie_data),
+                    'name' => 'Besucher ' . $domain['domain'],
+                    'type' => 'line',
+                ];
+
+                $legend[] = 'Besucher ' . $domain['domain'];
+
+                $series[] = $serie;
+            }
+        }
+
+
+        return [
+            'series' => $series,
+            'legend' => $legend,
+            'xaxis' => $xaxis,
+        ];
+    }
 }
