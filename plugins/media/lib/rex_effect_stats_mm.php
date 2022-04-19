@@ -3,11 +3,9 @@
 /**
  * Media Manager Effect to provide a method to log specific media files
  *
- * @author Andreas Lenhardt
  */
 class rex_effect_stats_mm extends rex_effect_abstract
 {
-
 
     /**
      *
@@ -15,9 +13,8 @@ class rex_effect_stats_mm extends rex_effect_abstract
      * @return void
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
-     * @author Andreas Lenhardt
      */
-    public function execute()
+    public function execute(): void
     {
 
         rex_extension::register('MEDIA_MANAGER_AFTER_SEND', function () {
@@ -46,9 +43,8 @@ class rex_effect_stats_mm extends rex_effect_abstract
      *
      *
      * @return string
-     * @author Andreas Lenhardt
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Datei in Statistik loggen';
     }

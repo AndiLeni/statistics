@@ -11,12 +11,12 @@ $request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''
 $sql = rex_sql::factory();
 // $sql->setDebug(true);
 
-$filter_date_helper = new filter_date_helper($request_date_start, $request_date_end, 'pagestats_visits_per_day');
+$filter_date_helper = new filterDateHelper($request_date_start, $request_date_end, 'pagestats_visits_per_day');
 
 
 
 // data for charts
-$chart_data = new ChartData($filter_date_helper);
+$chart_data = new chartData($filter_date_helper);
 
 
 // main chart data for visits and visitors
@@ -34,25 +34,25 @@ $chart_data_yearly = $chart_data->get_chart_data_yearly();
 
 
 // device specific data
-$browser = new stats_browser($filter_date_helper->date_start, $filter_date_helper->date_end);
+$browser = new stats_browser();
 $browser_data = $browser->get_data();
 
-$browsertype = new stats_browsertype($filter_date_helper->date_start, $filter_date_helper->date_end);
+$browsertype = new stats_browsertype();
 $browsertype_data = $browsertype->get_data();
 
-$os = new stats_os($filter_date_helper->date_start, $filter_date_helper->date_end);
+$os = new stats_os();
 $os_data = $os->get_data();
 
-$brand = new stats_brand($filter_date_helper->date_start, $filter_date_helper->date_end);
+$brand = new stats_brand();
 $brand_data = $brand->get_data();
 
-$model = new stats_model($filter_date_helper->date_start, $filter_date_helper->date_end);
+$model = new stats_model();
 $model_data = $model->get_data();
 
-$weekday = new stats_weekday($filter_date_helper->date_start, $filter_date_helper->date_end);
+$weekday = new stats_weekday();
 $weekday_data = $weekday->get_data();
 
-$hour = new stats_hour($filter_date_helper->date_start, $filter_date_helper->date_end);
+$hour = new stats_hour();
 $hour_data = $hour->get_data();
 
 

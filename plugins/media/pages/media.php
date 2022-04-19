@@ -8,7 +8,7 @@ $delete_entry = rex_request('delete_entry', 'boolean', false);
 $request_date_start = htmlspecialchars_decode(rex_request('date_start', 'string', ''));
 $request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''));
 
-$filter_date_helper = new filter_date_helper($request_date_start, $request_date_end, 'pagestats_media');
+$filter_date_helper = new filterDateHelper($request_date_start, $request_date_end, 'pagestats_media');
 
 
 
@@ -40,7 +40,7 @@ if ($request_url != '' && $delete_entry === true) {
 if ($request_url != '' && !$delete_entry) {
     // details section for single campaign
 
-    $pagedetails = new stats_media_details($request_url, $filter_date_helper->date_start, $filter_date_helper->date_end);
+    $pagedetails = new stats_media_details($request_url, $filter_date_helper);
     $sum_data = $pagedetails->get_sum_per_day();
 
     $content = '<div id="chart_details" style="height:500px; width:auto"></div>';

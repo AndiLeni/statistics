@@ -1,17 +1,32 @@
 <?php
 
-class ChartData
+class chartData
 {
-    private $filter_date_helper;
-    private $addon;
 
-    public function __construct($filter_date_helper)
+    private filterDateHelper $filter_date_helper;
+    private rex_addon $addon;
+
+
+    /**
+     * 
+     * 
+     * @param filterDateHelper $filter_date_helper 
+     * @return void 
+     * @throws InvalidArgumentException 
+     */
+    public function __construct(filterDateHelper $filter_date_helper)
     {
         $this->filter_date_helper = $filter_date_helper;
         $this->addon = rex_addon::get('statistics');
     }
 
-    private function get_labels()
+
+    /**
+     * 
+     * 
+     * @return array 
+     */
+    private function get_labels(): array
     {
         // modify end date, because sql includes start and end, php ommits end
         $period = new DatePeriod(
@@ -28,7 +43,15 @@ class ChartData
         return $labels;
     }
 
-    public function get_main_chart_data()
+
+    /**
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     */
+    public function get_main_chart_data(): array
     {
         $data_visits = $this->get_visits_per_day();
 
@@ -47,7 +70,15 @@ class ChartData
         ];
     }
 
-    private function get_visits_per_day()
+
+    /**
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     */
+    private function get_visits_per_day(): array
     {
         // DATA COLLECTION FOR MAIN CHART, "VIEWS PER DAY"
 
@@ -125,7 +156,15 @@ class ChartData
         return $data_chart_visits;
     }
 
-    private function get_visitors_per_day()
+
+    /**
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     */
+    private function get_visitors_per_day(): array
     {
         // DATA COLLECTION FOR MAIN CHART, "VISITORS PER DAY"
 
@@ -201,7 +240,15 @@ class ChartData
         return $data_chart_visitors;
     }
 
-    public function get_heatmap_visits()
+
+    /**
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     */
+    public function get_heatmap_visits(): array
     {
         // data for heatmap chart
 
@@ -242,7 +289,15 @@ class ChartData
         ];
     }
 
-    public function get_chart_data_monthly()
+
+    /**
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     */
+    public function get_chart_data_monthly(): array
     {
         $legend = [];
         $xaxis = [];
@@ -388,7 +443,15 @@ class ChartData
         ];
     }
 
-    public function get_chart_data_yearly()
+
+    /**
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     */
+    public function get_chart_data_yearly(): array
     {
 
         $legend = [];

@@ -3,75 +3,33 @@
 /**
  * Handles the "weekday" data for statistics
  *
- * @author Andreas Lenhardt
  */
 class stats_weekday
 {
 
-    private $addon;
-    private $start_date = '';
-    private $end_date = '';
+    private rex_addon $addon;
+
 
     /**
      * 
      * 
-     * @param mixed $start_date 
-     * @param mixed $end_date 
      * @return void 
-     * @author Andreas Lenhardt
+     * @throws InvalidArgumentException 
      */
-    public function __construct($start_date, $end_date)
+    public function __construct()
     {
         $this->addon = rex_addon::get('statistics');
-        $this->start_date = $start_date;
-        $this->end_date = $end_date;
     }
 
 
     /**
-     *
-     *
-     * @param mixed $weekday
-     * @return string|void
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return rex_sql 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
      */
-    public function get_weekday_string($weekday)
-    {
-        switch ($weekday['value']) {
-            case 1:
-                return $this->addon->i18n('statistics_monday');
-                break;
-            case 2:
-                return $this->addon->i18n('statistics_tuesday');
-                break;
-            case 3:
-                return $this->addon->i18n('statistics_wednesday');
-                break;
-            case 4:
-                return $this->addon->i18n('statistics_thursday');
-                break;
-            case 5:
-                return $this->addon->i18n('statistics_friday');
-                break;
-            case 6:
-                return $this->addon->i18n('statistics_saturday');
-                break;
-            case 7:
-                return $this->addon->i18n('statistics_sunday');
-                break;
-        }
-    }
-
-
-    /**
-     *
-     *
-     * @return array
-     * @throws InvalidArgumentException
-     * @throws rex_sql_exception
-     * @author Andreas Lenhardt
-     */
-    private function get_sql()
+    private function get_sql(): rex_sql
     {
         $sql = rex_sql::factory();
 
@@ -82,14 +40,13 @@ class stats_weekday
 
 
     /**
-     *
-     *
-     * @return (string|false)[]
-     * @throws InvalidArgumentException
-     * @throws rex_sql_exception
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
      */
-    public function get_data()
+    public function get_data(): array
     {
         $sql = $this->get_sql();
 
@@ -112,14 +69,13 @@ class stats_weekday
 
 
     /**
-     *
-     *
-     * @return string
-     * @throws InvalidArgumentException
-     * @throws rex_exception
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return string 
+     * @throws InvalidArgumentException 
+     * @throws rex_exception 
      */
-    public function get_list()
+    public function get_list(): string
     {
         $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "weekday" ORDER BY count DESC', 10000);
 
@@ -164,14 +120,13 @@ class stats_weekday
 
 
     /**
-     *
-     *
-     * @return array
-     * @throws InvalidArgumentException
-     * @throws rex_sql_exception
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
      */
-    public function get_data_dashboard()
+    public function get_data_dashboard(): array
     {
         $sql = $this->get_sql();
 

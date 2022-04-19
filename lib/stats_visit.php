@@ -8,7 +8,6 @@ use DeviceDetector\DeviceDetector;
  * Main class to handle saving of page visitors.
  * Performs checks to decide if visit should be ignored
  *
- * @author Andreas Lenhardt
  */
 class stats_visit
 {
@@ -33,87 +32,62 @@ class stats_visit
     ];
 
 
-    private $datetime_now;
+    private DateTimeImmutable $datetime_now;
 
-    private $addon;
+    private rex_addon $addon;
 
-    /**
-     * @var string
-     */
-    private $clientIPAddress;
+    private string $clientIPAddress;
 
-    /**
-     * @var string
-     */
-    private $url;
+    private string $url;
 
-    /**
-     * @var string
-     */
-    private $userAgent;
+    private string $userAgent;
 
-    public $DeviceDetector;
+    public DeviceDetector $DeviceDetector;
 
-    /**
-     * @var string
-     */
-    private $browser = 'Undefiniert';
+    private string $browser = 'Undefiniert';
 
-    /**
-     * @var string
-     */
-    private $os = 'Undefiniert';
+    private string $os = 'Undefiniert';
+
+    private string $osVer = 'Undefiniert';
+
+    private string $device_type = 'Undefiniert';
+
+    private string $brand = 'Undefiniert';
+
+    private string $model = 'Undefiniert';
+
+    private string $domain = '';
+
 
     /**
-     * @var string
-     */
-    private $osVer = 'Undefiniert';
-
-    /**
-     * @var string
-     */
-    private $device_type = 'Undefiniert';
-
-    /**
-     * @var string
-     */
-    private $brand = 'Undefiniert';
-
-    /**
-     * @var string
-     */
-    private $model = 'Undefiniert';
-
-    private $domain = '';
-
-    /**
-     *
-     *
-     * @param string $clientIPAddress
-     * @param string $url
-     * @param string $userAgent
-     * @return void
-     * @throws InvalidArgumentException
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @param string $clientIPAddress 
+     * @param string $url 
+     * @param string $userAgent 
+     * @param string $domain 
+     * @return void 
+     * @throws InvalidArgumentException 
      */
     public function __construct(string $clientIPAddress, string $url, string $userAgent, string $domain)
     {
         $this->addon = rex_addon::get('statistics');
         $this->clientIPAddress = $clientIPAddress;
         $this->url = $url;
-        $this->datetime_now = new DateTime();
+        $this->datetime_now = new DateTimeImmutable();
         $this->userAgent = $userAgent;
         $this->domain = $domain;
     }
 
 
+
     /**
-     *
-     *
-     * @return bool
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return bool 
+     * @throws InvalidArgumentException 
      */
-    public function ignore_visit()
+    public function ignore_visit(): bool
     {
         // check if visit should be ignored
         $ignored_paths = $this->addon->getConfig('statistics_ignored_paths');
@@ -173,14 +147,13 @@ class stats_visit
 
 
     /**
-     *
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @throws rex_sql_exception
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return void 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
      */
-    public function persist()
+    public function persist(): void
     {
         $clientInfo = $this->DeviceDetector->getClient();
         $osInfo = $this->DeviceDetector->getOs();
@@ -227,8 +200,14 @@ class stats_visit
     }
 
 
-
-    public function persist_visitor()
+    /**
+     * 
+     * 
+     * @return void 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     */
+    public function persist_visitor(): void
     {
         $sql = rex_sql::factory();
 
@@ -240,16 +219,14 @@ class stats_visit
     }
 
 
-
     /**
      *
      *
      * @return bool
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
-     * @author Andreas Lenhardt
      */
-    public function save_visit()
+    public function save_visit(): bool
     {
         $hash_string = $this->userAgent . $this->browser . $this->os . " " . $this->osVer . $this->device_type . $this->brand . $this->model . $this->clientIPAddress . $this->url;
         $hash = hash('sha1', $hash_string);
@@ -294,9 +271,8 @@ class stats_visit
      * @return bool
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
-     * @author Andreas Lenhardt
      */
-    public function save_visitor()
+    public function save_visitor(): bool
     {
         $hash_string = $this->userAgent . $this->browser . $this->os . " " . $this->osVer . $this->device_type . $this->brand . $this->model . $this->clientIPAddress;
         $hash = hash('sha1', $hash_string);
@@ -336,9 +312,8 @@ class stats_visit
      *
      * @return void
      * @throws Exception
-     * @author Andreas Lenhardt
      */
-    public function parse_ua()
+    public function parse_ua(): void
     {
         $this->DeviceDetector = new DeviceDetector($this->userAgent);
         $this->DeviceDetector->parse();
@@ -351,9 +326,8 @@ class stats_visit
      * @return void
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
-     * @author Andreas Lenhardt
      */
-    public function save_bot()
+    public function save_bot(): void
     {
         $botInfo = $this->DeviceDetector->getBot();
 
@@ -377,9 +351,8 @@ class stats_visit
      * @return void
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
-     * @author Andreas Lenhardt
      */
-    public function save_referer(string $referer)
+    public function save_referer(string $referer): void
     {
         $sql = rex_sql::factory();
 
@@ -391,25 +364,23 @@ class stats_visit
 
 
     /**
-     *
-     *
-     * @return mixed
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return bool 
      */
-    public function is_bot()
+    public function is_bot(): bool
     {
         return $this->DeviceDetector->isBot();
     }
 
 
     /**
-     * removes parameters from a url
      * 
-     * @param mixed $url 
-     * @return string|false 
-     * @author Andreas Lenhardt
+     * 
+     * @param string $url 
+     * @return string 
      */
-    public static function remove_url_parameters($url)
+    public static function remove_url_parameters(string $url): string
     {
         $url = strtok($url, '?');
 

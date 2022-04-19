@@ -5,7 +5,6 @@ use Vectorface\Whip\Whip;
 /**
  * API class
  *
- * @author Andreas Lenhardt
  */
 class rex_api_stats extends rex_api_function
 {
@@ -20,9 +19,8 @@ class rex_api_stats extends rex_api_function
      * @throws InvalidArgumentException 
      * @throws Exception 
      * @throws rex_sql_exception 
-     * @author Andreas Lenhardt
      */
-    public function execute()
+    public function execute(): rex_api_result
     {
         $plugin = rex_plugin::get('statistics', 'api');
         if ($plugin->getConfig('statistics_api_enable') == true) {

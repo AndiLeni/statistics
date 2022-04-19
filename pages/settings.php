@@ -65,8 +65,8 @@ $field3->setNotice($this->i18n('pagestats_ignored_regex_note'));
 
 $field4 = $form->addRadioField('statistics_log_all');
 $field4->setLabel($this->i18n('statistics_log_404'));
-$field4->addOption($this->i18n('statistics_yes'), true);
-$field4->addOption($this->i18n('statistics_no'), false);
+$field4->addOption($this->i18n('statistics_yes'), 1);
+$field4->addOption($this->i18n('statistics_no'), 0);
 $field4->setNotice($this->i18n('statistics_log_404_note'));
 
 
@@ -79,8 +79,8 @@ $field4->addOption($this->i18n('statistics_scroll_none'), 'none');
 
 $field5 = $form->addRadioField('statistics_ignore_url_params');
 $field5->setLabel($this->i18n('statistics_statistics_ignore_url_params'));
-$field5->addOption($this->i18n('statistics_yes'), true);
-$field5->addOption($this->i18n('statistics_no'), false);
+$field5->addOption($this->i18n('statistics_yes'), 1);
+$field5->addOption($this->i18n('statistics_no'), 0);
 $field5->setNotice($this->i18n('statistics_statistics_ignore_url_params_note'));
 
 
@@ -95,8 +95,8 @@ $field6->setNotice($this->i18n('statistics_default_datefilter_range_note'));
 
 $field7 = $form->addRadioField('statistics_combine_all_domains');
 $field7->setLabel('Fasse alle Domains zusammen');
-$field7->addOption($this->i18n('statistics_yes'), true);
-$field7->addOption($this->i18n('statistics_no'), false);
+$field7->addOption($this->i18n('statistics_yes'), 1);
+$field7->addOption($this->i18n('statistics_no'), 0);
 $field7->setNotice('Alle Domains werden zu einer "Gesamt" Anzahl zusammengefasst. Deaktivieren um Statistiken für alle Domains einzeln anzuzeigen.');
 
 

@@ -1,5 +1,21 @@
 # Changelog 
 
+## [minor] - x
+
+### Added
+
+### Changed
+- code refactored (typetints and return-types added)
+
+### Removed
+
+### Vendor Updates
+
+### Notes:
+Durch das hinzufügen von return-types und return-types wird nun mindestens eine PHP Version >= 7.4 benötigt.
+
+
+
 ## [2.2.0] - 30.03.2022
 
 ### Added

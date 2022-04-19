@@ -3,7 +3,6 @@
 /**
  * Main class to handle saving of media requests
  *
- * @author Andreas Lenhardt
  */
 class stats_media_request
 {
@@ -75,8 +74,8 @@ class stats_media_request
         '.csv',
     ];
 
-    private $url;
-    private $datetime_now;
+    private string $url;
+    private DateTimeImmutable $datetime_now;
 
 
 
@@ -85,23 +84,20 @@ class stats_media_request
      *
      * @param string $url
      * @return void
-     * @author Andreas Lenhardt
      */
     public function __construct(string $url)
     {
         $this->url = $url;
-        $this->datetime_now = new DateTime();
+        $this->datetime_now = new DateTimeImmutable();
     }
 
 
-
     /**
-     *
-     *
-     * @return bool
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return bool 
      */
-    public function is_media()
+    public function is_media(): bool
     {
         foreach (self::MEDIA_URLS as $el) {
             if (str_starts_with($this->url, $el)) {
@@ -126,9 +122,8 @@ class stats_media_request
      * @return void
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
-     * @author Andreas Lenhardt
      */
-    public function save_media()
+    public function save_media(): void
     {
         $sql = rex_sql::factory();
         $result = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_media') . ' SET count = count + 1 WHERE url = :url AND date = :date', ['url' => $this->url, 'date' => $this->datetime_now->format('Y-m-d')]);

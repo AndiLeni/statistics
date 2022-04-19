@@ -3,41 +3,37 @@
 /**
  * Used on the page "pages.php" to handle and retreive data for a single url in the "details-section"
  *
- * @author Andreas Lenhardt
  */
 class stats_pagedetails
 {
-    private $url;
-    private $min_date;
-    private $max_date;
+    private string $url;
+    private filterDateHelper $filter_date_helper;
+
 
     /**
-     *
-     *
-     * @param string $url
-     * @return void
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @param string $url 
+     * @param filterDateHelper $filterDateHelper 
+     * @return void 
      */
-    public function __construct(string $url, $min_date, $max_date)
+    public function __construct(string $url, filterDateHelper $filterDateHelper)
     {
         $this->url = $url;
-        $this->min_date = $min_date;
-        $this->max_date = $max_date;
+        $this->filter_date_helper = $filterDateHelper;
     }
 
 
-
     /**
-     *
-     *
-     * @return string
-     * @throws InvalidArgumentException
-     * @throws rex_exception
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return string 
+     * @throws InvalidArgumentException 
+     * @throws rex_exception 
      */
-    public function get_list()
+    public function get_list(): string
     {
-        $list = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_visits_per_url') . ' WHERE url = "' . $this->url . '" and date between "' . $this->min_date->format('Y-m-d') . '" and "' . $this->max_date->format('Y-m-d') . '" ORDER BY count DESC', 10000);
+        $list = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_visits_per_url') . ' WHERE url = "' . $this->url . '" and date between "' . $this->filter_date_helper->date_start->format('Y-m-d') . '" and "' . $this->filter_date_helper->date_end->format('Y-m-d') . '" ORDER BY count DESC', 10000);
 
         $list->setColumnLabel('date', 'Datum');
         $list->setColumnLabel('count', 'Anzahl');
@@ -48,46 +44,44 @@ class stats_pagedetails
 
         return $list->get();
     }
+
+
     /**
-     *
-     *
-     * @return mixed
-     * @throws InvalidArgumentException
-     * @throws rex_sql_exception
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return int 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
      */
-    public function get_page_total()
+    public function get_page_total(): int
     {
         $details_page_total = rex_sql::factory();
 
         $details_page_total->setQuery('SELECT sum(count) as "count" FROM ' . rex::getTable('pagestats_visits_per_url') . ' WHERE url = :url', ['url' => $this->url]);
 
-        $details_page_total = $details_page_total->getValue('count');
+        $details_page_total = $details_page_total->getValue('count') ? intval($details_page_total->getValue('count')) : 0;
 
         return $details_page_total;
     }
 
+
     /**
-     *
-     *
-     * @return (string|false)[]
-     * @throws InvalidArgumentException
-     * @throws rex_sql_exception
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
      */
-    public function get_sum_per_day()
+    public function get_sum_per_day(): array
     {
         $sql = rex_sql::factory();
 
         // modify to include end date in period because SQL BETWEEN includes start and end date, but DatePeriod excludes end date
         // without modification an additional day would be fetched from database
-        $end = $this->max_date;
-        $end = $end->modify('+1 day');
-
         $period = new DatePeriod(
-            $this->min_date,
+            $this->filter_date_helper->date_start,
             new DateInterval('P1D'),
-            $end
+            $this->filter_date_helper->date_end->modify('+1 day')
         );
 
         $array = [];
@@ -96,7 +90,7 @@ class stats_pagedetails
             $array[$value->format("d.m.Y")] = "0";
         }
 
-        $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visits_per_url') . ' WHERE url = :url and date between :start and :end ORDER BY date ASC', ['url' => $this->url, 'start' => $this->min_date->format('Y-m-d'), 'end' => $this->max_date->format('Y-m-d')]);
+        $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visits_per_url') . ' WHERE url = :url and date between :start and :end ORDER BY date ASC', ['url' => $this->url, 'start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
 
         $data = [];
 

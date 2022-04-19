@@ -4,37 +4,24 @@
  * Can be used to retreive the total amount of visitors
  * F.e. to be used in an old-fashioned Visitor-Counter
  *
- * @author Andreas Lenhardt
  */
 class stats_visitor_counter
 {
-    private $addon;
+
 
     /**
-     *
-     *
-     * @return void
-     * @throws InvalidArgumentException
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return rex_sql 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
      */
-    public function __construct()
-    {
-        $this->addon = rex_addon::get('statistics');
-    }
-
-    /**
-     *
-     *
-     * @return mixed
-     * @throws rex_sql_exception
-     * @author Andreas Lenhardt
-     */
-    private function get_sql()
+    private function get_sql(): rex_sql
     {
         $sql = rex_sql::factory();
         $result = $sql->setQuery('select sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_day'));
 
-        return $result->getValue('count');
+        return $result;
     }
 
     /**
@@ -42,11 +29,11 @@ class stats_visitor_counter
      *
      * @return string
      * @throws rex_sql_exception
-     * @author Andreas Lenhardt
      */
-    public function get_text()
+    public function get_text(): string
     {
-        $count = $this->get_sql();
+        $sql = $this->get_sql();
+        $count = $sql->getValue('count');
 
         return strval($count);
     }

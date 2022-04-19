@@ -3,57 +3,52 @@
 /**
  * Used on the page "campaigns.php" to handle and retreive data for a single api-request
  *
- * @author Andreas Lenhardt
  */
 class stats_campaign_details
 {
-    private $name;
-    private $date_start;
-    private $date_end;
+    private string $name;
+    private filterDateHelper $filterDateHelper;
+
+
 
     /**
-     *
-     *
-     * @param string $url
-     * @return void
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @param string $name 
+     * @param filterDateHelper $filterDateHelper 
+     * @return void 
      */
-    public function __construct(string $name, $date_start, $date_end)
+    public function __construct(string $name, filterDateHelper $filterDateHelper)
     {
         $this->name = $name;
-        $this->date_start = $date_start;
-        $this->date_end = $date_end;
+        $this->filterDateHelper = $filterDateHelper;
     }
 
 
     /**
-     *
-     *
-     * @return (string|false)[]
-     * @throws InvalidArgumentException
-     * @throws rex_sql_exception
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
      */
-    public function get_sum_per_day()
+    public function get_sum_per_day(): array
     {
         $sql = rex_sql::factory();
 
         // modify to include end date in period because SQL BETWEEN includes start and end date, but DatePeriod excludes end date
         // without modification an additional day would be fetched from database
-        $end = $this->date_end;
-        $end = $end->modify('+1 day');
-
         $period = new DatePeriod(
-            $this->date_start,
+            $this->filterDateHelper->date_start,
             new DateInterval('P1D'),
-            $end
+            $this->filterDateHelper->date_end->modify('+1 day')
         );
 
         foreach ($period as $value) {
             $array[$value->format("d.m.Y")] = "0";
         }
 
-        $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_api') . ' WHERE name = :name and date between :start and :end GROUP BY date ORDER BY date ASC', ['name' => $this->name, 'start' => $this->date_start->format('Y-m-d'), 'end' => $this->date_end->format('Y-m-d')]);
+        $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_api') . ' WHERE name = :name and date between :start and :end GROUP BY date ORDER BY date ASC', ['name' => $this->name, 'start' => $this->filterDateHelper->date_start->format('Y-m-d'), 'end' => $this->filterDateHelper->date_end->format('Y-m-d')]);
 
         $data = [];
 

@@ -3,31 +3,30 @@
 /**
  * Helper class for handling date filters on backend pages
  * 
- * @author Andreas Lenhardt
  */
-class filter_date_helper
+class filterDateHelper
 {
 
-    public $date_start;
-    public $date_end;
+    public DateTimeImmutable $date_start;
+    public DateTimeImmutable $date_end;
 
-    public $whole_time_start;
+    public DateTimeImmutable $whole_time_start;
 
-    private $table;
-    private $addon;
+    private string $table;
+    private rex_addon $addon;
+
 
     /**
      * 
      * 
-     * @param mixed $date_start 
-     * @param mixed $date_end 
-     * @param mixed $table 
+     * @param string $date_start 
+     * @param string $date_end 
+     * @param string $table 
      * @return void 
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
-     * @author Andreas Lenhardt
      */
-    function __construct($date_start, $date_end, $table)
+    function __construct(string $date_start, string $date_end, string $table)
     {
         $this->table = $table;
         $this->addon = rex_addon::get('statistics');
@@ -70,39 +69,20 @@ class filter_date_helper
         }
     }
 
-    /**
-     * 
-     * 
-     * @return DateTime 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
-     * @author Andreas Lenhardt
-     */
-    private function getMaxDateFromTable()
-    {
-        $sql = rex_sql::factory();
-        $max_date = $sql->setQuery('SELECT MAX(date) AS "date" from ' . rex::getTable($this->table));
-        $max_date = $max_date->getValue('date');
-        $max_date = new DateTimeImmutable($max_date);
-        $max_date = $max_date->modify('+1 day');
-
-        return $max_date;
-    }
 
     /**
      * 
      * 
-     * @return DateTime 
+     * @return DateTimeImmutable 
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
-     * @author Andreas Lenhardt
      */
-    private function getMinDateFromTable()
+    private function getMinDateFromTable(): DateTimeImmutable
     {
         $sql = rex_sql::factory();
         $min_date = $sql->setQuery('SELECT MIN(date) AS "date" from ' . rex::getTable($this->table));
         $min_date = $min_date->getValue('date');
-        $min_date = new DateTimeImmutable($min_date);
+        $min_date = DateTimeImmutable::createFromFormat('Y-m-d', $min_date);
 
         return $min_date;
     }

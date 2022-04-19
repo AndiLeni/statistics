@@ -3,37 +3,18 @@
 /**
  * Handles the "hour" data for statistics
  *
- * @author Andreas Lenhardt
  */
 class stats_hour
 {
 
-    private $start_date = '';
-    private $end_date = '';
-
     /**
      * 
      * 
-     * @param mixed $start_date 
-     * @param mixed $end_date 
-     * @return void 
-     * @author Andreas Lenhardt
+     * @return rex_sql 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
      */
-    public function __construct($start_date, $end_date)
-    {
-        $this->start_date = $start_date;
-        $this->end_date = $end_date;
-    }
-
-    /**
-     *
-     *
-     * @return array
-     * @throws InvalidArgumentException
-     * @throws rex_sql_exception
-     * @author Andreas Lenhardt
-     */
-    private function get_sql()
+    private function get_sql(): rex_sql
     {
         $sql = rex_sql::factory();
 
@@ -41,15 +22,16 @@ class stats_hour
 
         return $result;
     }
+
+
     /**
-     *
-     *
-     * @return (string|false)[]
-     * @throws InvalidArgumentException
-     * @throws rex_sql_exception
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
      */
-    public function get_data()
+    public function get_data(): array
     {
         $sql = $this->get_sql();
 
@@ -62,15 +44,15 @@ class stats_hour
         return $hours;
     }
 
+
     /**
-     *
-     *
-     * @return string
-     * @throws InvalidArgumentException
-     * @throws rex_exception
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return string 
+     * @throws InvalidArgumentException 
+     * @throws rex_exception 
      */
-    public function get_list()
+    public function get_list(): string
     {
         $addon = rex_addon::get('statistics');
 
@@ -98,15 +80,15 @@ class stats_hour
         return $table;
     }
 
+
     /**
-     *
-     *
-     * @return array
-     * @throws InvalidArgumentException
-     * @throws rex_sql_exception
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
      */
-    public function get_data_dashboard()
+    public function get_data_dashboard(): array
     {
         $sql = $this->get_sql();
 

@@ -8,19 +8,18 @@ use DeviceDetector\DeviceDetector;
  * Main class to handle saving of page visitors.
  * Performs checks to decide if visit should be ignored
  *
- * @author Andreas Lenhardt
  */
 class stats_campaign_visit
 {
 
 
-    private $datetime_now;
-    private $addon;
+    private DateTimeImmutable $datetime_now;
+    private rex_addon $addon;
 
-    private $clientIPAddress;
-    private $name;
-    private $userAgent;
-    private $DeviceDetector;
+    private string $clientIPAddress;
+    private string $name;
+    private string $userAgent;
+    private DeviceDetector $DeviceDetector;
 
 
     /**
@@ -31,14 +30,13 @@ class stats_campaign_visit
      * @param string $userAgent
      * @return void
      * @throws InvalidArgumentException
-     * @author Andreas Lenhardt
      */
     public function __construct(string $clientIPAddress, string $name, string $userAgent)
     {
         $this->addon = rex_addon::get('statistics');
         $this->clientIPAddress = $clientIPAddress;
         $this->name = $name;
-        $this->datetime_now = new DateTime();
+        $this->datetime_now = new DateTimeImmutable();
         $this->userAgent = $userAgent;
     }
 
@@ -49,7 +47,6 @@ class stats_campaign_visit
      * @return bool
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
-     * @author Andreas Lenhardt
      */
     public function save_visit()
     {
@@ -95,14 +92,12 @@ class stats_campaign_visit
      *
      * @return void
      * @throws Exception
-     * @author Andreas Lenhardt
      */
-    public function parse_ua()
+    public function parse_ua(): void
     {
         $this->DeviceDetector = new DeviceDetector($this->userAgent);
         $this->DeviceDetector->parse();
     }
-
 
 
     /**
@@ -112,9 +107,8 @@ class stats_campaign_visit
      * @return void
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
-     * @author Andreas Lenhardt
      */
-    public function save()
+    public function save(): void
     {
         $sql = rex_sql::factory();
         $result = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_api') . ' SET count = count + 1 WHERE name = :name AND date = :date', ['name' => $this->name, 'date' => $this->datetime_now->format('Y-m-d')]);
@@ -131,12 +125,11 @@ class stats_campaign_visit
 
 
     /**
-     *
-     *
-     * @return mixed
-     * @author Andreas Lenhardt
+     * 
+     * 
+     * @return bool 
      */
-    public function is_bot()
+    public function is_bot(): bool
     {
         return $this->DeviceDetector->isBot();
     }

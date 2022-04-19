@@ -3,14 +3,29 @@
 class StatsOverview
 {
 
-    private $filter_date_helper;
+    private filterDateHelper $filter_date_helper;
 
-    public function __construct($filter_date_helper)
+
+    /**
+     * 
+     * 
+     * @param filterDateHelper $filter_date_helper 
+     * @return void 
+     */
+    public function __construct(filterDateHelper $filter_date_helper)
     {
         $this->filter_date_helper = $filter_date_helper;
     }
 
-    public function get_overview_data()
+
+    /**
+     * 
+     * 
+     * @return array 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     */
+    public function get_overview_data(): array
     {
 
         $sql = rex_sql::factory();

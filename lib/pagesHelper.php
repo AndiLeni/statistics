@@ -4,26 +4,22 @@
 /**
  * Helper class for the backend page "pages"
  * 
- * @author Andreas Lenhardt
  */
-class pages_helper
+class pagesHelper
 {
 
-    private $addon;
-    private $filter_date_helper;
-
+    private rex_addon $addon;
+    private filterDateHelper $filter_date_helper;
 
 
     /**
      * 
      * 
-     * @param mixed $date_start 
-     * @param mixed $date_end 
+     * @param filterDateHelper $filter_date_helper 
      * @return void 
      * @throws InvalidArgumentException 
-     * @author Andreas Lenhardt
      */
-    public function __construct($filter_date_helper)
+    public function __construct(filterDateHelper $filter_date_helper)
     {
         $this->addon = rex_addon::get('statistics');
         $this->filter_date_helper = $filter_date_helper;
@@ -33,12 +29,11 @@ class pages_helper
     /**
      * 
      * 
-     * @return (string|false)[] 
+     * @return array 
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
-     * @author Andreas Lenhardt
      */
-    public function sum_per_page()
+    public function sum_per_page(): array
     {
         $sql = rex_sql::factory();
 
@@ -70,16 +65,17 @@ class pages_helper
         ];
     }
 
+
+
     /**
      * 
      * 
-     * @param mixed $request_url 
-     * @return null|int 
+     * @param string $request_url 
+     * @return int 
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
-     * @author Andreas Lenhardt
      */
-    public function ignore_page($request_url)
+    public function ignore_page(string $request_url): int
     {
         $ignored_paths = $this->addon->getConfig('statistics_ignored_paths');
         $this->addon->setConfig('statistics_ignored_paths', $ignored_paths . PHP_EOL . $request_url);
@@ -96,8 +92,9 @@ class pages_helper
 
         $sql->setQuery('delete from ' . rex::getTable('pagestats_visits_per_url') . ' where url = :url', ['url' => $request_url]);
 
-        return $sql->getRows();
+        return $sql->getRows() ?? 0;
     }
+
 
     /**
      * 
@@ -105,9 +102,8 @@ class pages_helper
      * @return string 
      * @throws InvalidArgumentException 
      * @throws rex_exception 
-     * @author Andreas Lenhardt
      */
-    public function get_list()
+    public function get_list(): string
     {
         $list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between "' . $this->filter_date_helper->date_start->format('Y-m-d') . '" and "' . $this->filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC, url ASC', 10000);
 

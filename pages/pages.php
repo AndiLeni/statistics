@@ -10,8 +10,8 @@ $search_string = htmlspecialchars_decode(rex_request('search_string', 'string', 
 $request_date_start = htmlspecialchars_decode(rex_request('date_start', 'string', ''));
 $request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''));
 
-$filter_date_helper = new filter_date_helper($request_date_start, $request_date_end, 'pagestats_visits_per_url');
-$pages_helper = new pages_helper($filter_date_helper);
+$filter_date_helper = new filterDateHelper($request_date_start, $request_date_end, 'pagestats_visits_per_url');
+$pages_helper = new pagesHelper($filter_date_helper);
 
 
 
@@ -50,7 +50,7 @@ if ($request_url != '' && $ignore_page === true) {
 if ($request_url != '' && !$ignore_page) {
     // details section for single page
 
-    $pagedetails = new stats_pagedetails($request_url, $filter_date_helper->date_start, $filter_date_helper->date_end);
+    $pagedetails = new stats_pagedetails($request_url, $filter_date_helper);
     $sum_data = $pagedetails->get_sum_per_day();
 
     $content = '<h4>' . $this->i18n('statistics_views_total') . ' <b>' . $pagedetails->get_page_total() . '</b></h4><a href="http://' . $request_url . '" target="_blank">' . $request_url . '</a>';

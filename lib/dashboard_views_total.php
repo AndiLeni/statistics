@@ -3,7 +3,6 @@
 /**
  * Provides data for the dashboard addon
  *
- * @author Andreas Lenhardt
  */
 class rex_dashboard_views_total extends rex_dashboard_item
 {
@@ -14,9 +13,8 @@ class rex_dashboard_views_total extends rex_dashboard_item
      * @return string
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
-     * @author Andreas Lenhardt
      */
-    public function getData()
+    public function getData(): string
     {
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('pagestats_visits_per_day'));
