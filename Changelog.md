@@ -6,6 +6,7 @@
 
 ### Changed
 - code refactored (typetints and return-types added)
+- fix hash updating if requests appear nearly simultaneously / #89
 
 ### Removed
 

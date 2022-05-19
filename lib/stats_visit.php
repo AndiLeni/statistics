@@ -275,36 +275,37 @@ class stats_visit
      */
     public function save_visitor(): bool
     {
+        $save_visitor = true;
+
         $hash_string = $this->userAgent . $this->browser . $this->os . " " . $this->osVer . $this->device_type . $this->brand . $this->model . $this->clientIPAddress;
         $hash = hash('sha1', $hash_string);
 
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('pagestats_hash'));
-        $sql->setWhere(['hash' => $hash]);
+        $sql->setWhere("hash = :hash LIMIT 1", ['hash' => $hash]);
         $sql->select();
 
         if ($sql->getRows() == 1) {
             $origin = new DateTime($sql->getValue('datetime'));
             $today = new DateTime('today midnight');
 
-            if ($origin->format('d.m.Y') != $today->format('d.m.Y')) {
-                // update set last visit to now
-                $sql->setQuery('UPDATE ' . rex::getTable('pagestats_hash') . ' SET datetime = :datetime WHERE hash = :hash ', ['hash' => $hash, 'datetime' => $today->format('Y-m-d H:i:s')]);
-                return true;
-            } else {
-                return false;
+            // hash was found and last visit was today, do not save visitor
+            if ($origin->format('d.m.Y') == $today->format('d.m.Y')) {
+                $save_visitor = false;
             }
-        } else {
-            // hash was not found, save hash with current datetime, then save visit
+        }
+
+        if ($save_visitor) {
+            // insert hash with current datetime if not found or update if found in database
             $today = new DateTime('today midnight');
             $sql = rex_sql::factory();
             $sql->setTable(rex::getTable('pagestats_hash'));
             $sql->setValue('hash', $hash);
             $sql->setValue('datetime', $today->format('Y-m-d H:i:s'));
-            $sql->insert();
-
-            return true;
+            $sql->insertOrUpdate();
         }
+
+        return $save_visitor;
     }
 
 
