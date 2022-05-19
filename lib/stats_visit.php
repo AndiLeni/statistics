@@ -228,12 +228,14 @@ class stats_visit
      */
     public function save_visit(): bool
     {
+        $save_visit = true;
+
         $hash_string = $this->userAgent . $this->browser . $this->os . " " . $this->osVer . $this->device_type . $this->brand . $this->model . $this->clientIPAddress . $this->url;
         $hash = hash('sha1', $hash_string);
 
         $sql = rex_sql::factory();
         $sql->setTable(rex::getTable('pagestats_hash'));
-        $sql->setWhere(['hash' => $hash]);
+        $sql->setWhere("hash = :hash LIMIT 1", ['hash' => $hash]);
         $sql->select();
 
         if ($sql->getRows() == 1) {
@@ -245,23 +247,22 @@ class stats_visit
             // hash was found, if last visit < 'statistics_visit_duration' min save visit
             $max_visit_length = intval($this->addon->getConfig('statistics_visit_duration'));
 
-            if ($minute_diff > $max_visit_length) {
-                // update set last visit to now
-                $sql->setQuery('UPDATE ' . rex::getTable('pagestats_hash') . ' SET datetime = :datetime WHERE hash = :hash ', ['hash' => $hash, 'datetime' => $this->datetime_now->format('Y-m-d H:i:s')]);
-                return true;
-            } else {
-                return false;
+            // if visit is not older than 'statistics_visit_duration' do not save visit
+            if ($minute_diff <= $max_visit_length) {
+                $save_visit = false;
             }
-        } else {
-            // hash was not found, save hash with current datetime, then save visit
+        }
+
+        if ($save_visit) {
+            // insert hash with current datetime if not found or update if found in database
             $sql = rex_sql::factory();
             $sql->setTable(rex::getTable('pagestats_hash'));
             $sql->setValue('hash', $hash);
             $sql->setValue('datetime', $this->datetime_now->format('Y-m-d H:i:s'));
-            $sql->insert();
-
-            return true;
+            $sql->insertOrUpdate();
         }
+
+        return $save_visit;
     }
 
 
