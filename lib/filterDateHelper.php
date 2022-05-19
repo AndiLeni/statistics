@@ -84,6 +84,10 @@ class filterDateHelper
         $min_date = $min_date->getValue('date');
         $min_date = DateTimeImmutable::createFromFormat('Y-m-d', $min_date);
 
+        if ($min_date == false) {
+            $min_date = new DateTimeImmutable("now");
+        }
+
         return $min_date;
     }
 }
