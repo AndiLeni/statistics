@@ -10,7 +10,7 @@ if (rex::isBackend()) {
     rex_extension::register('MEDIA_MANAGER_AFTER_SEND', function () {
         $plugin = rex_plugin::get('statistics', 'media');
 
-        if ($plugin->getConfig('pagestats_media_log_all') == true) {
+        if ($plugin->getConfig('statistics_media_log_all') == true) {
 
             $url = $_SERVER['REQUEST_URI'];
 

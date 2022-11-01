@@ -20,7 +20,7 @@ class rex_effect_stats_mm extends rex_effect_abstract
         rex_extension::register('MEDIA_MANAGER_AFTER_SEND', function () {
             $plugin = rex_plugin::get('statistics', 'media');
 
-            if ($plugin->getConfig('pagestats_media_log_mm') == true) {
+            if ($plugin->getConfig('statistics_media_log_mm') == true) {
                 $url = $_SERVER['REQUEST_URI'];
 
                 $sql = rex_sql::factory();
