@@ -21,7 +21,7 @@ requires:
     packages:
         yrewrite: "^2.7"
     php:
-        version: ">=7.1"
+        version: ">=7.4"
 
 default_config:
     statistics_media_log_all: false
