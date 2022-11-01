@@ -1,6 +1,8 @@
 # Changelog 
 
-## [minor] - x
+
+
+## [2.2.1] - 01.11.2022
 
 ### Added
 
