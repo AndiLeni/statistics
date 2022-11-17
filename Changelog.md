@@ -2,6 +2,20 @@
 
 
 
+## [2.2.2] - 17.11.2022
+
+### Changed
+- fixed missing statistics if the "ignore path" feature was used
+
+### Notes:
+Dieser Fix behebt leider nur zukünftige Fehler, nicht aber eine existierende fehlerhafte Config.
+
+Dies kann aber schnell mit einem Blick in die Datenbank festgestellt werden:
+- in ``rex_config`` nach `statistics_ignored_paths` suchen
+- wenn der Text mit `\r\n` oder `\n` beginnt diese Zeichen entfernen.
+
+
+
 ## [2.2.1] - 01.11.2022
 
 ### Added
