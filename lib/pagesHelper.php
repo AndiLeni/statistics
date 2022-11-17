@@ -78,7 +78,11 @@ class pagesHelper
     public function ignore_page(string $request_url): int
     {
         $ignored_paths = $this->addon->getConfig('statistics_ignored_paths');
-        $this->addon->setConfig('statistics_ignored_paths', $ignored_paths . PHP_EOL . $request_url);
+        if ($ignored_paths == "") {
+            $this->addon->setConfig('statistics_ignored_paths', $request_url);
+        } else {
+            $this->addon->setConfig('statistics_ignored_paths', $ignored_paths . PHP_EOL . $request_url);
+        }
 
         $sql = rex_sql::factory();
 
