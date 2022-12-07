@@ -2,7 +2,7 @@
 
 
 
-## [2.x] - x
+## [2.3.0] - 07.12.2022
 
 ### Changed
 - update matomo/device-detector from version 4 to version 6
