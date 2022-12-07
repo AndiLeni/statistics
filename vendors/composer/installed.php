@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '2416ad49bd4bd91cb46ac7350a0c1b568fbbae73',
+        'reference' => 'e92b5dbd68a71a233905ff7893df87336923c30c',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,16 +16,16 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '2416ad49bd4bd91cb46ac7350a0c1b568fbbae73',
+            'reference' => 'e92b5dbd68a71a233905ff7893df87336923c30c',
             'dev_requirement' => false,
         ),
         'matomo/device-detector' => array(
-            'pretty_version' => '4.2.3',
-            'version' => '4.2.3.0',
+            'pretty_version' => '6.0.4',
+            'version' => '6.0.4.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matomo/device-detector',
             'aliases' => array(),
-            'reference' => 'd879f07496d6e6ee89cef5bcd925383d9b0c2cc0',
+            'reference' => 'aaed4d27c7a9876756d03ae85386977db306492d',
             'dev_requirement' => false,
         ),
         'mustangostang/spyc' => array(
@@ -40,7 +40,7 @@
         'piwik/device-detector' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => '4.2.3',
+                0 => '6.0.4',
             ),
         ),
         'psr/http-message' => array(

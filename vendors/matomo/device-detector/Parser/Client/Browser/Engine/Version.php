@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Device Detector - The Universal Device Detection library for parsing User Agents
  *
@@ -9,6 +7,8 @@ declare(strict_types=1);
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
+
+declare(strict_types=1);
 
 namespace DeviceDetector\Parser\Client\Browser\Engine;
 
@@ -56,8 +56,14 @@ class Version extends AbstractClientParser
             }
         }
 
+        $engineToken = $this->engine;
+
+        if ('Blink' === $this->engine) {
+            $engineToken = 'Chrome';
+        }
+
         \preg_match(
-            "~{$this->engine}\s*/?\s*((?(?=\d+\.\d)\d+[.\d]*|\d{1,7}(?=(?:\D|$))))~i",
+            "~{$engineToken}\s*/?\s*((?(?=\d+\.\d)\d+[.\d]*|\d{1,7}(?=(?:\D|$))))~i",
             $this->userAgent,
             $matches
         );

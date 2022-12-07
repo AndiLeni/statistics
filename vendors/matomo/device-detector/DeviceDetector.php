@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * Device Detector - The Universal Device Detection library for parsing User Agents
  *
@@ -9,6 +7,8 @@ declare(strict_types=1);
  *
  * @license http://www.gnu.org/licenses/lgpl.html LGPL v3 or later
  */
+
+declare(strict_types=1);
 
 namespace DeviceDetector;
 
@@ -31,6 +31,7 @@ use DeviceDetector\Parser\Device\HbbTv;
 use DeviceDetector\Parser\Device\Mobile;
 use DeviceDetector\Parser\Device\Notebook;
 use DeviceDetector\Parser\Device\PortableMediaPlayer;
+use DeviceDetector\Parser\Device\ShellTv;
 use DeviceDetector\Parser\OperatingSystem;
 use DeviceDetector\Parser\VendorFragment;
 use DeviceDetector\Yaml\ParserInterface as YamlParser;
@@ -67,7 +68,7 @@ class DeviceDetector
     /**
      * Current version number of DeviceDetector
      */
-    public const VERSION = '4.2.3';
+    public const VERSION = '6.0.4';
 
     /**
      * Constant used as value for unknown browser / os
@@ -78,20 +79,19 @@ class DeviceDetector
      * Holds all registered client types
      * @var array
      */
-    public static $clientTypes = [];
-
-    /**
-     * Operating system families that are known as desktop only
-     *
-     * @var array
-     */
-    protected static $desktopOsArray = ['AmigaOS', 'IBM', 'GNU/Linux', 'Mac', 'Unix', 'Windows', 'BeOS', 'Chrome OS'];
+    protected $clientTypes = [];
 
     /**
      * Holds the useragent that should be parsed
      * @var string
      */
-    protected $userAgent;
+    protected $userAgent = '';
+
+    /**
+     * Holds the client hints that should be parsed
+     * @var ?ClientHints
+     */
+    protected $clientHints = null;
 
     /**
      * Holds the operating system data after parsing the UA
@@ -182,12 +182,17 @@ class DeviceDetector
     /**
      * Constructor
      *
-     * @param string $userAgent UA to parse
+     * @param string      $userAgent   UA to parse
+     * @param ClientHints $clientHints Browser client hints to parse
      */
-    public function __construct(string $userAgent = '')
+    public function __construct(string $userAgent = '', ?ClientHints $clientHints = null)
     {
         if ('' !== $userAgent) {
             $this->setUserAgent($userAgent);
+        }
+
+        if ($clientHints instanceof ClientHints) {
+            $this->setClientHints($clientHints);
         }
 
         $this->addClientParser(new FeedReader());
@@ -198,6 +203,7 @@ class DeviceDetector
         $this->addClientParser(new Library());
 
         $this->addDeviceParser(new HbbTv());
+        $this->addDeviceParser(new ShellTv());
         $this->addDeviceParser(new Notebook());
         $this->addDeviceParser(new Console());
         $this->addDeviceParser(new CarBrowser());
@@ -222,7 +228,7 @@ class DeviceDetector
             }
         }
 
-        foreach (self::$clientTypes as $client) {
+        foreach ($this->clientTypes as $client) {
             if (\strtolower($methodName) === 'is' . \strtolower(\str_replace(' ', '', $client))) {
                 return $this->getClient('type') === $client;
             }
@@ -246,6 +252,20 @@ class DeviceDetector
     }
 
     /**
+     * Sets the browser client hints to be parsed
+     *
+     * @param ?ClientHints $clientHints
+     */
+    public function setClientHints(?ClientHints $clientHints = null): void
+    {
+        if ($this->clientHints !== $clientHints) {
+            $this->reset();
+        }
+
+        $this->clientHints = $clientHints;
+    }
+
+    /**
      * @param AbstractClientParser $parser
      *
      * @throws \Exception
@@ -253,7 +273,7 @@ class DeviceDetector
     public function addClientParser(AbstractClientParser $parser): void
     {
         $this->clientParsers[] = $parser;
-        self::$clientTypes[]   = $parser->getName();
+        $this->clientTypes[]   = $parser->getName();
     }
 
     /**
@@ -355,6 +375,11 @@ class DeviceDetector
      */
     public function isMobile(): bool
     {
+        // Client hints indicate a mobile device
+        if ($this->clientHints instanceof ClientHints && $this->clientHints->isMobile()) {
+            return true;
+        }
+
         // Mobile device types
         if (\in_array($this->device, [
             AbstractDeviceParser::DEVICE_TYPE_FEATURE_PHONE,
@@ -396,7 +421,7 @@ class DeviceDetector
      * Returns if the parsed UA was identified as desktop device
      * Desktop devices are all devices with an unknown type that are running a desktop os
      *
-     * @see self::$desktopOsArray
+     * @see OperatingSystem::$desktopOsArray
      *
      * @return bool
      */
@@ -413,9 +438,7 @@ class DeviceDetector
             return false;
         }
 
-        $decodedFamily = OperatingSystem::getOsFamily($osName);
-
-        return \in_array($decodedFamily, self::$desktopOsArray);
+        return OperatingSystem::isDesktopOs($osName);
     }
 
     /**
@@ -529,6 +552,16 @@ class DeviceDetector
     }
 
     /**
+     * Returns the client hints that is set to be parsed
+     *
+     * @return ?ClientHints
+     */
+    public function getClientHints(): ?ClientHints
+    {
+        return $this->clientHints;
+    }
+
+    /**
      * Returns the bot extracted from the parsed UA
      *
      * @return array|bool|null
@@ -559,8 +592,10 @@ class DeviceDetector
 
         $this->parsed = true;
 
-        // skip parsing for empty useragents or those not containing any letter
-        if (empty($this->userAgent) || !\preg_match('/([a-z])/i', $this->userAgent)) {
+        // skip parsing for empty useragents or those not containing any letter (if no client hints were provided)
+        if ((empty($this->userAgent) || !\preg_match('/([a-z])/i', $this->userAgent))
+            && empty($this->clientHints)
+        ) {
             return;
         }
 
@@ -593,11 +628,12 @@ class DeviceDetector
      *
      * @deprecated
      *
-     * @param string $ua UserAgent to parse
+     * @param string       $ua          UserAgent to parse
+     * @param ?ClientHints $clientHints Client Hints to parse
      *
      * @return array
      */
-    public static function getInfoFromUserAgent(string $ua): array
+    public static function getInfoFromUserAgent(string $ua, ?ClientHints $clientHints = null): array
     {
         static $deviceDetector;
 
@@ -606,6 +642,7 @@ class DeviceDetector
         }
 
         $deviceDetector->setUserAgent($ua);
+        $deviceDetector->setClientHints($clientHints);
 
         $deviceDetector->parse();
 
@@ -616,16 +653,27 @@ class DeviceDetector
             ];
         }
 
-        $osFamily      = OperatingSystem::getOsFamily($deviceDetector->getOsAttribute('name'));
-        $browserFamily = Browser::getBrowserFamily($deviceDetector->getClientAttribute('name'));
+        /** @var array $client */
+        $client        = $deviceDetector->getClient();
+        $browserFamily = 'Unknown';
 
-        $os = $deviceDetector->getOs();
-        unset($os['short_name']);
+        if ($deviceDetector->isBrowser()
+            && true === \is_array($client)
+            && true === \array_key_exists('family', $client)
+            && null !== $client['family']
+        ) {
+            $browserFamily = $client['family'];
+        }
 
-        $client = $deviceDetector->getClient();
-        unset($client['short_name']);
+        unset($client['short_name'], $client['family']);
 
-        $processed = [
+        /** @var array $os */
+        $os       = $deviceDetector->getOs();
+        $osFamily = $os['family'] ?? 'Unknown';
+
+        unset($os['short_name'], $os['family']);
+
+        return [
             'user_agent'     => $deviceDetector->getUserAgent(),
             'os'             => $os,
             'client'         => $client,
@@ -634,11 +682,9 @@ class DeviceDetector
                 'brand' => $deviceDetector->getBrandName(),
                 'model' => $deviceDetector->getModel(),
             ],
-            'os_family'      => $osFamily ?? 'Unknown',
-            'browser_family' => $browserFamily ?? 'Unknown',
+            'os_family'      => $osFamily,
+            'browser_family' => $browserFamily,
         ];
-
-        return $processed;
     }
 
     /**
@@ -778,9 +824,10 @@ class DeviceDetector
         $parsers = $this->getBotParsers();
 
         foreach ($parsers as $parser) {
-            $parser->setUserAgent($this->getUserAgent());
             $parser->setYamlParser($this->getYamlParser());
             $parser->setCache($this->getCache());
+            $parser->setUserAgent($this->getUserAgent());
+            $parser->setClientHints($this->getClientHints());
 
             if ($this->discardBotInformation) {
                 $parser->discardDetails();
@@ -797,7 +844,7 @@ class DeviceDetector
     }
 
     /**
-     * Tries to detected the client (e.g. browser, mobile app, ...)
+     * Tries to detect the client (e.g. browser, mobile app, ...)
      */
     protected function parseClient(): void
     {
@@ -807,6 +854,7 @@ class DeviceDetector
             $parser->setYamlParser($this->getYamlParser());
             $parser->setCache($this->getCache());
             $parser->setUserAgent($this->getUserAgent());
+            $parser->setClientHints($this->getClientHints());
             $client = $parser->parse();
 
             if (!empty($client)) {
@@ -818,7 +866,7 @@ class DeviceDetector
     }
 
     /**
-     * Tries to detected the device type, model and brand
+     * Tries to detect the device type, model and brand
      */
     protected function parseDevice(): void
     {
@@ -828,6 +876,7 @@ class DeviceDetector
             $parser->setYamlParser($this->getYamlParser());
             $parser->setCache($this->getCache());
             $parser->setUserAgent($this->getUserAgent());
+            $parser->setClientHints($this->getClientHints());
 
             if ($parser->parse()) {
                 $this->device = $parser->getDeviceType();
@@ -836,6 +885,13 @@ class DeviceDetector
 
                 break;
             }
+        }
+
+        /**
+         * If no model could be parsed from useragent, we use the one from client hints if available
+         */
+        if ($this->clientHints instanceof ClientHints && empty($this->model)) {
+            $this->model = $this->clientHints->getModel();
         }
 
         /**
@@ -849,14 +905,14 @@ class DeviceDetector
         }
 
         $osName     = $this->getOsAttribute('name');
-        $osFamily   = OperatingSystem::getOsFamily($osName);
+        $osFamily   = $this->getOsAttribute('family');
         $osVersion  = $this->getOsAttribute('version');
         $clientName = $this->getClientAttribute('name');
 
         /**
          * Assume all devices running iOS / Mac OS are from Apple
          */
-        if (empty($this->brand) && \in_array($osName, ['Apple TV', 'watchOS', 'iOS', 'Mac'])) {
+        if (empty($this->brand) && \in_array($osName, ['iPadOS', 'tvOS', 'watchOS', 'iOS', 'Mac'])) {
             $this->brand = 'Apple';
         }
 
@@ -870,9 +926,9 @@ class DeviceDetector
         if (null === $this->device && 'Android' === $osFamily
             && $this->matchUserAgent('Chrome/[\.0-9]*')
         ) {
-            if ($this->matchUserAgent('Chrome/[\.0-9]* (?:Mobile|eliboM)')) {
+            if ($this->matchUserAgent('(?:Mobile|eliboM) Safari/')) {
                 $this->device = AbstractDeviceParser::DEVICE_TYPE_SMARTPHONE;
-            } elseif ($this->matchUserAgent('Chrome/[\.0-9]* (?!Mobile)')) {
+            } elseif ($this->matchUserAgent('(?!Mobile )Safari/')) {
                 $this->device = AbstractDeviceParser::DEVICE_TYPE_TABLET;
             }
         }
@@ -919,6 +975,13 @@ class DeviceDetector
         }
 
         /**
+         * All unknown devices under running Java ME are more likely a features phones
+         */
+        if ('Java ME' === $osName && null === $this->device) {
+            $this->device = AbstractDeviceParser::DEVICE_TYPE_FEATURE_PHONE;
+        }
+
+        /**
          * According to http://msdn.microsoft.com/en-us/library/ie/hh920767(v=vs.85).aspx
          * Internet Explorer 10 introduces the "Touch" UA string token. If this token is present at the end of the
          * UA string, the computer has touch capability, and is running Windows 8 (or later).
@@ -937,7 +1000,14 @@ class DeviceDetector
         /**
          * All devices running Opera TV Store are assumed to be a tv
          */
-        if ($this->matchUserAgent('Opera TV Store')) {
+        if ($this->matchUserAgent('Opera TV Store| OMI/')) {
+            $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
+        }
+
+        /**
+         * All devices that contain Andr0id in string are assumed to be a tv
+         */
+        if ($this->matchUserAgent('Andr0id|Android TV')) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
         }
 
@@ -952,6 +1022,13 @@ class DeviceDetector
          * Devices running Kylo or Espital TV Browsers are assumed to be a TV
          */
         if (null === $this->device && \in_array($clientName, ['Kylo', 'Espial TV Browser'])) {
+            $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
+        }
+
+        /**
+         * All devices containing TV fragment are assumed to be a tv
+         */
+        if (null === $this->device && $this->matchUserAgent('\(TV;')) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_TV;
         }
 
@@ -981,6 +1058,7 @@ class DeviceDetector
     {
         $osParser = new OperatingSystem();
         $osParser->setUserAgent($this->getUserAgent());
+        $osParser->setClientHints($this->getClientHints());
         $osParser->setYamlParser($this->getYamlParser());
         $osParser->setCache($this->getCache());
         $this->os = $osParser->parse();

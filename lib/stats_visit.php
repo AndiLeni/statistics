@@ -1,6 +1,7 @@
 <?php
 
 
+use DeviceDetector\ClientHints;
 use DeviceDetector\DeviceDetector;
 
 
@@ -161,7 +162,6 @@ class stats_visit
         $brandInfo = $this->DeviceDetector->getBrandName();
         $modelInfo = $this->DeviceDetector->getModel();
 
-
         $this->browser = $clientInfo['name'] ?? 'Undefiniert';
         $this->os = $osInfo['name'] ?? 'Undefiniert';
         $this->osVer = $osInfo['version'] ?? 'Undefiniert';
@@ -317,7 +317,8 @@ class stats_visit
      */
     public function parse_ua(): void
     {
-        $this->DeviceDetector = new DeviceDetector($this->userAgent);
+        $clientHints = ClientHints::factory($_SERVER);
+        $this->DeviceDetector = new DeviceDetector($this->userAgent, $clientHints);
         $this->DeviceDetector->parse();
     }
 
