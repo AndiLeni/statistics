@@ -1,6 +1,12 @@
 # Changelog 
 
 
+## [2.4.0] - 09.12.2022
+
+### Changed
+- fix release version number
+
+
 
 ## [2.3.0] - 07.12.2022
 
