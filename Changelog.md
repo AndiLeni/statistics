@@ -1,6 +1,14 @@
 # Changelog 
 
 
+
+## [2.5.0-alpha1] - 02.03.2023
+
+### Changed
+- fix issue with spyc.php
+
+
+
 ## [2.4.0] - 09.12.2022
 
 ### Changed
