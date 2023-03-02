@@ -1,14 +1,9 @@
 {
-    "_readme": [
-        "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
-        "This file is @generated automatically"
-    ],
-    "content-hash": "8db76e42358b8eaac2f7a8ac49f4eeba",
     "packages": [
         {
             "name": "psr/http-message",
             "version": "1.0.1",
+            "version_normalized": "1.0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
@@ -23,12 +18,14 @@
             "require": {
                 "php": ">=5.3.0"
             },
+            "time": "2016-08-06T14:39:51+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.0.x-dev"
                 }
             },
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Psr\\Http\\Message\\": "src/"
@@ -57,11 +54,12 @@
             "support": {
                 "source": "https://github.com/php-fig/http-message/tree/master"
             },
-            "time": "2016-08-06T14:39:51+00:00"
+            "install-path": "../psr/http-message"
         },
         {
             "name": "vectorface/whip",
             "version": "v0.4.0",
+            "version_normalized": "0.4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Vectorface/whip.git",
@@ -83,7 +81,9 @@
                 "squizlabs/php_codesniffer": "~2.0",
                 "vectorface/dunit": "~2.0"
             },
+            "time": "2020-08-25T13:45:06+00:00",
             "type": "library",
+            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Vectorface\\Whip\\": "./src"
@@ -116,16 +116,9 @@
                 "issues": "https://github.com/Vectorface/whip/issues",
                 "source": "https://github.com/Vectorface/whip"
             },
-            "time": "2020-08-25T13:45:06+00:00"
+            "install-path": "../vectorface/whip"
         }
     ],
-    "packages-dev": [],
-    "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": [],
-    "prefer-stable": false,
-    "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "dev": true,
+    "dev-package-names": []
 }

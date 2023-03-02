@@ -3,6 +3,7 @@
 
 use DeviceDetector\ClientHints;
 use DeviceDetector\DeviceDetector;
+use DeviceDetector\Yaml\Symfony as DeviceDetectorSymfonyYamlParser;
 
 
 /**
@@ -317,8 +318,10 @@ class stats_visit
      */
     public function parse_ua(): void
     {
-        $clientHints = ClientHints::factory($_SERVER);
-        $this->DeviceDetector = new DeviceDetector($this->userAgent, $clientHints);
+        // $clientHints = ClientHints::factory($_SERVER);
+        // $this->DeviceDetector = new DeviceDetector($this->userAgent, $clientHints);
+        $this->DeviceDetector = new DeviceDetector($this->userAgent);
+        $this->DeviceDetector->setYamlParser(new DeviceDetectorSymfonyYamlParser());
         $this->DeviceDetector->parse();
     }
 

@@ -61,8 +61,6 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () {
 
     if (!rex::isBackend()) {
 
-        require_once __DIR__ . '/vendors/autoload.php';
-
         $addon = rex_addon::get('statistics');
         $log_all = $addon->getConfig('statistics_log_all');
 
