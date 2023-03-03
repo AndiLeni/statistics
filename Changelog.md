@@ -2,6 +2,13 @@
 
 
 
+## [x] - x
+
+### Changed
+- fix deprecation warning in datefilter / [#102](https://github.com/AndiLeni/statistics/issues/102)
+
+
+
 ## [2.5.0-alpha1] - 02.03.2023
 
 ### Changed

@@ -82,11 +82,13 @@ class filterDateHelper
         $sql = rex_sql::factory();
         $min_date = $sql->setQuery('SELECT MIN(date) AS "date" from ' . rex::getTable($this->table));
         $min_date = $min_date->getValue('date');
-        $min_date = DateTimeImmutable::createFromFormat('Y-m-d', $min_date);
 
-        if ($min_date == false) {
+        if ($min_date === null) {
             $min_date = new DateTimeImmutable("now");
+        } else {
+            $min_date = DateTimeImmutable::createFromFormat('Y-m-d', $min_date);
         }
+
 
         return $min_date;
     }
