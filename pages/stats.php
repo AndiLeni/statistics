@@ -272,7 +272,8 @@ echo $fragment->parse('core/page/section.php');
         },
         legend: {
             data: <?php echo json_encode($chart_data_monthly['legend']) ?>,
-            right: '20%',
+            right: '5%',
+            type: 'scroll',
         },
         xAxis: {
             data: <?php echo json_encode($chart_data_monthly['xaxis']) ?>,
@@ -321,7 +322,8 @@ echo $fragment->parse('core/page/section.php');
         },
         legend: {
             data: <?php echo json_encode($chart_data_yearly['legend']) ?>,
-            right: '20%',
+            right: '5%',
+            type: 'scroll',
         },
         xAxis: {
             data: <?php echo json_encode($chart_data_yearly['xaxis']) ?>,
@@ -413,7 +415,6 @@ echo $fragment->parse('core/page/section.php');
             show: false,
             orient: 'vertical',
             left: 'left',
-            type: 'scroll',
         },
         toolbox: {
             show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
@@ -462,7 +463,6 @@ echo $fragment->parse('core/page/section.php');
             show: false,
             orient: 'vertical',
             left: 'left',
-            type: 'scroll',
         },
         toolbox: {
             show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
@@ -511,7 +511,6 @@ echo $fragment->parse('core/page/section.php');
             show: false,
             orient: 'vertical',
             left: 'left',
-            type: 'scroll',
         },
         toolbox: {
             show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
@@ -560,7 +559,6 @@ echo $fragment->parse('core/page/section.php');
             show: false,
             orient: 'vertical',
             left: 'left',
-            type: 'scroll',
         },
         toolbox: {
             show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
@@ -609,7 +607,6 @@ echo $fragment->parse('core/page/section.php');
             show: false,
             orient: 'vertical',
             left: 'left',
-            type: 'scroll',
         },
         toolbox: {
             show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
