@@ -6,6 +6,7 @@
 
 ### Changed
 - fix deprecation warning in datefilter / [#102](https://github.com/AndiLeni/statistics/issues/102)
+- set domain to "undefined" when rex_yrewrite::getHost() is null / [#101](https://github.com/AndiLeni/statistics/issues/101)
 
 
 

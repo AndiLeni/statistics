@@ -88,7 +88,7 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () {
             $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
             // yrewrite domain
-            $domain = rex_yrewrite::getHost();
+            $domain = rex_yrewrite::getHost() ?? 'undefined';
 
             $visit = new stats_visit($clientAddress, $url, $userAgent, $domain);
 
