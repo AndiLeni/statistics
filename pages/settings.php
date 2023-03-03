@@ -102,6 +102,11 @@ $field7->addOption($this->i18n('statistics_yes'), 1);
 $field7->addOption($this->i18n('statistics_no'), 0);
 $field7->setNotice('Alle Domains werden zu einer "Gesamt" Anzahl zusammengefasst. Deaktivieren um Statistiken für alle Domains einzeln anzuzeigen.');
 
+$field7 = $form->addRadioField('statistics_show_chart_toolbox');
+$field7->setLabel('Zeige Toolbox an den Charts');
+$field7->addOption($this->i18n('statistics_yes'), 1);
+$field7->addOption($this->i18n('statistics_no'), 0);
+
 
 $addon = rex_addon::get('statistics');
 $fragment = new rex_fragment();

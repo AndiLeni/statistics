@@ -197,7 +197,9 @@ echo $fragment->parse('core/page/section.php');
             // top: '12%',
         },
         toolbox: {
-            show: true,
+            show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
+            orient: 'vertical',
+            top: '10%',
             feature: {
                 dataZoom: {
                     yAxisIndex: "none"
@@ -215,10 +217,11 @@ echo $fragment->parse('core/page/section.php');
         legend: {
             data: <?php echo json_encode($main_chart_data['legend']) ?>,
             // orient: 'vertical',
-            right: '20%',
+            type: 'scroll',
             // top: 20,
             // bottom: 20,
-            // align: 'left',
+            right: '5%',
+            align: 'left',
         },
         xAxis: {
             data: <?php echo json_encode($main_chart_data['xaxis']) ?>,
@@ -250,7 +253,9 @@ echo $fragment->parse('core/page/section.php');
             right: '5%',
         },
         toolbox: {
-            show: true,
+            show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
+            orient: 'vertical',
+            top: '10%',
             feature: {
                 dataZoom: {
                     yAxisIndex: "none"
@@ -297,7 +302,9 @@ echo $fragment->parse('core/page/section.php');
             right: '5%',
         },
         toolbox: {
-            show: true,
+            show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
+            orient: 'vertical',
+            top: '10%',
             feature: {
                 dataZoom: {
                     yAxisIndex: "none"
@@ -338,7 +345,9 @@ echo $fragment->parse('core/page/section.php');
             }
         },
         toolbox: {
-            show: true,
+            show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
+            orient: 'vertical',
+            top: '10%',
             feature: {
                 dataView: {
                     readOnly: false
@@ -407,7 +416,9 @@ echo $fragment->parse('core/page/section.php');
             type: 'scroll',
         },
         toolbox: {
-            show: true,
+            show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
+            orient: 'vertical',
+            top: '10%',
             feature: {
                 dataView: {
                     readOnly: false
@@ -454,7 +465,9 @@ echo $fragment->parse('core/page/section.php');
             type: 'scroll',
         },
         toolbox: {
-            show: true,
+            show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
+            orient: 'vertical',
+            top: '10%',
             feature: {
                 dataView: {
                     readOnly: false
@@ -501,7 +514,9 @@ echo $fragment->parse('core/page/section.php');
             type: 'scroll',
         },
         toolbox: {
-            show: true,
+            show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
+            orient: 'vertical',
+            top: '10%',
             feature: {
                 dataView: {
                     readOnly: false
@@ -548,7 +563,9 @@ echo $fragment->parse('core/page/section.php');
             type: 'scroll',
         },
         toolbox: {
-            show: true,
+            show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
+            orient: 'vertical',
+            top: '10%',
             feature: {
                 dataView: {
                     readOnly: false
@@ -595,7 +612,9 @@ echo $fragment->parse('core/page/section.php');
             type: 'scroll',
         },
         toolbox: {
-            show: true,
+            show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
+            orient: 'vertical',
+            top: '10%',
             feature: {
                 dataView: {
                     readOnly: false
@@ -655,7 +674,9 @@ echo $fragment->parse('core/page/section.php');
             type: 'value'
         }],
         toolbox: {
-            show: true,
+            show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
+            orient: 'vertical',
+            top: '10%',
             feature: {
                 dataZoom: {
                     yAxisIndex: "none"
@@ -716,7 +737,9 @@ echo $fragment->parse('core/page/section.php');
             type: 'value'
         }],
         toolbox: {
-            show: true,
+            show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
+            orient: 'vertical',
+            top: '10%',
             feature: {
                 dataZoom: {
                     yAxisIndex: "none"

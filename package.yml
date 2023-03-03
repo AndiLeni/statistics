@@ -44,6 +44,7 @@ default_config:
     statistics_ignore_url_params: false
     statistics_default_datefilter_range: "thisYear"
     statistics_combine_all_domains: true
+    statistics_show_chart_toolbox: false
 
 installer_ignore:
     - .git

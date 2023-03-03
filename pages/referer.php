@@ -113,6 +113,7 @@ echo $fragment->parse('core/page/section.php');
             'values' => array_values($data),
         ];
 
+        $show_toolbox = rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false';
         echo "var chart_details = echarts.init(document.getElementById('chart_details'));
         var chart_details_option = {
             title: {},
@@ -132,7 +133,7 @@ echo $fragment->parse('core/page/section.php');
                 // top: '12%',
             },
             toolbox: {
-                show: true,
+                show: " . $show_toolbox . ",
                 feature: {
                     dataZoom: {
                         yAxisIndex: 'none'
