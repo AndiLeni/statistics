@@ -103,7 +103,7 @@ $lists_yearly = $lists_data->get_lists_yearly();
 
 
 $fragment_main_chart = new rex_fragment();
-$fragment_main_chart->setVar('daily', '<div id="chart_visits_daily" style="width: 100%;height:500px;"></div><hr><div id="chart_visits_heatmap" style="width: 100%;height:250px;"></div>' . $lists_daily->parse('collapse.php'), false);
+$fragment_main_chart->setVar('daily', '<div id="chart_visits_daily" style="width: 100%;height:500px;"></div><hr><div id="chart_visits_heatmap" style="width: 100%;height:200px;"></div>' . $lists_daily->parse('collapse.php'), false);
 $fragment_main_chart->setVar('monthly', '<div id="chart_visits_monthly" style="width: 100%;height:500px;"></div>' . $lists_monthly->parse('collapse.php'), false);
 $fragment_main_chart->setVar('yearly', '<div id="chart_visits_yearly" style="width: 100%;height:500px;"></div>' . $lists_yearly->parse('collapse.php'), false);
 echo $fragment_main_chart->parse('main_chart.php');

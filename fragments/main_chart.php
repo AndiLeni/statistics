@@ -12,11 +12,13 @@
             <div class="rex-page-nav">
 
                 <!-- Nav tabs -->
-                <ul class="nav nav-pills nav-justified" role="tablist">
+                <ul class="nav nav-pills nav-justified" role="tablist" style="border: 2px solid #4b9ad9;">
                     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Täglich</a></li>
                     <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Monatlich</a></li>
                     <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Jährlich</a></li>
                 </ul>
+
+                <hr>
 
                 <!-- Tab panes -->
                 <div class="tab-content" style="margin-top: 20px;">
