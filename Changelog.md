@@ -7,6 +7,7 @@
 ### Changed
 - fix deprecation warning in datefilter / [#102](https://github.com/AndiLeni/statistics/issues/102)
 - set domain to "undefined" when rex_yrewrite::getHost() is null / [#101](https://github.com/AndiLeni/statistics/issues/101)
+- entries in pagestats_visitors_per_day were not deleted / [#94](https://github.com/AndiLeni/statistics/issues/94)
 
 
 

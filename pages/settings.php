@@ -19,6 +19,9 @@ if (rex_request_method() == 'post') {
         $sql->setQuery('delete from ' . rex::getTable('pagestats_visits_per_day'));
         $count += $sql->getRows();
 
+        $sql->setQuery('delete from ' . rex::getTable('pagestats_visitors_per_day'));
+        $count += $sql->getRows();
+
         $sql->setQuery('delete from ' . rex::getTable('pagestats_visits_per_url'));
         $count += $sql->getRows();
 
