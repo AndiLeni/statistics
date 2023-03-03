@@ -161,7 +161,7 @@ $list->setColumnLabel('name', $this->i18n('statistics_name'));
 $list->setColumnLabel('count', $this->i18n('statistics_count'));
 $list->setColumnLabel('category', $this->i18n('statistics_category'));
 $list->setColumnLabel('producer', $this->i18n('statistics_producer'));
-$list->addTableAttribute('class', 'dt_order_default statistics_table');
+$list->addTableAttribute('class', 'dt_bots statistics_table');
 
 if ($list->getRows() == 0) {
     $table = rex_view::info($addon->i18n('statistics_no_data'));
@@ -873,6 +873,49 @@ echo $fragment->parse('core/page/section.php');
             "search": {
                 "caseInsensitive": true
             },
+
+            <?php
+
+            if (trim(rex::getUser()->getLanguage()) == '' || trim(rex::getUser()->getLanguage()) == 'de_de') {
+                if (rex::getProperty('lang') == 'de_de') {
+                    echo '
+                    language: {
+                        "search": "_INPUT_",
+                        "searchPlaceholder": "Suchen",
+                        "decimal": ",",
+                        "info": "Einträge _START_-_END_ von _TOTAL_",
+                        "emptyTable": "Keine Daten",
+                        "infoEmpty": "0 von 0 Einträgen",
+                        "infoFiltered": "(von _MAX_ insgesamt)",
+                        "lengthMenu": "_MENU_ anzeigen",
+                        "loadingRecords": "Lade...",
+                        "zeroRecords": "Keine passenden Datensätze gefunden",
+                        "thousands": ".",
+                        "paginate": {
+                            "first": "<<",
+                            "last": ">>",
+                            "next": ">",
+                            "previous": "<"
+                        },
+                    },
+                    ';
+                }
+            }
+
+            ?>
+        });
+
+        $('.dt_bots').DataTable({
+            "paging": true,
+            "pageLength": 10,
+            "lengthChange": true,
+            "lengthMenu": [5, 10, 50, 100],
+            "search": {
+                "caseInsensitive": true
+            },
+            "order": [
+                [3, "desc"]
+            ],
 
             <?php
 

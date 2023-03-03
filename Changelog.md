@@ -10,6 +10,7 @@
 - entries in pagestats_visitors_per_day were not deleted / [#94](https://github.com/AndiLeni/statistics/issues/94)
 - chart captions are scrollable and should now take less space / [#98](https://github.com/AndiLeni/statistics/issues/98)
 - toolbox for charts can now be hidden (default: hidden). if needed enable manually in addon settings
+- many small ui improvements
 
 
 ## [2.5.0-alpha1] - 02.03.2023
