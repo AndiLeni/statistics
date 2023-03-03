@@ -10,7 +10,7 @@
     <div class="panel-body">
 
         <div class="row">
-            <div class="col-12 col-md-6" style="padding:1rem">
+            <div class="col-12 col-md-6 text-center" style="padding:1rem">
                 <form id="statistics_df_form" class="form-inline" method="GET">
                     <input type="hidden" value="<?php echo $this->current_backend_page ?>" name="page">
                     <div class="form-group" style="margin-right: 1rem;">
@@ -24,7 +24,7 @@
                     <button type="submit" class="btn btn-primary"><?php echo $this->i18n('statistics_filter') ?></button>
                 </form>
             </div>
-            <div class="col-12 col-md-6" style="padding:1rem">
+            <div class="col-12 col-md-6 text-center" style="padding:1rem">
                 <a class="btn btn-info" id="statistics_df_lsd">Letze 7 Tage</a>
                 <a class="btn btn-info" id="statistics_df_ltd">Letze 30 Tage</a>
                 <a class="btn btn-info" id="statistics_df_ty">Dieses Jahr</a>
