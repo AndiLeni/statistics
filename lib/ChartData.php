@@ -335,7 +335,6 @@ class chartData
         // get total visits
         $result_total = $sql->getArray('SELECT DATE_FORMAT(date,"%b %Y") AS "month", IFNULL(SUM(count),0) AS "count" FROM ' . rex::getTable('pagestats_visits_per_day') . ' GROUP BY month ORDER BY date ASC');
 
-        dump($result_total);
 
         // set count to each month
         foreach ($result_total as $row) {
