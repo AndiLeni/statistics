@@ -19,8 +19,8 @@ $(document).on("rex:ready", function (event, container) {
             statistics_df_form.submit();
         });
         statistics_df_ty.addEventListener("click", function () {
-            this_year = get_this_year();
-            statistics_datefilter_start.value = this_year;
+            last_year = get_past_date(365);
+            statistics_datefilter_start.value = last_year;
             statistics_df_form.submit();
         });
         statistics_df_wt.addEventListener("click", function () {
@@ -37,14 +37,6 @@ $(document).on("rex:ready", function (event, container) {
         month = ("0" + (date.getMonth() + 1)).slice(-2);
         year = date.getFullYear();
         str = year + "-" + month + "-" + day;
-
-        return str;
-    }
-
-    function get_this_year() {
-        var date = new Date();
-        year = date.getFullYear();
-        str = year + "-01-01";
 
         return str;
     }

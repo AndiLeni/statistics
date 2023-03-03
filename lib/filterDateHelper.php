@@ -46,7 +46,7 @@ class filterDateHelper
                 $this->date_start = $date;
             } elseif ($date_range == 'thisYear') {
                 $date = new DateTimeImmutable();
-                $date = $date->setTimestamp(strtotime('first day of january this year'));
+                $date = $date->modify("-365 day");
                 $this->date_start = $date;
             } else {
                 $this->date_start = $this->getMinDateFromTable();

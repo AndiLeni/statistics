@@ -27,7 +27,7 @@
             <div class="col-12 col-md-6 text-center" style="padding:1rem">
                 <a class="btn btn-info" id="statistics_df_lsd">Letze 7 Tage</a>
                 <a class="btn btn-info" id="statistics_df_ltd">Letze 30 Tage</a>
-                <a class="btn btn-info" id="statistics_df_ty">Dieses Jahr</a>
+                <a class="btn btn-info" id="statistics_df_ty">Letzte 12 Monate</a>
                 <a data-start="<?php echo $this->wts ?>" class="btn btn-info" id="statistics_df_wt">Gesamt</a>
             </div>
         </div>
