@@ -1,10 +1,8 @@
 # Changelog 
 
 
+## [2.5.0] - 29.03.2023
 
-## [2.5.0-alpha2] - 03.03.2023
-
-### Changed
 - fix deprecation warning in datefilter / [#102](https://github.com/AndiLeni/statistics/issues/102)
 - set domain to "undefined" when rex_yrewrite::getHost() is null / [#101](https://github.com/AndiLeni/statistics/issues/101)
 - entries in pagestats_visitors_per_day were not deleted / [#94](https://github.com/AndiLeni/statistics/issues/94)
@@ -14,11 +12,19 @@
 
 - many small ui improvements
 
+- fix issue with spyc.php
+
+
+## [2.5.0-alpha2] - 03.03.2023
+
+### Changed
+see 2.5
+
 
 ## [2.5.0-alpha1] - 02.03.2023
 
 ### Changed
-- fix issue with spyc.php
+see 2.5
 
 
 
