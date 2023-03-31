@@ -6,14 +6,25 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit4be1805b5fefffcf0872c98f65c52624
 {
+    public static $files = array (
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'V' => 
         array (
             'Vectorface\\Whip\\' => 16,
         ),
+        'S' => 
+        array (
+            'Symfony\\Contracts\\Service\\' => 26,
+            'Symfony\\Contracts\\Cache\\' => 24,
+            'Symfony\\Component\\VarExporter\\' => 30,
+            'Symfony\\Component\\Cache\\' => 24,
+        ),
         'P' => 
         array (
-            'Psr\\Http\\Message\\' => 17,
+            'Psr\\Cache\\' => 10,
         ),
     );
 
@@ -22,9 +33,25 @@ class ComposerStaticInit4be1805b5fefffcf0872c98f65c52624
         array (
             0 => __DIR__ . '/..' . '/vectorface/whip/src',
         ),
-        'Psr\\Http\\Message\\' => 
+        'Symfony\\Contracts\\Service\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/symfony/service-contracts',
+        ),
+        'Symfony\\Contracts\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/cache-contracts',
+        ),
+        'Symfony\\Component\\VarExporter\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/var-exporter',
+        ),
+        'Symfony\\Component\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/cache',
+        ),
+        'Psr\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
     );
 

@@ -1,5 +1,27 @@
 {
     "require": {
-        "vectorface/whip": "^0.4.0"
+        "vectorface/whip": "^0.4.0",
+        "symfony/cache": "^5.4"
+    },
+    "replace": {
+        "psr/log": "*",
+        "psr/container": "*",
+        "psr/http-message": "*",
+        "ankitpokhrel/tus-php": "*",
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-intl-grapheme": "*",
+        "symfony/polyfill-intl-normalizer": "*",
+        "symfony/polyfill-mbstring": "*",
+        "symfony/polyfill-php72": "*",
+        "symfony/polyfill-php73": "*",
+        "symfony/polyfill-php74": "*",
+        "symfony/polyfill-php80": "*",
+        "symfony/polyfill-php81": "*"
+    },
+    "config": {
+        "platform": {
+            "php": "7.4"
+        }
     }
 }
