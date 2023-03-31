@@ -1,6 +1,11 @@
 # Changelog 
 
 
+## [2.6.0] - 31.03.2023
+
+- add file based caching for device detector
+
+
 ## [2.5.0] - 29.03.2023
 
 - fix deprecation warning in datefilter / [#102](https://github.com/AndiLeni/statistics/issues/102)
