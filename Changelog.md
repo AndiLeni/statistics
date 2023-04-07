@@ -1,6 +1,12 @@
 # Changelog 
 
 
+## [2.6.1] - 07.04.2023
+
+- update device detector to 6.1.1, also fixes [#103](https://github.com/AndiLeni/statistics/issues/103)
+- re-enable client hints after dd-update
+
+
 ## [2.6.0] - 31.03.2023
 
 - add file based caching for device detector
