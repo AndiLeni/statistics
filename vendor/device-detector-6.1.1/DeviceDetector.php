@@ -68,7 +68,7 @@ class DeviceDetector
     /**
      * Current version number of DeviceDetector
      */
-    public const VERSION = '6.1.0';
+    public const VERSION = '6.1.1';
 
     /**
      * Constant used as value for unknown browser / os
@@ -388,7 +388,8 @@ class DeviceDetector
             AbstractDeviceParser::DEVICE_TYPE_PHABLET,
             AbstractDeviceParser::DEVICE_TYPE_CAMERA,
             AbstractDeviceParser::DEVICE_TYPE_PORTABLE_MEDIA_PAYER,
-        ])) {
+        ])
+        ) {
             return true;
         }
 
@@ -397,7 +398,8 @@ class DeviceDetector
             AbstractDeviceParser::DEVICE_TYPE_TV,
             AbstractDeviceParser::DEVICE_TYPE_SMART_DISPLAY,
             AbstractDeviceParser::DEVICE_TYPE_CONSOLE,
-        ])) {
+        ])
+        ) {
             return false;
         }
 
@@ -655,8 +657,7 @@ class DeviceDetector
         $client        = $deviceDetector->getClient();
         $browserFamily = 'Unknown';
 
-        if (
-            $deviceDetector->isBrowser()
+        if ($deviceDetector->isBrowser()
             && true === \is_array($client)
             && true === \array_key_exists('family', $client)
             && null !== $client['family']
@@ -728,7 +729,6 @@ class DeviceDetector
     public function getYamlParser(): YamlParser
     {
         if (!empty($this->yamlParser)) {
-            file_put_contents('TEST.txt', get_class($this->yamlParser));
             return $this->yamlParser;
         }
 
@@ -923,8 +923,7 @@ class DeviceDetector
          * Note: We do not check for browser (family) here, as there might be mobile apps using Chrome, that won't have
          *       a detected browser, but can still be detected. So we check the useragent for Chrome instead.
          */
-        if (
-            null === $this->device && 'Android' === $osFamily
+        if (null === $this->device && 'Android' === $osFamily
             && $this->matchUserAgent('Chrome/[\.0-9]*')
         ) {
             if ($this->matchUserAgent('(?:Mobile|eliboM) Safari/')) {
@@ -944,9 +943,8 @@ class DeviceDetector
         /**
          * Some UA contain the fragment 'Android; Tablet;' or 'Opera Tablet', so we assume those devices as tablets
          */
-        if (
-            null === $this->device && ($this->hasAndroidTableFragment()
-                || $this->matchUserAgent('Opera Tablet'))
+        if (null === $this->device && ($this->hasAndroidTableFragment()
+            || $this->matchUserAgent('Opera Tablet'))
         ) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_TABLET;
         }
@@ -969,8 +967,7 @@ class DeviceDetector
         if (null === $this->device && 'Android' === $osName && '' !== $osVersion) {
             if (-1 === \version_compare($osVersion, '2.0')) {
                 $this->device = AbstractDeviceParser::DEVICE_TYPE_SMARTPHONE;
-            } elseif (
-                \version_compare($osVersion, '3.0') >= 0
+            } elseif (\version_compare($osVersion, '3.0') >= 0
                 && -1 === \version_compare($osVersion, '4.0')
             ) {
                 $this->device = AbstractDeviceParser::DEVICE_TYPE_TABLET;
@@ -1001,9 +998,8 @@ class DeviceDetector
          * all Windows 8 touch devices are tablets.
          */
 
-        if (
-            null === $this->device && ('Windows RT' === $osName || ('Windows' === $osName
-                && \version_compare($osVersion, '8') >= 0)) && $this->isTouchEnabled()
+        if (null === $this->device && ('Windows RT' === $osName || ('Windows' === $osName
+            && \version_compare($osVersion, '8') >= 0)) && $this->isTouchEnabled()
         ) {
             $this->device = AbstractDeviceParser::DEVICE_TYPE_TABLET;
         }
