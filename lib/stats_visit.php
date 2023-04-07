@@ -320,9 +320,9 @@ class stats_visit
     public function parse_ua(): void
     {
         $cache = new FilesystemAdapter('', 0, rex_path::addonCache('statistics', 'devicedetector'));
-        // $clientHints = ClientHints::factory($_SERVER);
-        // $this->DeviceDetector = new DeviceDetector($this->userAgent, $clientHints);
-        $this->DeviceDetector = new DeviceDetector($this->userAgent);
+        $clientHints = ClientHints::factory($_SERVER);
+        $this->DeviceDetector = new DeviceDetector($this->userAgent, $clientHints);
+        // $this->DeviceDetector = new DeviceDetector($this->userAgent);
         $this->DeviceDetector->setYamlParser(new DeviceDetectorSymfonyYamlParser());
         $this->DeviceDetector->setCache(new \DeviceDetector\Cache\PSR6Bridge($cache));
         $this->DeviceDetector->parse();
