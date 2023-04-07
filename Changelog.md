@@ -1,6 +1,9 @@
 # Changelog 
 
 
+## [x.x.x] - xx.xx.xxxx
+
+
 ## [2.6.1] - 07.04.2023
 
 - update device detector to 6.1.1, also fixes [#103](https://github.com/AndiLeni/statistics/issues/103)

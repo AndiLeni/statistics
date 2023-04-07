@@ -23,5 +23,10 @@
         "platform": {
             "php": "7.4"
         }
+    },
+    "scripts": {
+        "release": [
+            "@php .tools/release.php"
+        ]
     }
 }

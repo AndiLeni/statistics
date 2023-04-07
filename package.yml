@@ -49,3 +49,4 @@ default_config:
 installer_ignore:
     - .git
     - preview
+    - .tools
