@@ -1,7 +1,10 @@
-# Changelog 
+# Changelog
 
 
-## [x.x.x] - xx.xx.xxxx
+## [x.x.x] - xx.xx.xxxx 
+
+
+## [2.7.0] - 10.05.2023
 - page requests coming from users logged into the backend can now be discarded in order not to distort the statistics 
 [#104](https://github.com/AndiLeni/statistics/issues/104), [#93](https://github.com/AndiLeni/statistics/issues/93)
 
