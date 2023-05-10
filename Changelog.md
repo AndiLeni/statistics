@@ -2,6 +2,8 @@
 
 
 ## [x.x.x] - xx.xx.xxxx
+- page requests coming from users logged into the backend can now be discarded in order not to distort the statistics 
+[#104](https://github.com/AndiLeni/statistics/issues/104), [#93](https://github.com/AndiLeni/statistics/issues/93)
 
 
 ## [2.6.1] - 07.04.2023

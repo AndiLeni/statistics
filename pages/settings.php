@@ -108,6 +108,13 @@ $field7->addOption($this->i18n('statistics_yes'), 1);
 $field7->addOption($this->i18n('statistics_no'), 0);
 
 
+$field8 = $form->addRadioField('statistics_ignore_backend_loggedin');
+$field8->setLabel('Eigene Seitenaufrufe ignorieren');
+$field8->addOption($this->i18n('statistics_yes'), 1);
+$field8->addOption($this->i18n('statistics_no'), 0);
+$field8->setNotice('Aktivieren, um Seitenaufrufe durch eingeloggte User zu verwerfen.');
+
+
 $addon = rex_addon::get('statistics');
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'edit', false);

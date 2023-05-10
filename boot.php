@@ -54,15 +54,38 @@ if (rex::isBackend()) {
 }
 
 
+// set variable to check in EP whether the visit is coming from a logged-in user or not
+if (rex::isFrontend()) {
+    $addon = rex_addon::get('statistics');
+    $ignore_backend_loggedin = $addon->getConfig('statistics_ignore_backend_loggedin');
+
+    if ($ignore_backend_loggedin) {
+        $statistics_has_backend_login = rex_backend_login::hasSession();
+    } else {
+        $statistics_has_backend_login = false;
+    }
+} else {
+    $statistics_has_backend_login = true;
+}
+
+
 
 // NOTICE: EP 'RESPONSE_SHUTDOWN' is not called on madia request
 // do actions after content is delivered
-rex_extension::register('RESPONSE_SHUTDOWN', function () {
+rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_backend_login) {
 
-    if (!rex::isBackend()) {
+    if (rex::isFrontend()) {
 
         $addon = rex_addon::get('statistics');
         $log_all = $addon->getConfig('statistics_log_all');
+        $ignore_backend_loggedin = $addon->getConfig('statistics_ignore_backend_loggedin');
+
+
+        // return when visit is coming from a logged-in user
+        if ($ignore_backend_loggedin && $statistics_has_backend_login) {
+            return;
+        }
+
 
         $response_code = rex_response::getStatus();
 

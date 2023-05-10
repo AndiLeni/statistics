@@ -45,6 +45,7 @@ default_config:
     statistics_default_datefilter_range: "thisYear"
     statistics_combine_all_domains: true
     statistics_show_chart_toolbox: false
+    statistics_ignore_backend_loggedin: true
 
 installer_ignore:
     - .git
