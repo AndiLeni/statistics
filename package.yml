@@ -17,6 +17,12 @@ page:
         referer:
             title: "translate:statistics_referer"
             icon: rex-icon fa-external-link
+        media:
+            title: "translate:statistics_media"
+            icon: rex-icon fa-image
+        campaigns:
+            icon: rex-icon fa-bullhorn
+            title: "translate:statistics_api_campaigns"
         settings:
             title: "translate:statistics_settings"
             perm: statistics[settings]
@@ -27,6 +33,8 @@ page:
                 icon: rex-icon fa-info-circle,
                 itemclass: pull-right,
             }
+
+        
 
 requires:
     redaxo: "^5.11"
@@ -46,6 +54,13 @@ default_config:
     statistics_combine_all_domains: true
     statistics_show_chart_toolbox: false
     statistics_ignore_backend_loggedin: true
+
+    statistics_media_log_all: false
+    statistics_media_log_mm: true
+
+    statistics_api_enable: false
+
+
 
 installer_ignore:
     - .git

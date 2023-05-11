@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '63e65eee1ef44ca9dae8a1a5d9bafc3250b3131a',
+        'reference' => '270e7163ce0b823aa6be64740c77fc2b7cffcf41',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '63e65eee1ef44ca9dae8a1a5d9bafc3250b3131a',
+            'reference' => '270e7163ce0b823aa6be64740c77fc2b7cffcf41',
             'dev_requirement' => false,
         ),
         'ankitpokhrel/tus-php' => array(

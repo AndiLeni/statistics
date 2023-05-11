@@ -38,12 +38,21 @@ if (rex_request_method() == 'post') {
         $sql = rex_sql::factory();
         $sql->setQuery('delete from ' . rex::getTable('pagestats_referer'));
         echo rex_view::success($sql->getRows() . ' ' . $this->i18n('statistics_deleted_media'));
+    } elseif ($function == 'delete_media') {
+        $sql = rex_sql::factory();
+        $sql->setQuery('delete from ' . rex::getTable('pagestats_media'));
+        echo rex_view::success('Es wurden ' . $sql->getRows() . ' Einträge aus der Tabelle media gelöscht.</div>');
+    } elseif ($function == 'delete_campaigns') {
+        $sql = rex_sql::factory();
+        $sql->setQuery('delete from ' . rex::getTable('pagestats_api'));
+        echo rex_view::success('Es wurden ' . $sql->getRows() . ' Einträge aus der Tabelle api gelöscht.');
     }
 }
 
 
 $form = rex_config_form::factory("statistics");
 
+$form->addFieldset("Allgemein");
 
 $field2 = $form->addTextField('statistics_visit_duration');
 $field2->setLabel($this->i18n('statistics_visit_duration'));
@@ -115,6 +124,33 @@ $field8->addOption($this->i18n('statistics_no'), 0);
 $field8->setNotice('Aktivieren, um Seitenaufrufe durch eingeloggte User zu verwerfen.');
 
 
+// media
+$form->addFieldset("Media");
+
+$fm1 = $form->addRadioField('statistics_media_log_all');
+$fm1->setLabel($this->i18n('statistics_media_log_all'));
+$fm1->addOption($this->i18n('statistics_media_yes'), 1);
+$fm1->addOption($this->i18n('statistics_media_no'), 0);
+$fm1->setNotice($this->i18n('statistics_media_log_all_note'));
+
+$fm2 = $form->addRadioField('statistics_media_log_mm');
+$fm2->setLabel($this->i18n('statistics_media_log_mm'));
+$fm2->addOption($this->i18n('statistics_media_yes'), 1);
+$fm2->addOption($this->i18n('statistics_media_no'), 0);
+$fm2->setNotice($this->i18n('statistics_media_log_mm_note'));
+
+
+// api
+$form->addFieldset("API");
+
+$field = $form->addRadioField('statistics_api_enable');
+$field->setLabel($this->i18n('statistics_api_enable_campaigns'));
+$field->addOption($this->i18n('statistics_api_yes'), 1);
+$field->addOption($this->i18n('statistics_api_no'), 0);
+$field->setNotice($this->i18n('statistics_api_enable_campaigns_note'));
+
+
+// parse fragment with setting form
 $addon = rex_addon::get('statistics');
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'edit', false);
@@ -146,19 +182,19 @@ $content = '
 <input type="hidden" name="func" value="delete_referer">
 <button class="btn btn-danger" type="submit" data-confirm="' . $this->i18n('statistics_confirm_delete_referer') . '">' . $this->i18n('statistics_delete_referer') . '</button>
 </form>
+
+<form style="margin:5px" action="' . rex_url::backendPage('statistics/media/settings') . '" method="post">
+<input type="hidden" name="func" value="delete_media">
+<button class="btn btn-danger" type="submit" data-confirm="' . $this->i18n('statistics_media_delete_media_confirm') . '">' . $this->i18n('statistics_media_delete_media') . '</button>
+</form>
+
+<form style="margin:5px" action="' . rex_url::currentBackendPage() . '" method="post">
+<input type="hidden" name="func" value="delete_campaigns">
+<button class="btn btn-danger" type="submit" data-confirm="' . $this->i18n('statistics_api_delete_api_confirm') . '">' . $this->i18n('statistics_api_delete_api') . '</button>
+</form>
+
+</div>
 ';
-
-
-if (rex::isBackend() && rex_plugin::get('statistics', 'media')->isAvailable()) {
-    $content .= '
-    <form style="margin:5px" action="' . rex_url::currentBackendPage() . '" method="post">
-    <input type="hidden" name="func" value="delete_media">
-    <button class="btn btn-danger" type="submit" data-confirm="' . $this->i18n('statistics_confirm_delete_media') . '">' . $this->i18n('statistics_delete_media') . '</button>
-    </form>
-    ';
-}
-
-$content .= '</div>';
 
 
 $fragment = new rex_fragment();

@@ -13,11 +13,11 @@
             <div class="col-12 col-md-6 text-center" style="padding:1rem">
                 <form id="statistics_df_form" class="form-inline" method="GET">
                     <input type="hidden" value="<?php echo $this->current_backend_page ?>" name="page">
-                    <div class="form-group" style="margin-right: 1rem;">
+                    <div class="form-group" style="margin: 0.5rem;">
                         <label for="date_start"><?php echo $this->i18n('statistics_startdate') ?></label>
                         <input id="statistics_datefilter_start" style="line-height: normal;" type="date" value="<?php echo $this->date_start->format('Y-m-d') ?>" class="form-control" name="date_start">
                     </div>
-                    <div class="form-group" style="margin-right: 1rem;">
+                    <div class="form-group" style="margin: 0.5rem;">
                         <label for="date_end"><?php echo $this->i18n('statistics_enddate') ?></label>
                         <input id="statistics_datefilter_end" style="line-height: normal;" value="<?php echo $this->date_end->format('Y-m-d') ?>" type="date" class="form-control" name="date_end">
                     </div>
