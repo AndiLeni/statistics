@@ -1,6 +1,6 @@
 <?php
 
-
+use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Vectorface\Whip\Whip;
 
 
@@ -99,8 +99,15 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
             $clientAddress = $whip->getValidIpAddress();
             $clientAddress = $clientAddress ? $clientAddress : '0.0.0.0';
 
+            // domain
+            try {
+                $domain = rex::getRequest()->getHost();
+            } catch (SuspiciousOperationException $e) {
+                $domain = 'undefined';
+            }
+
             // page url
-            $url = rex_yrewrite::getHost() . rex_server('REQUEST_URI', 'string', '');
+            $url = $domain . rex::getRequest()->getRequestUri();
 
             // optionally ignore url parameters
             if ($addon->getConfig('statistics_ignore_url_params')) {
@@ -109,9 +116,6 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
 
             // user agent
             $userAgent = rex_server('HTTP_USER_AGENT', 'string', '');
-
-            // yrewrite domain
-            $domain = rex_yrewrite::getHost() ?? 'undefined';
 
             $visit = new stats_visit($clientAddress, $url, $userAgent, $domain);
 
