@@ -1,5 +1,7 @@
 <?php
 
+$addon = rex_addon::get('statistics');
+
 $current_backend_page = rex_get('page', 'string', '');
 $search_string = htmlspecialchars_decode(rex_request('search_string', 'string', ''));
 $request_name = rex_request('name', 'string', '');
@@ -59,26 +61,26 @@ $list = rex_list::factory('SELECT name, sum(count) as "count" from ' . rex::getT
 
 
 
-$list->setColumnLabel('name', $this->i18n('statistics_api_name'));
-$list->setColumnLabel('count', $this->i18n('statistics_api_count'));
+$list->setColumnLabel('name', $addon->i18n('statistics_api_name'));
+$list->setColumnLabel('count', $addon->i18n('statistics_api_count'));
 // $list->setColumnSortable('name', $direction = 'asc');
 // $list->setColumnSortable('count', $direction = 'asc');
 $list->setColumnParams('name', ['name' => '###name###', 'date_start' => $filter_date_helper->date_start->format('Y-m-d'), 'date_end' => $filter_date_helper->date_end->format('Y-m-d')]);
 
-$list->addColumn('edit', $this->i18n('statistics_api_delete'));
-$list->setColumnLabel('edit', $this->i18n('statistics_api_delete'));
-$list->addLinkAttribute('edit', 'data-confirm', '###name###' . PHP_EOL . $this->i18n('statistics_api_delete_confirm'));
+$list->addColumn('edit', $addon->i18n('statistics_api_delete'));
+$list->setColumnLabel('edit', $addon->i18n('statistics_api_delete'));
+$list->addLinkAttribute('edit', 'data-confirm', '###name###' . PHP_EOL . $addon->i18n('statistics_api_delete_confirm'));
 $list->setColumnParams('edit', ['name' => '###name###', 'delete_entry' => true]);
 $list->addTableAttribute('class', 'table-bordered statistics_table');
 
 if ($list->getRows() == 0) {
-    $table = rex_view::info($this->i18n('statistics_no_data'));
+    $table = rex_view::info($addon->i18n('statistics_no_data'));
 } else {
     $table = $list->get();
 }
 
 $fragment2 = new rex_fragment();
-$fragment2->setVar('title', $this->i18n('statistics_api_campaign_views'));
+$fragment2->setVar('title', $addon->i18n('statistics_api_campaign_views'));
 $fragment2->setVar('body', $table, false);
 echo $fragment2->parse('core/page/section.php');
 

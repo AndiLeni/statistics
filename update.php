@@ -1,5 +1,7 @@
 <?php
 
+$addon = rex_addon::get('statistics');
+
 // fix table rex_pagestats_referer
 
 $sql = rex_sql::factory();
@@ -15,7 +17,7 @@ $data = $sql->getArray($query);
 rex_sql_table::get(rex::getTable('pagestats_referer'))->drop();
 
 // create new tables
-$this->includeFile(__DIR__ . '/install.php');
+$addon->includeFile(__DIR__ . '/install.php');
 
 foreach ($data as $e) {
     $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_referer') . ' (hash,referer,date,count) VALUES 

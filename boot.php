@@ -108,7 +108,7 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
             }
 
             // user agent
-            $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+            $userAgent = rex_server('HTTP_USER_AGENT', 'string', '');
 
             // yrewrite domain
             $domain = rex_yrewrite::getHost() ?? 'undefined';
@@ -137,8 +137,9 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
                         // check hash with save_visit, if true then save visit
 
                         // check if referer exists, if yes safe it
-                        if (isset($_SERVER['HTTP_REFERER'])) {
-                            $referer = urldecode($_SERVER['HTTP_REFERER']);
+                        $referer = rex_server('HTTP_REFERER', 'string', '');
+                        if ($referer != '') {
+                            $referer = urldecode($referer);
 
                             if (!str_starts_with($referer, rex::getServer())) {
                                 $visit->save_referer($referer);
@@ -176,7 +177,7 @@ if (rex::isBackend()) {
 
         if ($addon->getConfig('statistics_media_log_all') == true) {
 
-            $url = $_SERVER['REQUEST_URI'];
+            $url = rex_server('REQUEST_URI', 'string', '');
 
             $media_request = new stats_media_request($url);
 

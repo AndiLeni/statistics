@@ -1,5 +1,7 @@
 <?php
 
+$addon = rex_addon::get('statistics');
+
 $current_backend_page = rex_get('page', 'string', '');
 $search_string = htmlspecialchars_decode(rex_request('search_string', 'string', ''));
 $request_url = rex_request('url', 'string', '');
@@ -58,21 +60,21 @@ if ($request_url != '' && !$delete_entry) {
 $list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_media') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC', 10000);
 
 
-$list->setColumnLabel('url', $this->i18n('statistics_media_url'));
-$list->setColumnLabel('count', $this->i18n('statistics_media_count'));
+$list->setColumnLabel('url', $addon->i18n('statistics_media_url'));
+$list->setColumnLabel('count', $addon->i18n('statistics_media_count'));
 // $list->setColumnSortable('url', $direction = 'asc');
 // $list->setColumnSortable('count', $direction = 'asc');
 $list->setColumnParams('url', ['url' => '###url###', 'date_start' => $filter_date_helper->date_start->format('Y-m-d'), 'date_end' => $filter_date_helper->date_end->format('Y-m-d')]);
 $list->addTableAttribute('class', 'table-bordered statistics_table');
 
 if ($list->getRows() == 0) {
-    $table = rex_view::info($this->i18n('statistics_no_data'));
+    $table = rex_view::info($addon->i18n('statistics_no_data'));
 } else {
     $table = $list->get();
 }
 
 $fragment2 = new rex_fragment();
-$fragment2->setVar('title', $this->i18n('statistics_media_views'));
+$fragment2->setVar('title', $addon->i18n('statistics_media_views'));
 $fragment2->setVar('body', $table, false);
 echo $fragment2->parse('core/page/section.php');
 

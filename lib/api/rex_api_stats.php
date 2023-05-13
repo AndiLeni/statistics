@@ -40,7 +40,7 @@ class rex_api_stats extends rex_api_function
             if ($name != '') {
 
                 // user agent
-                $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+                $userAgent = rex_server('HTTP_USER_AGENT', 'string', '');
 
                 $visit = new stats_campaign_visit($clientAddress, $name, $userAgent);
 

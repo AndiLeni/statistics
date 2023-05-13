@@ -29,7 +29,6 @@ class stats_campaign_visit
      *
      *
      * @param string $clientIPAddress
-     * @param string $url
      * @param string $userAgent
      * @return void
      * @throws InvalidArgumentException
@@ -110,7 +109,6 @@ class stats_campaign_visit
     /**
      *
      *
-     * @param string $referer
      * @return void
      * @throws InvalidArgumentException
      * @throws rex_sql_exception

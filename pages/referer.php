@@ -54,18 +54,18 @@ if ($request_ref != '') {
 $list = rex_list::factory('SELECT referer, SUM(count) as "count" from ' . rex::getTable('pagestats_referer') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY referer ORDER BY count DESC, referer ASC', 10000);
 
 $list->setColumnLabel('referer', 'Referer');
-$list->setColumnLabel('count', $this->i18n('statistics_count'));
+$list->setColumnLabel('count', $addon->i18n('statistics_count'));
 $list->setColumnParams('referer', ['referer' => '###referer###', 'date_start' => $filter_date_helper->date_start->format('Y-m-d'), 'date_end' => $filter_date_helper->date_end->format('Y-m-d')]);
 $list->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
 
 if ($list->getRows() == 0) {
-    $table = rex_view::info($this->i18n('statistics_no_data'));
+    $table = rex_view::info($addon->i18n('statistics_no_data'));
 } else {
     $table = $list->get();
 }
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', $this->i18n('statistics_all_referer'));
+$fragment->setVar('title', $addon->i18n('statistics_all_referer'));
 $fragment->setVar('body', $table, false);
 echo $fragment->parse('core/page/section.php');
 
@@ -91,6 +91,7 @@ echo $fragment->parse('core/page/section.php');
             $end
         );
 
+        $array = [];
         foreach ($period as $value) {
             $array[$value->format("d.m.Y")] = "0";
         }
@@ -98,6 +99,7 @@ echo $fragment->parse('core/page/section.php');
         $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_referer') . ' WHERE referer = :referer and date between :start and :end GROUP BY date ORDER BY date ASC', ['referer' => $request_ref, 'start' => $filter_date_helper->date_start->format('Y-m-d'), 'end' => $filter_date_helper->date_end->format('Y-m-d')]);
 
         $data = [];
+        $arr2 = [];
 
         if ($sum_per_day->getRows() != 0) {
             foreach ($sum_per_day as $row) {

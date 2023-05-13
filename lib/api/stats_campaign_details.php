@@ -44,6 +44,7 @@ class stats_campaign_details
             $this->filterDateHelper->date_end->modify('+1 day')
         );
 
+        $array = [];
         foreach ($period as $value) {
             $array[$value->format("d.m.Y")] = "0";
         }
@@ -51,6 +52,7 @@ class stats_campaign_details
         $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_api') . ' WHERE name = :name and date between :start and :end GROUP BY date ORDER BY date ASC', ['name' => $this->name, 'start' => $this->filterDateHelper->date_start->format('Y-m-d'), 'end' => $this->filterDateHelper->date_end->format('Y-m-d')]);
 
         $data = [];
+        $arr2 = [];
 
         if ($sum_per_day->getRows() != 0) {
             foreach ($sum_per_day as $row) {

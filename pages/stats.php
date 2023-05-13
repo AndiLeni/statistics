@@ -112,43 +112,43 @@ echo $fragment_main_chart->parse('main_chart.php');
 
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', $this->i18n('statistics_browser'));
+$fragment->setVar('title', $addon->i18n('statistics_browser'));
 $fragment->setVar('chart', '<div id="chart_browser" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $browser->get_list(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', $this->i18n('statistics_devicetype'));
+$fragment->setVar('title', $addon->i18n('statistics_devicetype'));
 $fragment->setVar('chart', '<div id="chart_browsertype" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $browsertype->get_list(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', $this->i18n('statistics_os'));
+$fragment->setVar('title', $addon->i18n('statistics_os'));
 $fragment->setVar('chart', '<div id="chart_os" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $os->get_list(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', $this->i18n('statistics_brand'));
+$fragment->setVar('title', $addon->i18n('statistics_brand'));
 $fragment->setVar('chart', '<div id="chart_brand" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $brand->get_list(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', $this->i18n('statistics_model'));
+$fragment->setVar('title', $addon->i18n('statistics_model'));
 $fragment->setVar('chart', '<div id="chart_model" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $model->get_list(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', $this->i18n('statistics_days'));
+$fragment->setVar('title', $addon->i18n('statistics_days'));
 $fragment->setVar('chart', '<div id="chart_weekday" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $weekday->get_list(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
-$fragment->setVar('title', $this->i18n('statistics_hours'));
+$fragment->setVar('title', $addon->i18n('statistics_hours'));
 $fragment->setVar('chart', '<div id="chart_hour" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $hour->get_list(), false);
 echo $fragment->parse('data_vertical.php');
@@ -157,10 +157,10 @@ echo $fragment->parse('data_vertical.php');
 
 
 $list = rex_list::factory('SELECT * FROM ' . rex::getTable('pagestats_bot') . ' ORDER BY count DESC', 1000);
-$list->setColumnLabel('name', $this->i18n('statistics_name'));
-$list->setColumnLabel('count', $this->i18n('statistics_count'));
-$list->setColumnLabel('category', $this->i18n('statistics_category'));
-$list->setColumnLabel('producer', $this->i18n('statistics_producer'));
+$list->setColumnLabel('name', $addon->i18n('statistics_name'));
+$list->setColumnLabel('count', $addon->i18n('statistics_count'));
+$list->setColumnLabel('category', $addon->i18n('statistics_category'));
+$list->setColumnLabel('producer', $addon->i18n('statistics_producer'));
 $list->addTableAttribute('class', 'dt_bots statistics_table');
 
 if ($list->getRows() == 0) {

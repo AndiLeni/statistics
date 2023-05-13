@@ -53,7 +53,7 @@ if ($request_url != '' && !$ignore_page) {
     $pagedetails = new stats_pagedetails($request_url, $filter_date_helper);
     $sum_data = $pagedetails->get_sum_per_day();
 
-    $content = '<h4>' . $this->i18n('statistics_views_total') . ' <b>' . $pagedetails->get_page_total() . '</b></h4><a href="http://' . $request_url . '" target="_blank">' . $request_url . '</a>';
+    $content = '<h4>' . $addon->i18n('statistics_views_total') . ' <b>' . $pagedetails->get_page_total() . '</b></h4><a href="http://' . $request_url . '" target="_blank">' . $request_url . '</a>';
     $content .= '<div id="chart_details" style="height:500px; width:auto"></div>';
     $content .= $pagedetails->get_list();
 
@@ -78,7 +78,7 @@ foreach ($domains as $domain) {
 }
 $domain_select .= '</select>';
 $fragment = new rex_fragment();
-$fragment->setVar('title', $this->i18n('statistics_sum_per_page'));
+$fragment->setVar('title', $addon->i18n('statistics_sum_per_page'));
 $fragment->setVar('body', '<div id="chart_visits_per_page" style="height:500px; width:auto"></div>' . $domain_select . $pages_helper->get_list(), false);
 echo $fragment->parse('core/page/section.php');
 

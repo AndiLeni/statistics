@@ -21,7 +21,7 @@ class rex_effect_stats_mm extends rex_effect_abstract
             $addon = rex_addon::get('statistics');
 
             if ($addon->getConfig('statistics_media_log_mm') == true) {
-                $url = $_SERVER['REQUEST_URI'];
+                $url = rex_server('REQUEST_URI', 'string', '');
 
                 $sql = rex_sql::factory();
                 $result = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_media') . ' SET count = count + 1 WHERE url = :url AND date = :date', ['url' => $url, 'date' => date('Y-m-d')]);

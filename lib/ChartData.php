@@ -269,6 +269,7 @@ class chartData
             $dec_last
         );
 
+        $data_visits_heatmap_values = [];
         foreach ($period as $value) {
             if (in_array($value->format("Y-m-d"), array_keys($heatmap_calendar))) {
                 $data_visits_heatmap_values[] = [$value->format("Y-m-d"), $heatmap_calendar[$value->format("Y-m-d")]];

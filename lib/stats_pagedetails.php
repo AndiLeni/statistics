@@ -93,6 +93,7 @@ class stats_pagedetails
         $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_visits_per_url') . ' WHERE url = :url and date between :start and :end ORDER BY date ASC', ['url' => $this->url, 'start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
 
         $data = [];
+        $arr2 = [];
 
         if ($sum_per_day->getRows() != 0) {
             foreach ($sum_per_day as $row) {
