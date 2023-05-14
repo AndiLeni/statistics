@@ -1,5 +1,9 @@
 <?php
 
+use AndiLeni\Statistics\filterDateHelper;
+use AndiLeni\Statistics\pagesHelper;
+use AndiLeni\Statistics\stats_pagedetails;
+
 $addon = rex_addon::get('statistics');
 
 $current_backend_page = rex_get('page', 'string', '');

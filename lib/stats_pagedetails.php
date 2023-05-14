@@ -1,5 +1,17 @@
 <?php
 
+namespace AndiLeni\Statistics;
+
+use DateInterval;
+use DatePeriod;
+use DateTime;
+use rex;
+use rex_list;
+use rex_sql;
+use InvalidArgumentException;
+use rex_sql_exception;
+use rex_exception;
+
 /**
  * Used on the page "pages.php" to handle and retreive data for a single url in the "details-section"
  *

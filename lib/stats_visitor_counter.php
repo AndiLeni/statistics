@@ -1,5 +1,12 @@
 <?php
 
+namespace AndiLeni\Statistics;
+
+use rex;
+use rex_sql;
+use InvalidArgumentException;
+use rex_sql_exception;
+
 /**
  * Can be used to retreive the total amount of visitors
  * F.e. to be used in an old-fashioned Visitor-Counter
@@ -27,6 +34,7 @@ class stats_visitor_counter
     /**
      *
      *
+     * @api
      * @return string
      * @throws rex_sql_exception
      */

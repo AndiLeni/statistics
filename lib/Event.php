@@ -19,7 +19,7 @@ class Event
      * @return bool 
      * @throws InvalidArgumentException 
      */
-    public static function log($name)
+    public static function log($name): bool
     {
         $datetime_now = new DateTimeImmutable();
         $datetime_now = $datetime_now->format('Y-m-d');

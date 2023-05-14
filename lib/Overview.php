@@ -1,5 +1,13 @@
 <?php
 
+namespace AndiLeni\Statistics;
+
+use rex;
+use rex_sql;
+use rex_sql_exception;
+use InvalidArgumentException;
+
+
 class StatsOverview
 {
 

@@ -1,5 +1,15 @@
 <?php
 
+namespace AndiLeni\Statistics;
+
+use DateInterval;
+use DatePeriod;
+use DateTime;
+use rex;
+use rex_sql;
+use rex_sql_exception;
+use InvalidArgumentException;
+
 /**
  * Used on the page "campaigns.php" to handle and retreive data for a single api-request
  *

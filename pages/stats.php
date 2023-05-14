@@ -1,5 +1,17 @@
 <?php
 
+use AndiLeni\Statistics\chartData;
+use AndiLeni\Statistics\filterDateHelper;
+use AndiLeni\Statistics\ListData;
+use AndiLeni\Statistics\stats_brand;
+use AndiLeni\Statistics\stats_browser;
+use AndiLeni\Statistics\stats_browsertype;
+use AndiLeni\Statistics\stats_hour;
+use AndiLeni\Statistics\stats_model;
+use AndiLeni\Statistics\stats_os;
+use AndiLeni\Statistics\stats_weekday;
+use AndiLeni\Statistics\StatsOverview;
+
 $addon = rex_addon::get('statistics');
 
 // BASIC INITIALISATION 

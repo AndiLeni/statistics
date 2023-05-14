@@ -1,5 +1,16 @@
 <?php
 
+namespace AndiLeni\Statistics;
+
+use rex;
+use rex_sql;
+use InvalidArgumentException;
+use rex_sql_exception;
+use AndiLeni\Statistics\filterDateHelper;
+use DateInterval;
+use DatePeriod;
+use DateTime;
+
 /**
  * Used on the page "media.php" to handle and retreive data for a single media url
  *

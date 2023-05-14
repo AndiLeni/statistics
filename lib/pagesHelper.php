@@ -1,5 +1,15 @@
 <?php
 
+namespace AndiLeni\Statistics;
+
+use rex;
+use rex_addon;
+use rex_list;
+use rex_sql;
+use rex_view;
+use InvalidArgumentException;
+use rex_sql_exception;
+use rex_exception;
 
 /**
  * Helper class for the backend page "pages"

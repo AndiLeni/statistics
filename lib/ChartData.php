@@ -1,10 +1,23 @@
 <?php
 
+namespace AndiLeni\Statistics;
+
+use DateInterval;
+use DatePeriod;
+use DateTime;
+use DateTimeImmutable;
+use InvalidArgumentException;
+use rex;
+use rex_addon;
+use rex_sql;
+use rex_sql_exception;
+
 class chartData
 {
 
     private filterDateHelper $filter_date_helper;
     private rex_addon $addon;
+
 
 
     /**

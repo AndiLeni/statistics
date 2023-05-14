@@ -1,5 +1,15 @@
 <?php
 
+namespace AndiLeni\Statistics;
+
+use rex;
+use rex_addon;
+use rex_exception;
+use rex_fragment;
+use rex_list;
+use rex_view;
+use InvalidArgumentException;
+
 class ListData
 {
     private filterDateHelper $filter_date_helper;

@@ -1,5 +1,6 @@
 <?php
 
+use AndiLeni\Statistics\stats_campaign_visit;
 use Vectorface\Whip\Whip;
 
 /**

@@ -89,10 +89,10 @@ class ProxyAdapter implements AdapterInterface, CacheInterface, PruneableInterfa
                 }
                 if ($metadata) {
                     // For compactness, expiry and creation duration are packed in the key of an array, using magic numbers as separators
-                    $item["\0*\0value"] = ["\x9D".pack('VN', (int) (0.1 + $metadata[self::METADATA_EXPIRY] - self::METADATA_EXPIRY_OFFSET), $metadata[self::METADATA_CTIME])."\x5F" => $item["\0*\0value"]];
+                    $item["\0*\0value"] = ["\x9D" . pack('VN', (int) (0.1 + $metadata[self::METADATA_EXPIRY] - self::METADATA_EXPIRY_OFFSET), $metadata[self::METADATA_CTIME]) . "\x5F" => $item["\0*\0value"]];
                 }
                 $innerItem->set($item["\0*\0value"]);
-                $innerItem->expiresAt(null !== $item["\0*\0expiry"] ? \DateTime::createFromFormat('U.u', sprintf('%.6F', $item["\0*\0expiry"])) : null);
+                $innerItem->expiresAt(null !== $item["\0*\0expiry"] ? DateTime::createFromFormat('U.u', sprintf('%.6F', $item["\0*\0expiry"])) : null);
             },
             null,
             CacheItem::class
@@ -159,7 +159,7 @@ class ProxyAdapter implements AdapterInterface, CacheInterface, PruneableInterfa
     public function clear(string $prefix = '')
     {
         if ($this->pool instanceof AdapterInterface) {
-            return $this->pool->clear($this->namespace.$prefix);
+            return $this->pool->clear($this->namespace . $prefix);
         }
 
         return $this->pool->clear();
@@ -236,9 +236,9 @@ class ProxyAdapter implements AdapterInterface, CacheInterface, PruneableInterfa
         } elseif ($this->pool instanceof AdapterInterface) {
             // this is an optimization specific for AdapterInterface implementations
             // so we can save a round-trip to the backend by just creating a new item
-            $innerItem = (self::$createCacheItem)($this->namespace.$item["\0*\0key"], null, $this->poolHash);
+            $innerItem = (self::$createCacheItem)($this->namespace . $item["\0*\0key"], null, $this->poolHash);
         } else {
-            $innerItem = $this->pool->getItem($this->namespace.$item["\0*\0key"]);
+            $innerItem = $this->pool->getItem($this->namespace . $item["\0*\0key"]);
         }
 
         (self::$setInnerItem)($innerItem, $item);
@@ -263,6 +263,6 @@ class ProxyAdapter implements AdapterInterface, CacheInterface, PruneableInterfa
     {
         \assert('' !== CacheItem::validateKey($key));
 
-        return $this->namespace.$key;
+        return $this->namespace . $key;
     }
 }

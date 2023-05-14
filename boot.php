@@ -1,5 +1,14 @@
 <?php
 
+use AndiLeni\Statistics\rex_dashboard_browser;
+use AndiLeni\Statistics\rex_dashboard_browsertype;
+use AndiLeni\Statistics\rex_dashboard_hour;
+use AndiLeni\Statistics\rex_dashboard_os;
+use AndiLeni\Statistics\rex_dashboard_views_total;
+use AndiLeni\Statistics\stats_media_request;
+use AndiLeni\Statistics\stats_visit;
+use AndiLeni\Statistics\stats_weekday_dashboard;
+use AndiLeni\Statistics\rex_effect_stats_mm;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Vectorface\Whip\Whip;
 

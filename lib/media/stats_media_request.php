@@ -1,5 +1,14 @@
 <?php
 
+namespace AndiLeni\Statistics;
+
+use DateTimeImmutable;
+use rex;
+use rex_sql;
+use InvalidArgumentException;
+use rex_sql_exception;
+
+
 /**
  * Main class to handle saving of media requests
  *

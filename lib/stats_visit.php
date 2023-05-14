@@ -1,10 +1,20 @@
 <?php
 
+namespace AndiLeni\Statistics;
 
+use DateTime;
+use DateTimeImmutable;
 use DeviceDetector\ClientHints;
 use DeviceDetector\DeviceDetector;
 use DeviceDetector\Yaml\Symfony as DeviceDetectorSymfonyYamlParser;
+use rex;
+use rex_addon;
+use rex_path;
+use rex_sql;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use InvalidArgumentException;
+use rex_sql_exception;
+use Exception;
 
 
 /**

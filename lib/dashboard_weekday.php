@@ -1,10 +1,15 @@
 <?php
 
+namespace AndiLeni\Statistics;
+
+use InvalidArgumentException;
+use rex_sql_exception;
+
 /**
  * Provides data for the dashboard addon
  *
  */
-class stats_weekday_dashboard extends rex_dashboard_item_chart_bar
+class stats_weekday_dashboard extends \rex_dashboard_item_chart_bar
 {
 
     /**
