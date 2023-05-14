@@ -41,6 +41,8 @@ if (rex::isBackend()) {
     rex_view::addCssFile($addon->getAssetsUrl('statistics.css'));
 
     rex_view::addJsFile($addon->getAssetsUrl('echarts.min.js'));
+    rex_view::addJsFile($addon->getAssetsUrl('dark.js'));
+    rex_view::addJsFile($addon->getAssetsUrl('shine.js'));
     rex_view::addJsFile($addon->getAssetsUrl('datatables.min.js'));
 
     rex_view::addJsFile($addon->getAssetsUrl('statistics.js'));

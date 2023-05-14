@@ -82,6 +82,12 @@ echo $fragment2->parse('core/page/section.php');
 
 
 <script>
+    if (rex.theme == "dark" || window.matchMedia('(prefers-color-scheme: dark)').matches && rex.theme == "auto") {
+        var theme = "dark";
+    } else {
+        var theme = "shine";
+    }
+
     var config = {
         responsive: true,
         toImageButtonOptions: {
@@ -108,7 +114,7 @@ echo $fragment2->parse('core/page/section.php');
 
     if ($request_url != '' && !$delete_entry) {
         $show_toolbox = rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false';
-        echo "var chart_details = echarts.init(document.getElementById('chart_details'));
+        echo "var chart_details = echarts.init(document.getElementById('chart_details'), theme);
         var chart_details_option = {
             title: {},
             tooltip: {

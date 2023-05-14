@@ -86,7 +86,13 @@ echo $fragment->parse('core/page/section.php');
 
 
 <script>
-    var chart_visits_per_page = echarts.init(document.getElementById('chart_visits_per_page'));
+    if (rex.theme == "dark" || window.matchMedia('(prefers-color-scheme: dark)').matches && rex.theme == "auto") {
+        var theme = "dark";
+    } else {
+        var theme = "shine";
+    }
+
+    var chart_visits_per_page = echarts.init(document.getElementById('chart_visits_per_page'), theme);
     var chart_visits_per_page_option = {
         title: {},
         tooltip: {
@@ -139,7 +145,7 @@ echo $fragment->parse('core/page/section.php');
 
     if ($request_url != '' && !$ignore_page) {
         $show_toolbox = rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false';
-        echo "var chart_details = echarts.init(document.getElementById('chart_details'));
+        echo "var chart_details = echarts.init(document.getElementById('chart_details'), theme);
         var chart_details_option = {
             title: {},
             tooltip: {

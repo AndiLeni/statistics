@@ -178,7 +178,13 @@ echo $fragment->parse('core/page/section.php');
 
 
 <script>
-    var chart_visits_daily = echarts.init(document.getElementById('chart_visits_daily'));
+    if (rex.theme == "dark" || window.matchMedia('(prefers-color-scheme: dark)').matches && rex.theme == "auto") {
+        var theme = "dark";
+    } else {
+        var theme = "shine";
+    }
+
+    var chart_visits_daily = echarts.init(document.getElementById('chart_visits_daily'), theme);
     var chart_visits_daily_option = {
         title: {},
         tooltip: {
@@ -236,7 +242,7 @@ echo $fragment->parse('core/page/section.php');
 
 
 
-    var chart_visits_monthly = echarts.init(document.getElementById('chart_visits_monthly'));
+    var chart_visits_monthly = echarts.init(document.getElementById('chart_visits_monthly'), theme);
     var chart_visits_monthly_option = {
         title: {},
         tooltip: {
@@ -286,7 +292,7 @@ echo $fragment->parse('core/page/section.php');
 
 
 
-    var chart_visits_yearly = echarts.init(document.getElementById('chart_visits_yearly'));
+    var chart_visits_yearly = echarts.init(document.getElementById('chart_visits_yearly'), theme);
     var chart_visits_yearly_option = {
         title: {},
         tooltip: {
@@ -336,7 +342,7 @@ echo $fragment->parse('core/page/section.php');
 
 
 
-    var visits_heatmap = echarts.init(document.getElementById('chart_visits_heatmap'));
+    var visits_heatmap = echarts.init(document.getElementById('chart_visits_heatmap'), theme);
     var option_heatmap = {
         title: {},
         tooltip: {
@@ -404,7 +410,7 @@ echo $fragment->parse('core/page/section.php');
 
 
 
-    var chart_browser = echarts.init(document.getElementById('chart_browser'));
+    var chart_browser = echarts.init(document.getElementById('chart_browser'), theme);
     var chart_browser_option = {
         title: {},
         tooltip: {
@@ -452,7 +458,7 @@ echo $fragment->parse('core/page/section.php');
 
 
 
-    var chart_browsertype = echarts.init(document.getElementById('chart_browsertype'));
+    var chart_browsertype = echarts.init(document.getElementById('chart_browsertype'), theme);
     var chart_browsertype_option = {
         title: {},
         tooltip: {
@@ -500,7 +506,7 @@ echo $fragment->parse('core/page/section.php');
 
 
 
-    var chart_os = echarts.init(document.getElementById('chart_os'));
+    var chart_os = echarts.init(document.getElementById('chart_os'), theme);
     var chart_os_option = {
         title: {},
         tooltip: {
@@ -548,7 +554,7 @@ echo $fragment->parse('core/page/section.php');
 
 
 
-    var chart_brand = echarts.init(document.getElementById('chart_brand'));
+    var chart_brand = echarts.init(document.getElementById('chart_brand'), theme);
     var chart_brand_option = {
         title: {},
         tooltip: {
@@ -596,7 +602,7 @@ echo $fragment->parse('core/page/section.php');
 
 
 
-    var chart_model = echarts.init(document.getElementById('chart_model'));
+    var chart_model = echarts.init(document.getElementById('chart_model'), theme);
     var chart_model_option = {
         title: {},
         tooltip: {
@@ -644,7 +650,7 @@ echo $fragment->parse('core/page/section.php');
 
 
 
-    var chart_weekday = echarts.init(document.getElementById('chart_weekday'));
+    var chart_weekday = echarts.init(document.getElementById('chart_weekday'), theme);
     var chart_weekday_option = {
         title: {},
         tooltip: {
@@ -707,7 +713,7 @@ echo $fragment->parse('core/page/section.php');
 
 
 
-    var chart_hour = echarts.init(document.getElementById('chart_hour'));
+    var chart_hour = echarts.init(document.getElementById('chart_hour'), theme);
     var chart_hour_option = {
         title: {},
         tooltip: {
