@@ -1,19 +1,11 @@
 <?php
 
-namespace AndiLeni\Statistics;
-
-use rex;
-use rex_addon;
-use rex_extension;
-use rex_sql;
-use InvalidArgumentException;
-use rex_sql_exception;
 
 /**
  * Media Manager Effect to provide a method to log specific media files
  *
  */
-class rex_effect_stats_mm extends \rex_effect_abstract
+class rex_effect_stats_mm extends rex_effect_abstract
 {
 
     /**

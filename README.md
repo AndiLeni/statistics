@@ -57,6 +57,8 @@ Es können folgende Einstellungen getroffen werden:
 Falls man im Frontend einen Besucher-Counter einfügen möchte klappt das mittles der folgenden Modul-Ausgabe:
 ```php
 <?php
+use AndiLeni\Statistics\stats_visitor_counter;
+
 $counter = new stats_visitor_counter();
 ?>
 
@@ -66,8 +68,6 @@ Der Ausgegebene Text kann dann nach Belieben gestaltet werden.
 
 
 ### Download-Counter:
-> Benötigt das Plugin "Media"  
-
 1. Im Media Manager einen neuen Medientyp anlegen mit dem Namen "log"
 2. Zu diesem den Effekt "Datei in Statistik loggen" hinzufügen
 3. Ein Modul anlegen  
@@ -108,7 +108,6 @@ Der Ausgegebene Text kann dann nach Belieben gestaltet werden.
 
 ### Kampagnen-Tracking:
 Ziel: Das Klicken eines Links im Frontend soll erfasst werden.
-> Benötigt das Plugin "API"
 
 1. Ein Modul anlegen
    Eingabe:
