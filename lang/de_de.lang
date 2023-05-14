@@ -109,7 +109,7 @@ statistics_media_delete_stats = Statistiken löschen
 statistics_media_delete_media_confirm = Wirklich die gesamte Media-Statistik löschen?
 statistics_media_delete_media = Alle Media-Statistik löschen
 
-statistics_api_campaigns = Kampagnen
+statistics_api_events = Events
 statistics_api_settings = Einstellungen
 statistics_api_filter = Filtern
 statistics_api_search_for = Suche nach:

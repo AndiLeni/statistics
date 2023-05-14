@@ -22,7 +22,7 @@ page:
             icon: rex-icon fa-image
         campaigns:
             icon: rex-icon fa-bullhorn
-            title: "translate:statistics_api_campaigns"
+            title: "translate:statistics_api_events"
         settings:
             title: "translate:statistics_settings"
             perm: statistics[settings]

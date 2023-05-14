@@ -111,7 +111,7 @@ statistics_media_delete_stats = Delete statistics.
 statistics_media_delete_media_confirm = Really delete all media statistics?
 statistics_media_delete_media = Delete all media statistics
 
-statistics_api_campaigns = Campaigns
+statistics_api_events = Events
 statistics_api_settings = Settings
 statistics_api_filter = Filter
 statistics_api_search_for = Search for:
