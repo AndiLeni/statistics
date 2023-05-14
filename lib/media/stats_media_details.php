@@ -24,22 +24,6 @@ class stats_media_details
     }
 
 
-    /**
-     * 
-     * 
-     * @return int 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
-     */
-    public function get_page_total(): int
-    {
-        $details_page_total = rex_sql::factory();
-        $details_page_total->setQuery('SELECT SUM(count) as "count" FROM ' . rex::getTable('pagestats_media') . ' WHERE url = :url', ['url' => $this->url]);
-        $details_page_total = $details_page_total->getValue('count') ? intval($details_page_total->getValue('count')) : 0;
-
-        return $details_page_total;
-    }
-
 
     /**
      * 
