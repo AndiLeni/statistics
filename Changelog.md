@@ -1,7 +1,15 @@
 # Changelog
 
 
-## [x.x.x] - xx.xx.xxxx 
+## [x.x.x] - xx.xx.xxxx
+
+
+## [3.0.0beta1] - 17.05.2023 
+- the addon now uses namespaces, so you have to check for errors after an update, if methods of this addon are used in your own code
+- darkmode for charts added
+- plugins are now directly integrated into the main addon
+- renamed "Kampagnen" to "API" to better express what this feature is doing
+- removed yrewrite as a dependency
 
 
 ## [2.7.0] - 10.05.2023
