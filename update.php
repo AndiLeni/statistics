@@ -7,13 +7,13 @@ $addon = rex_addon::get('statistics');
 
 // copy old config settings
 if (rex_config::has("statistics/api", "statistics_api_enable")) {
-    rex_config::set("statistics_api_enable", rex_config::get("statistics/api", "statistics_api_enable"));
+    rex_config::set("statistics", "statistics_api_enable", rex_config::get("statistics/api", "statistics_api_enable"));
 }
 
 if (rex_config::has("statistics/media", "statistics_media_log_all")) {
-    rex_config::set("statistics_media_log_all", rex_config::get("statistics/media", "statistics_media_log_all"));
+    rex_config::set("statistics", "statistics_media_log_all", rex_config::get("statistics/media", "statistics_media_log_all"));
 }
 
 if (rex_config::has("statistics/media", "statistics_media_log_mm")) {
-    rex_config::set("statistics_media_log_mm", rex_config::get("statistics/media", "statistics_media_log_mm"));
+    rex_config::set("statistics", "statistics_media_log_mm", rex_config::get("statistics/media", "statistics_media_log_mm"));
 }
