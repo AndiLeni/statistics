@@ -4,6 +4,9 @@
 ## [x.x.x] - xx.xx.xxxx
 
 
+## [3.0.0beta2] - 19.05.2023
+
+
 ## [3.0.0beta1] - 17.05.2023 
 - the addon now uses namespaces, so you have to check for errors after an update, if methods of this addon are used in your own code
 - darkmode for charts added
