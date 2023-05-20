@@ -148,6 +148,9 @@ $fm2->addOption($addon->i18n('statistics_media_yes'), 1);
 $fm2->addOption($addon->i18n('statistics_media_no'), 0);
 $fm2->setNotice($addon->i18n('statistics_media_log_mm_note'));
 
+$note = rex_view::warning("Nur eine dieser beiden Optionen aktivieren, sonst werden Aufrufe doppelt gezählt.");
+$form->addRawField($note);
+
 
 // api
 $form->addFieldset("API");
