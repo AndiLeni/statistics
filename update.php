@@ -18,5 +18,6 @@ if (rex_config::has("statistics/media", "statistics_media_log_mm")) {
     rex_config::set("statistics", "statistics_media_log_mm", rex_config::get("statistics/media", "statistics_media_log_mm"));
 }
 
-// remove plugins from config
+// remove plugins
+rex_dir::delete(rex_path::addon('statistics', 'plugins'));
 rex_package_manager::synchronizeWithFileSystem();
