@@ -45,15 +45,27 @@ if (rex::isFrontend()) {
     } else {
         $statistics_has_backend_login = false;
     }
+
+    rex_login::startSession();
+
+    $token = rex_session("statistics_token", "string", null);
+
+    if ($token === null) {
+        $bytes = random_bytes(20);
+        $token = bin2hex($bytes);
+
+        rex_set_session('statistics_token', $token);
+    }
 } else {
     $statistics_has_backend_login = true;
+    $token = "";
 }
 
 
 
 // NOTICE: EP 'RESPONSE_SHUTDOWN' is not called on madia request
 // do actions after content is delivered
-rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_backend_login) {
+rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_backend_login, $token) {
 
     if (rex::isFrontend()) {
 
@@ -68,11 +80,37 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
         }
 
 
+        // domain
+        try {
+            $domain = rex::getRequest()->getHost();
+        } catch (SuspiciousOperationException $e) {
+            $domain = 'undefined';
+        }
+
+        // page url
+        $url = $domain . rex::getRequest()->getRequestUri();
+
+
+
+        if (rex_config::get("statistics", "statistics_rec_session_stats", false) === true && rex::getRequest()->getRequestUri() != "/favicon.ico") {
+            $sql = rex_sql::factory();
+            $sql->setQuery("INSERT INTO " . rex::getTable('pagestats_visitduration') . " (token, lastvisit, duration) VALUES (:token, NOW(), 0) ON DUPLICATE KEY UPDATE duration = duration + (NOW() - lastvisit), lastvisit = NOW();", [":token" => $token]);
+
+            // last visited page
+            $sql = rex_sql::factory();
+            $sql->setQuery("INSERT INTO " . rex::getTable('pagestats_lastpage') . " (token, url) VALUES (:token, :url) ON DUPLICATE KEY UPDATE url = VALUES(url);", [":token" => $token, ":url" => $url]);
+
+            // number pages visited
+            $sql = rex_sql::factory();
+            $sql->setQuery("INSERT INTO " . rex::getTable('pagestats_pagecount') . " (token, count) VALUES (:token, 1) ON DUPLICATE KEY UPDATE count = count + 1;", [":token" => $token]);
+        }
+
+
         $response_code = rex_response::getStatus();
 
 
         // check responsecode and if non-200 requests should be logged
-        if ($response_code == '200 OK' || $log_all) {
+        if ($response_code == rex_response::HTTP_OK || $log_all) {
 
 
             // get ip from visitor, set to 0.0.0.0 when ip can not be determined
@@ -80,15 +118,6 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
             $clientAddress = $whip->getValidIpAddress();
             $clientAddress = $clientAddress ? $clientAddress : '0.0.0.0';
 
-            // domain
-            try {
-                $domain = rex::getRequest()->getHost();
-            } catch (SuspiciousOperationException $e) {
-                $domain = 'undefined';
-            }
-
-            // page url
-            $url = $domain . rex::getRequest()->getRequestUri();
 
             // optionally ignore url parameters
             if ($addon->getConfig('statistics_ignore_url_params')) {

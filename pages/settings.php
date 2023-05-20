@@ -126,6 +126,13 @@ $field8->addOption($addon->i18n('statistics_no'), 0);
 $field8->setNotice('Aktivieren, um Seitenaufrufe durch eingeloggte User zu verwerfen.');
 
 
+$field = $form->addRadioField('statistics_rec_session_stats');
+$field->setLabel('Sitzungs Statistiken erfassen');
+$field->addOption($addon->i18n('statistics_yes'), 1);
+$field->addOption($addon->i18n('statistics_no'), 0);
+$field->setNotice('Aktivieren, um die Statistiken "Besuchsdauer", "Ausstiegsseite" und "Anzahl besuchte Seiten" zu erfassen');
+
+
 // media
 $form->addFieldset("Media");
 
