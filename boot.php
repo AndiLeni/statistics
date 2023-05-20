@@ -1,39 +1,10 @@
 <?php
 
-use AndiLeni\Statistics\rex_dashboard_browser;
-use AndiLeni\Statistics\rex_dashboard_browsertype;
-use AndiLeni\Statistics\rex_dashboard_hour;
-use AndiLeni\Statistics\rex_dashboard_os;
-use AndiLeni\Statistics\rex_dashboard_views_total;
 use AndiLeni\Statistics\stats_media_request;
 use AndiLeni\Statistics\stats_visit;
-use AndiLeni\Statistics\stats_weekday_dashboard;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Vectorface\Whip\Whip;
 
-
-
-// dashboard addon integration
-if (rex::isBackend() && rex_addon::get('dashboard')->isAvailable()) {
-    rex_dashboard::addItem(
-        rex_dashboard_views_total::factory('stats_views_total', 'Statistik | Seitenaufrufe')
-    );
-    rex_dashboard::addItem(
-        rex_dashboard_browser::factory('stats_browser', 'Statistik | Browser')->setDonut()
-    );
-    rex_dashboard::addItem(
-        rex_dashboard_browsertype::factory('stats_browsertype', 'Statistik | Gerätetypen')->setDonut()
-    );
-    rex_dashboard::addItem(
-        rex_dashboard_os::factory('stats_os', 'Statistik | Betriebssysteme')->setDonut()
-    );
-    rex_dashboard::addItem(
-        rex_dashboard_hour::factory('stats_hour', 'Statistik | Seitenaufrufe: Uhrzeiten')
-    );
-    rex_dashboard::addItem(
-        stats_weekday_dashboard::factory('stats_weekday', 'Statistik | Seitenaufrufe: Wochentage')
-    );
-}
 
 
 if (rex::isBackend()) {
