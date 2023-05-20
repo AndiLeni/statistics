@@ -9,8 +9,10 @@ use AndiLeni\Statistics\Browsertype;
 use AndiLeni\Statistics\Hour;
 use AndiLeni\Statistics\Model;
 use AndiLeni\Statistics\OS;
+use AndiLeni\Statistics\Pagecount;
 use AndiLeni\Statistics\Weekday;
 use AndiLeni\Statistics\Summary;
+use AndiLeni\Statistics\VisitDuration;
 
 $addon = rex_addon::get('statistics');
 
@@ -66,6 +68,12 @@ $weekday_data = $weekday->getData();
 
 $hour = new Hour();
 $hour_data = $hour->getData();
+
+$pagecount = new Pagecount();
+$pagecount_data = $pagecount->getChartData();
+
+$visitduration = new VisitDuration();
+$visitduration_data = $visitduration->getChartData();
 
 
 
@@ -165,6 +173,17 @@ $fragment->setVar('chart', '<div id="chart_hour" style="width: 100%;height:500px
 $fragment->setVar('table', $hour->getList(), false);
 echo $fragment->parse('data_vertical.php');
 
+$fragment = new rex_fragment();
+$fragment->setVar('title', "Anzahl besuchter Seiten in einer Sitzung");
+$fragment->setVar('chart', '<div id="chart_pagecount" style="width: 100%;height:500px"></div>', false);
+$fragment->setVar('table', $pagecount->getList(), false);
+echo $fragment->parse('data_vertical.php');
+
+$fragment = new rex_fragment();
+$fragment->setVar('title', "Besuchsdauer");
+$fragment->setVar('chart', '<div id="chart_visitduration" style="width: 100%;height:500px"></div>', false);
+$fragment->setVar('table', $visitduration->getList(), false);
+echo $fragment->parse('data_vertical.php');
 
 
 
@@ -785,6 +804,130 @@ echo $fragment->parse('core/page/section.php');
         }]
     };
     chart_hour.setOption(chart_hour_option);
+
+
+    var chart_pagecount = echarts.init(document.getElementById('chart_pagecount'), theme);
+    var chart_pagecount_option = {
+        title: {},
+        tooltip: {
+            trigger: 'axis',
+            formatter: "{b} Seiten besucht: <b>{c} mal</b>",
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            containLabel: true,
+            left: '3%',
+            right: '3%',
+            bottom: '3%',
+        },
+        xAxis: [{
+            type: 'category',
+            data: <?= json_encode($pagecount_data['values']) ?>,
+            axisTick: {
+                alignWithLabel: true
+            }
+        }],
+        yAxis: [{
+            type: 'value'
+        }],
+        toolbox: {
+            show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
+            orient: 'vertical',
+            top: '10%',
+            feature: {
+                dataZoom: {
+                    yAxisIndex: "none"
+                },
+                dataView: {
+                    readOnly: false
+                },
+                magicType: {
+                    type: ["line", "bar"]
+                },
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        series: [{
+            type: 'bar',
+            data: <?php echo json_encode($pagecount_data['labels']) ?>,
+            label: {
+                show: false,
+            },
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }]
+    };
+    chart_pagecount.setOption(chart_pagecount_option);
+
+
+    var chart_visitduration = echarts.init(document.getElementById('chart_visitduration'), theme);
+    var chart_visitduration_option = {
+        title: {},
+        tooltip: {
+            trigger: 'axis',
+            formatter: "{b} Seiten besucht: <b>{c} mal</b>",
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            containLabel: true,
+            left: '3%',
+            right: '3%',
+            bottom: '3%',
+        },
+        xAxis: [{
+            type: 'category',
+            data: <?= json_encode($visitduration_data['values']) ?>,
+            axisTick: {
+                alignWithLabel: true
+            }
+        }],
+        yAxis: [{
+            type: 'value'
+        }],
+        toolbox: {
+            show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
+            orient: 'vertical',
+            top: '10%',
+            feature: {
+                dataZoom: {
+                    yAxisIndex: "none"
+                },
+                dataView: {
+                    readOnly: false
+                },
+                magicType: {
+                    type: ["line", "bar"]
+                },
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        series: [{
+            type: 'bar',
+            data: <?php echo json_encode($visitduration_data['labels']) ?>,
+            label: {
+                show: false,
+            },
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }]
+    };
+    chart_visitduration.setOption(chart_visitduration_option);
 
 
     // resize visits chart when tabs change
