@@ -13,7 +13,7 @@ use rex_sql_exception;
  * Main class to handle saving of media requests
  *
  */
-class stats_media_request
+class MediaRequest
 {
 
     // media urls, for media detection
@@ -106,7 +106,7 @@ class stats_media_request
      * 
      * @return bool 
      */
-    public function is_media(): bool
+    public function isMedia(): bool
     {
         foreach (self::MEDIA_URLS as $el) {
             if (str_starts_with($this->url, $el)) {
@@ -132,7 +132,7 @@ class stats_media_request
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
      */
-    public function save_media(): void
+    public function save(): void
     {
         $sql = rex_sql::factory();
         $result = $sql->setQuery('UPDATE ' . rex::getTable('pagestats_media') . ' SET count = count + 1 WHERE url = :url AND date = :date', ['url' => $this->url, 'date' => $this->datetime_now->format('Y-m-d')]);

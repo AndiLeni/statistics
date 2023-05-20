@@ -15,21 +15,21 @@ use rex_exception;
  * Helper class for the backend page "pages"
  * 
  */
-class pagesHelper
+class Pages
 {
 
     private rex_addon $addon;
-    private filterDateHelper $filter_date_helper;
+    private DateFilter $filter_date_helper;
 
 
     /**
      * 
      * 
-     * @param filterDateHelper $filter_date_helper 
+     * @param DateFilter $filter_date_helper 
      * @return void 
      * @throws InvalidArgumentException 
      */
-    public function __construct(filterDateHelper $filter_date_helper)
+    public function __construct(DateFilter $filter_date_helper)
     {
         $this->addon = rex_addon::get('statistics');
         $this->filter_date_helper = $filter_date_helper;
@@ -43,7 +43,7 @@ class pagesHelper
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function sum_per_page(): array
+    public function sumPerPage(): array
     {
         $sql = rex_sql::factory();
 
@@ -85,7 +85,7 @@ class pagesHelper
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function ignore_page(string $request_url): int
+    public function ignorePage(string $request_url): int
     {
         $ignored_paths = $this->addon->getConfig('statistics_ignored_paths');
         if ($ignored_paths == "") {
@@ -117,7 +117,7 @@ class pagesHelper
      * @throws InvalidArgumentException 
      * @throws rex_exception 
      */
-    public function get_list(): string
+    public function getList(): string
     {
         $list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between "' . $this->filter_date_helper->date_start->format('Y-m-d') . '" and "' . $this->filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC, url ASC', 10000);
 

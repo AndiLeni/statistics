@@ -1,6 +1,6 @@
 <?php
 
-use AndiLeni\Statistics\filterDateHelper;
+use AndiLeni\Statistics\DateFilter;
 
 $addon = rex_addon::get('statistics');
 
@@ -9,7 +9,7 @@ $request_date_start = htmlspecialchars_decode(rex_request('date_start', 'string'
 $request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''));
 $request_ref = htmlspecialchars_decode(rex_request('referer', 'string', ''));
 
-$filter_date_helper = new filterDateHelper($request_date_start, $request_date_end, 'pagestats_referer');
+$filter_date_helper = new DateFilter($request_date_start, $request_date_end, 'pagestats_referer');
 
 
 

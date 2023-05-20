@@ -12,40 +12,38 @@ use rex_sql_exception;
 use rex_exception;
 
 /**
- * Handles the device-"model" data for statistics
+ * Handles the "brand" data for statistics
  *
  */
-class stats_model
+class Brand
 {
-
-
     /**
-     * 
-     * 
-     * @return rex_sql 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return rex_sql
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      */
-    private function get_sql(): rex_sql
+    private function getSql(): rex_sql
     {
         $sql = rex_sql::factory();
 
-        $result = $sql->setQuery('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' WHERE type = "model" ORDER BY count DESC');
+        $result = $sql->setQuery('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' WHERE type = "brand" ORDER BY count DESC');
 
         return $result;
     }
 
 
     /**
-     * 
-     * 
-     * @return array 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
+     *
+     *
+     * @return array
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
      */
-    public function get_data(): array
+    public function getData(): array
     {
-        $sql = $this->get_sql();
+        $sql = $this->getSql();
 
         $data = [];
 
@@ -61,18 +59,17 @@ class stats_model
 
 
     /**
-     * 
-     * 
-     * @return string 
-     * @throws InvalidArgumentException 
-     * @throws rex_exception 
+     *
+     *
+     * @return string
+     * @throws InvalidArgumentException
+     * @throws rex_exception
      */
-    public function get_list(): string
-
+    public function getList(): string
     {
         $addon = rex_addon::get('statistics');
 
-        $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "model" ORDER BY count DESC', 10000);
+        $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "brand" ORDER BY count DESC', 10000);
 
         $list->setColumnLabel('name', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));

@@ -22,7 +22,7 @@ use Exception;
  * Performs checks to decide if visit should be ignored
  *
  */
-class stats_visit
+class Visit
 {
 
     const IGNORE_WHEN_STARTS = [
@@ -100,7 +100,7 @@ class stats_visit
      * @return bool 
      * @throws InvalidArgumentException 
      */
-    public function ignore_visit(): bool
+    public function shouldIgnore(): bool
     {
         // check if visit should be ignored
         $ignored_paths = $this->addon->getConfig('statistics_ignored_paths');
@@ -219,7 +219,7 @@ class stats_visit
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function persist_visitor(): void
+    public function persistVisitor(): void
     {
         $sql = rex_sql::factory();
 
@@ -238,7 +238,7 @@ class stats_visit
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
      */
-    public function save_visit(): bool
+    public function shouldSaveVisit(): bool
     {
         $save_visit = true;
 
@@ -285,7 +285,7 @@ class stats_visit
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
      */
-    public function save_visitor(): bool
+    public function shouldSaveVisitor(): bool
     {
         $save_visitor = true;
 
@@ -327,7 +327,7 @@ class stats_visit
      * @return void
      * @throws Exception
      */
-    public function parse_ua(): void
+    public function parseUA(): void
     {
         $cache = new FilesystemAdapter('', 0, rex_path::addonCache('statistics', 'devicedetector'));
         $clientHints = ClientHints::factory($_SERVER);
@@ -346,7 +346,7 @@ class stats_visit
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
      */
-    public function save_bot(): void
+    public function saveBot(): void
     {
         $botInfo = $this->DeviceDetector->getBot();
 
@@ -371,7 +371,7 @@ class stats_visit
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
      */
-    public function save_referer(string $referer): void
+    public function saveReferer(string $referer): void
     {
         $sql = rex_sql::factory();
 
@@ -387,7 +387,7 @@ class stats_visit
      * 
      * @return bool 
      */
-    public function is_bot(): bool
+    public function isBot(): bool
     {
         return $this->DeviceDetector->isBot();
     }
@@ -399,7 +399,7 @@ class stats_visit
      * @param string $url 
      * @return string 
      */
-    public static function remove_url_parameters(string $url): string
+    public static function removeUrlParameters(string $url): string
     {
         $url = strtok($url, '?');
 

@@ -6,7 +6,7 @@ use rex;
 use rex_sql;
 use InvalidArgumentException;
 use rex_sql_exception;
-use AndiLeni\Statistics\filterDateHelper;
+use AndiLeni\Statistics\DateFilter;
 use DateInterval;
 use DatePeriod;
 use DateTime;
@@ -15,20 +15,20 @@ use DateTime;
  * Used on the page "media.php" to handle and retreive data for a single media url
  *
  */
-class stats_media_details
+class MediaDetails
 {
     private string $url;
-    private filterDateHelper $filter_date_helper;
+    private DateFilter $filter_date_helper;
 
 
     /**
      * 
      * 
      * @param string $url 
-     * @param filterDateHelper $filterDateHelper 
+     * @param DateFilter $filterDateHelper 
      * @return void 
      */
-    public function __construct(string $url, filterDateHelper $filter_date_helper)
+    public function __construct(string $url, DateFilter $filter_date_helper)
     {
         $this->url = $url;
         $this->filter_date_helper = $filter_date_helper;
@@ -43,7 +43,7 @@ class stats_media_details
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function get_sum_per_day(): array
+    public function getSumPerDay(): array
     {
         $sql = rex_sql::factory();
 

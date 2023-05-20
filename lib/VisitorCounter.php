@@ -12,36 +12,22 @@ use rex_sql_exception;
  * F.e. to be used in an old-fashioned Visitor-Counter
  *
  */
-class stats_visitor_counter
+class VisitorCounter
 {
 
 
     /**
      * 
      * 
-     * @return rex_sql 
+     * @return string 
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    private function get_sql(): rex_sql
+    public static function getText(): string
     {
         $sql = rex_sql::factory();
         $result = $sql->setQuery('select sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_day'));
-
-        return $result;
-    }
-
-    /**
-     *
-     *
-     * @api
-     * @return string
-     * @throws rex_sql_exception
-     */
-    public function get_text(): string
-    {
-        $sql = $this->get_sql();
-        $count = $sql->getValue('count');
+        $count = $result->getValue('count');
 
         return strval($count);
     }

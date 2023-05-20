@@ -12,18 +12,18 @@ use InvalidArgumentException;
 
 class ListData
 {
-    private filterDateHelper $filter_date_helper;
+    private DateFilter $filter_date_helper;
     private rex_addon $addon;
 
 
     /**
      * 
      * 
-     * @param filterDateHelper $filter_date_helper 
+     * @param DateFilter $filter_date_helper 
      * @return void 
      * @throws InvalidArgumentException 
      */
-    public function __construct(filterDateHelper $filter_date_helper)
+    public function __construct(DateFilter $filter_date_helper)
     {
         $this->filter_date_helper = $filter_date_helper;
         $this->addon = rex_addon::get('statistics');
@@ -37,7 +37,7 @@ class ListData
      * @throws InvalidArgumentException 
      * @throws rex_exception 
      */
-    public function get_lists_daily(): rex_fragment
+    public function getListsDaily(): rex_fragment
     {
         $list_dates = rex_list::factory('SELECT date, sum(count) as "count" FROM ' . rex::getTable('pagestats_visits_per_day') . ' where date between "' . $this->filter_date_helper->date_start->format('Y-m-d') . '" and "' . $this->filter_date_helper->date_end->format('Y-m-d') . '" group by date ORDER BY count DESC', 10000);
         $list_dates->setColumnLabel('date', 'Datum');
@@ -83,7 +83,7 @@ class ListData
      * @throws InvalidArgumentException 
      * @throws rex_exception 
      */
-    public function get_lists_monthly(): rex_fragment
+    public function getListsMonthly(): rex_fragment
     {
         $list_dates = rex_list::factory('SELECT DATE_FORMAT(date,"%m.%Y") as "month", IFNULL(sum(count),0) as "count" FROM ' . rex::getTable('pagestats_visits_per_day') . ' GROUP BY month ORDER BY date DESC', 10000);
         $list_dates->setColumnLabel('month', 'Monat');
@@ -129,7 +129,7 @@ class ListData
      * @throws InvalidArgumentException 
      * @throws rex_exception 
      */
-    public function get_lists_yearly(): rex_fragment
+    public function getListsYearly(): rex_fragment
     {
         $list_dates = rex_list::factory('SELECT DATE_FORMAT(date,"%Y") as "year", IFNULL(sum(count),0) as "count" FROM ' . rex::getTable('pagestats_visits_per_day') . ' GROUP BY year ORDER BY count DESC', 10000);
         $list_dates->setColumnLabel('year', 'Jahr');

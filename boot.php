@@ -1,7 +1,7 @@
 <?php
 
-use AndiLeni\Statistics\stats_media_request;
-use AndiLeni\Statistics\stats_visit;
+use AndiLeni\Statistics\MediaRequest;
+use AndiLeni\Statistics\Visit;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Vectorface\Whip\Whip;
 
@@ -92,31 +92,31 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
 
             // optionally ignore url parameters
             if ($addon->getConfig('statistics_ignore_url_params')) {
-                $url = stats_visit::remove_url_parameters($url);
+                $url = Visit::removeUrlParameters($url);
             }
 
             // user agent
             $userAgent = rex_server('HTTP_USER_AGENT', 'string', '');
 
-            $visit = new stats_visit($clientAddress, $url, $userAgent, $domain);
+            $visit = new Visit($clientAddress, $url, $userAgent, $domain);
 
 
             // Track only frontend requests if page url should not be ignored
             // ignore requests with empty user agent
-            if (!rex::isBackend() && $userAgent != '' && !$visit->ignore_visit()) {
+            if (!rex::isBackend() && $userAgent != '' && !$visit->shouldIgnore()) {
 
                 // visit is not a media request, hence either bot or human visitor
 
                 // parse useragent
-                $visit->parse_ua();
+                $visit->parseUA();
 
-                if ($visit->is_bot()) {
+                if ($visit->isBot()) {
 
                     // visitor is a bot
-                    $visit->save_bot();
+                    $visit->saveBot();
                 } else {
 
-                    if ($visit->save_visit()) {
+                    if ($visit->shouldSaveVisit()) {
 
                         // visitor is human
                         // check hash with save_visit, if true then save visit
@@ -127,16 +127,16 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
                             $referer = urldecode($referer);
 
                             if (!str_starts_with($referer, rex::getServer())) {
-                                $visit->save_referer($referer);
+                                $visit->saveReferer($referer);
                             }
                         }
 
 
                         // check if unique visitor
-                        if ($visit->save_visitor()) {
+                        if ($visit->shouldSaveVisitor()) {
 
                             // save visitor
-                            $visit->persist_visitor();
+                            $visit->persistVisitor();
                         }
 
 
@@ -164,11 +164,11 @@ if (rex::isBackend()) {
 
             $url = rex_server('REQUEST_URI', 'string', '');
 
-            $media_request = new stats_media_request($url);
+            $media_request = new MediaRequest($url);
 
-            if ($media_request->is_media()) {
+            if ($media_request->isMedia()) {
 
-                $media_request->save_media();
+                $media_request->save();
             }
         }
     });

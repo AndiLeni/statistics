@@ -16,20 +16,20 @@ use rex_exception;
  * Used on the page "pages.php" to handle and retreive data for a single url in the "details-section"
  *
  */
-class stats_pagedetails
+class PageDetails
 {
     private string $url;
-    private filterDateHelper $filter_date_helper;
+    private DateFilter $filter_date_helper;
 
 
     /**
      * 
      * 
      * @param string $url 
-     * @param filterDateHelper $filterDateHelper 
+     * @param DateFilter $filterDateHelper 
      * @return void 
      */
-    public function __construct(string $url, filterDateHelper $filterDateHelper)
+    public function __construct(string $url, DateFilter $filterDateHelper)
     {
         $this->url = $url;
         $this->filter_date_helper = $filterDateHelper;
@@ -43,7 +43,7 @@ class stats_pagedetails
      * @throws InvalidArgumentException 
      * @throws rex_exception 
      */
-    public function get_list(): string
+    public function getList(): string
     {
         $list = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_visits_per_url') . ' WHERE url = "' . $this->url . '" and date between "' . $this->filter_date_helper->date_start->format('Y-m-d') . '" and "' . $this->filter_date_helper->date_end->format('Y-m-d') . '" ORDER BY count DESC', 10000);
 
@@ -65,7 +65,7 @@ class stats_pagedetails
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function get_page_total(): int
+    public function getPageTotal(): int
     {
         $details_page_total = rex_sql::factory();
 
@@ -84,7 +84,7 @@ class stats_pagedetails
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function get_sum_per_day(): array
+    public function getSumPerDay(): array
     {
         $sql = rex_sql::factory();
 

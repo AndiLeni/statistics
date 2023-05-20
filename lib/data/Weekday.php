@@ -16,7 +16,7 @@ use rex_exception;
  * Handles the "weekday" data for statistics
  *
  */
-class stats_weekday
+class Weekday
 {
 
     private rex_addon $addon;
@@ -41,7 +41,7 @@ class stats_weekday
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    private function get_sql(): rex_sql
+    private function getSql(): rex_sql
     {
         $sql = rex_sql::factory();
 
@@ -58,9 +58,9 @@ class stats_weekday
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function get_data(): array
+    public function getData(): array
     {
-        $sql = $this->get_sql();
+        $sql = $this->getSql();
 
         $data = [
             0 => 0,
@@ -87,7 +87,7 @@ class stats_weekday
      * @throws InvalidArgumentException 
      * @throws rex_exception 
      */
-    public function get_list(): string
+    public function getList(): string
     {
         $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "weekday" ORDER BY count DESC', 10000);
 
@@ -128,34 +128,5 @@ class stats_weekday
         }
 
         return $table;
-    }
-
-
-    /**
-     * 
-     * 
-     * @return array 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
-     */
-    public function get_data_dashboard(): array
-    {
-        $sql = $this->get_sql();
-
-        $data = [
-            0 => 0,
-            1 => 0,
-            2 => 0,
-            3 => 0,
-            4 => 0,
-            5 => 0,
-            6 => 0,
-        ];
-
-        foreach ($sql as $row) {
-            $data[intval($row->getValue('name')) - 1] = $row->getValue('count');
-        }
-
-        return $data;
     }
 }

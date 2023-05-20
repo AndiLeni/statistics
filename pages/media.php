@@ -1,7 +1,7 @@
 <?php
 
-use AndiLeni\Statistics\filterDateHelper;
-use AndiLeni\Statistics\stats_media_details;
+use AndiLeni\Statistics\DateFilter;
+use AndiLeni\Statistics\MediaDetails;
 
 $addon = rex_addon::get('statistics');
 
@@ -13,7 +13,7 @@ $delete_entry = rex_request('delete_entry', 'boolean', false);
 $request_date_start = htmlspecialchars_decode(rex_request('date_start', 'string', ''));
 $request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''));
 
-$filter_date_helper = new filterDateHelper($request_date_start, $request_date_end, 'pagestats_media');
+$filter_date_helper = new DateFilter($request_date_start, $request_date_end, 'pagestats_media');
 
 
 
@@ -45,8 +45,8 @@ if ($request_url != '' && $delete_entry === true) {
 if ($request_url != '' && !$delete_entry) {
     // details section for single campaign
 
-    $pagedetails = new stats_media_details($request_url, $filter_date_helper);
-    $sum_data = $pagedetails->get_sum_per_day();
+    $pagedetails = new MediaDetails($request_url, $filter_date_helper);
+    $sum_data = $pagedetails->getSumPerDay();
 
     $content = '<div id="chart_details" style="height:500px; width:auto"></div>';
 

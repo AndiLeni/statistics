@@ -1,8 +1,8 @@
 <?php
 
-use AndiLeni\Statistics\filterDateHelper;
-use AndiLeni\Statistics\pagesHelper;
-use AndiLeni\Statistics\stats_pagedetails;
+use AndiLeni\Statistics\DateFilter;
+use AndiLeni\Statistics\Pages;
+use AndiLeni\Statistics\PageDetails;
 
 $addon = rex_addon::get('statistics');
 
@@ -14,8 +14,8 @@ $search_string = htmlspecialchars_decode(rex_request('search_string', 'string', 
 $request_date_start = htmlspecialchars_decode(rex_request('date_start', 'string', ''));
 $request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''));
 
-$filter_date_helper = new filterDateHelper($request_date_start, $request_date_end, 'pagestats_visits_per_url');
-$pages_helper = new pagesHelper($filter_date_helper);
+$filter_date_helper = new DateFilter($request_date_start, $request_date_end, 'pagestats_visits_per_url');
+$pages_helper = new Pages($filter_date_helper);
 
 
 
@@ -39,13 +39,13 @@ $filter_fragment->setVar('wts', $filter_date_helper->whole_time_start->format("Y
 <?php
 
 // sum per page, bar chart
-$sum_per_page = $pages_helper->sum_per_page();
+$sum_per_page = $pages_helper->sumPerPage();
 
 
 // check if request is for ignoring a url
 // if yes, add url to addon settings and delete all database entries of this url 
 if ($request_url != '' && $ignore_page === true) {
-    $rows = $pages_helper->ignore_page($request_url);
+    $rows = $pages_helper->ignorePage($request_url);
     echo rex_view::success('Es wurden ' . $rows . ' Einträge gelöscht. Die Url <code>' . $request_url . '</code> wird zukünftig ignoriert.');
 }
 
@@ -54,12 +54,12 @@ if ($request_url != '' && $ignore_page === true) {
 if ($request_url != '' && !$ignore_page) {
     // details section for single page
 
-    $pagedetails = new stats_pagedetails($request_url, $filter_date_helper);
-    $sum_data = $pagedetails->get_sum_per_day();
+    $pagedetails = new PageDetails($request_url, $filter_date_helper);
+    $sum_data = $pagedetails->getSumPerDay();
 
-    $content = '<h4>' . $addon->i18n('statistics_views_total') . ' <b>' . $pagedetails->get_page_total() . '</b></h4><a href="http://' . $request_url . '" target="_blank">' . $request_url . '</a>';
+    $content = '<h4>' . $addon->i18n('statistics_views_total') . ' <b>' . $pagedetails->getPageTotal() . '</b></h4><a href="http://' . $request_url . '" target="_blank">' . $request_url . '</a>';
     $content .= '<div id="chart_details" style="height:500px; width:auto"></div>';
-    $content .= $pagedetails->get_list();
+    $content .= $pagedetails->getList();
 
     $fragment = new rex_fragment();
     $fragment->setVar('class', 'info', false);
@@ -83,7 +83,7 @@ foreach ($domains as $domain) {
 $domain_select .= '</select>';
 $fragment = new rex_fragment();
 $fragment->setVar('title', $addon->i18n('statistics_sum_per_page'));
-$fragment->setVar('body', '<div id="chart_visits_per_page" style="height:500px; width:auto"></div>' . $domain_select . $pages_helper->get_list(), false);
+$fragment->setVar('body', '<div id="chart_visits_per_page" style="height:500px; width:auto"></div>' . $domain_select . $pages_helper->getList(), false);
 echo $fragment->parse('core/page/section.php');
 
 ?>

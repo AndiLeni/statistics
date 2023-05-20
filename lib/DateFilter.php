@@ -14,7 +14,7 @@ use DateTimeImmutable;
  * Helper class for handling date filters on backend pages
  * 
  */
-class filterDateHelper
+class DateFilter
 {
 
     public DateTimeImmutable $date_start;

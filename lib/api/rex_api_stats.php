@@ -1,6 +1,6 @@
 <?php
 
-use AndiLeni\Statistics\stats_campaign_visit;
+use AndiLeni\Statistics\EventRequest;
 use Vectorface\Whip\Whip;
 
 /**
@@ -43,12 +43,12 @@ class rex_api_stats extends rex_api_function
                 // user agent
                 $userAgent = rex_server('HTTP_USER_AGENT', 'string', '');
 
-                $visit = new stats_campaign_visit($clientAddress, $name, $userAgent);
+                $visit = new EventRequest($clientAddress, $name, $userAgent);
 
                 // parse useragent
-                $visit->parse_ua();
+                $visit->parseUA();
 
-                if (!$visit->is_bot() && $visit->save_visit()) {
+                if (!$visit->isBot() && $visit->shouldSave()) {
 
                     $visit->save();
                 }

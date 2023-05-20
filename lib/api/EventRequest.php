@@ -22,7 +22,7 @@ use Exception;
  * Performs checks to decide if visit should be ignored
  *
  */
-class stats_campaign_visit
+class EventRequest
 {
 
 
@@ -60,7 +60,7 @@ class stats_campaign_visit
      * @throws InvalidArgumentException
      * @throws rex_sql_exception
      */
-    public function save_visit()
+    public function shouldSave()
     {
         $hash_string = $this->userAgent . $this->clientIPAddress . $this->name;
         $hash = hash('sha1', $hash_string);
@@ -105,7 +105,7 @@ class stats_campaign_visit
      * @return void
      * @throws Exception
      */
-    public function parse_ua(): void
+    public function parseUA(): void
     {
         $cache = new FilesystemAdapter('', 0, rex_path::addonCache('statistics', 'devicedetector'));
         $clientHints = ClientHints::factory($_SERVER);
@@ -144,7 +144,7 @@ class stats_campaign_visit
      * 
      * @return bool 
      */
-    public function is_bot(): bool
+    public function isBot(): bool
     {
         return $this->DeviceDetector->isBot();
     }

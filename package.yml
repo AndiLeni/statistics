@@ -20,7 +20,7 @@ page:
         media:
             title: "translate:statistics_media"
             icon: rex-icon fa-image
-        campaigns:
+        events:
             icon: rex-icon fa-bullhorn
             title: "translate:statistics_api_events"
         settings:

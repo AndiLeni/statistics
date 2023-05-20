@@ -8,19 +8,19 @@ use rex_sql_exception;
 use InvalidArgumentException;
 
 
-class StatsOverview
+class Summary
 {
 
-    private filterDateHelper $filter_date_helper;
+    private DateFilter $filter_date_helper;
 
 
     /**
      * 
      * 
-     * @param filterDateHelper $filter_date_helper 
+     * @param DateFilter $filter_date_helper 
      * @return void 
      */
-    public function __construct(filterDateHelper $filter_date_helper)
+    public function __construct(DateFilter $filter_date_helper)
     {
         $this->filter_date_helper = $filter_date_helper;
     }
@@ -33,7 +33,7 @@ class StatsOverview
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function get_overview_data(): array
+    public function getSummaryData(): array
     {
 
         $sql = rex_sql::factory();

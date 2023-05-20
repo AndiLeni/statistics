@@ -2,6 +2,7 @@
 
 namespace AndiLeni\Statistics;
 
+use AndiLeni\Statistics\DateFilter;
 use DateInterval;
 use DatePeriod;
 use DateTime;
@@ -14,10 +15,10 @@ use InvalidArgumentException;
  * Used on the page "campaigns.php" to handle and retreive data for a single api-request
  *
  */
-class stats_campaign_details
+class EventDetails
 {
     private string $name;
-    private filterDateHelper $filterDateHelper;
+    private DateFilter $filterDateHelper;
 
 
 
@@ -25,10 +26,10 @@ class stats_campaign_details
      * 
      * 
      * @param string $name 
-     * @param filterDateHelper $filterDateHelper 
+     * @param DateFilter $filterDateHelper 
      * @return void 
      */
-    public function __construct(string $name, filterDateHelper $filterDateHelper)
+    public function __construct(string $name, DateFilter $filterDateHelper)
     {
         $this->name = $name;
         $this->filterDateHelper = $filterDateHelper;
@@ -42,7 +43,7 @@ class stats_campaign_details
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function get_sum_per_day(): array
+    public function getSumPerDay(): array
     {
         $sql = rex_sql::factory();
 

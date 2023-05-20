@@ -15,7 +15,7 @@ use rex_exception;
  * Handles the "hour" data for statistics
  *
  */
-class stats_hour
+class Hour
 {
 
     /**
@@ -25,7 +25,7 @@ class stats_hour
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    private function get_sql(): rex_sql
+    private function getSql(): rex_sql
     {
         $sql = rex_sql::factory();
 
@@ -42,9 +42,9 @@ class stats_hour
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function get_data(): array
+    public function getData(): array
     {
-        $sql = $this->get_sql();
+        $sql = $this->getSql();
 
         $hours = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0, 8 => 0, 9 => 0, 10 => 0, 11 => 0, 12 => 0, 13 => 0, 14 => 0, 15 => 0, 16 => 0, 17 => 0, 18 => 0, 19 => 0, 20 => 0, 21 => 0, 22 => 0, 23 => 0];
 
@@ -63,7 +63,7 @@ class stats_hour
      * @throws InvalidArgumentException 
      * @throws rex_exception 
      */
-    public function get_list(): string
+    public function getList(): string
     {
         $addon = rex_addon::get('statistics');
 
@@ -89,26 +89,5 @@ class stats_hour
         }
 
         return $table;
-    }
-
-
-    /**
-     * 
-     * 
-     * @return array 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
-     */
-    public function get_data_dashboard(): array
-    {
-        $sql = $this->get_sql();
-
-        $hours = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0, 8 => 0, 9 => 0, 10 => 0, 11 => 0, 12 => 0, 13 => 0, 14 => 0, 15 => 0, 16 => 0, 17 => 0, 18 => 0, 19 => 0, 20 => 0, 21 => 0, 22 => 0, 23 => 0];
-
-        foreach ($sql as $row) {
-            $hours[intval($row->getValue('name'))] = $row->getValue('count');
-        }
-
-        return $hours;
     }
 }

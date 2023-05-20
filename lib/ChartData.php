@@ -15,7 +15,7 @@ use rex_sql_exception;
 class chartData
 {
 
-    private filterDateHelper $filter_date_helper;
+    private DateFilter $filter_date_helper;
     private rex_addon $addon;
 
 
@@ -23,11 +23,11 @@ class chartData
     /**
      * 
      * 
-     * @param filterDateHelper $filter_date_helper 
+     * @param DateFilter $filter_date_helper 
      * @return void 
      * @throws InvalidArgumentException 
      */
-    public function __construct(filterDateHelper $filter_date_helper)
+    public function __construct(DateFilter $filter_date_helper)
     {
         $this->filter_date_helper = $filter_date_helper;
         $this->addon = rex_addon::get('statistics');
@@ -39,7 +39,7 @@ class chartData
      * 
      * @return array 
      */
-    private function get_labels(): array
+    private function getLabels(): array
     {
         // modify end date, because sql includes start and end, php ommits end
         $period = new DatePeriod(
@@ -64,15 +64,15 @@ class chartData
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function get_main_chart_data(): array
+    public function getMainChartData(): array
     {
-        $data_visits = $this->get_visits_per_day();
+        $data_visits = $this->getVisitsPerDay();
 
-        $data_visitors = $this->get_visitors_per_day();
+        $data_visitors = $this->getVisitorsPerDay();
 
         $data_chart = array_merge($data_visits, $data_visitors);
 
-        $xaxis_values = $this->get_labels();
+        $xaxis_values = $this->getLabels();
 
         $legend_values = array_column($data_chart, 'name');
 
@@ -91,7 +91,7 @@ class chartData
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    private function get_visits_per_day(): array
+    private function getVisitsPerDay(): array
     {
         // DATA COLLECTION FOR MAIN CHART, "VIEWS PER DAY"
 
@@ -177,7 +177,7 @@ class chartData
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    private function get_visitors_per_day(): array
+    private function getVisitorsPerDay(): array
     {
         // DATA COLLECTION FOR MAIN CHART, "VISITORS PER DAY"
 
@@ -261,7 +261,7 @@ class chartData
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function get_heatmap_visits(): array
+    public function getHeatmapVisits(): array
     {
         // data for heatmap chart
 
@@ -311,7 +311,7 @@ class chartData
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function get_chart_data_monthly(): array
+    public function getChartDataMonthly(): array
     {
         $legend = [];
         $xaxis = [];
@@ -466,7 +466,7 @@ class chartData
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function get_chart_data_yearly(): array
+    public function getChartDataYearly(): array
     {
 
         $legend = [];

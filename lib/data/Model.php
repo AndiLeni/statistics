@@ -12,11 +12,12 @@ use rex_sql_exception;
 use rex_exception;
 
 /**
- * Handles the "browser" data for statistics
+ * Handles the device-"model" data for statistics
  *
  */
-class stats_browser
+class Model
 {
+
 
     /**
      * 
@@ -25,11 +26,11 @@ class stats_browser
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    private function get_sql(): rex_sql
+    private function getSql(): rex_sql
     {
         $sql = rex_sql::factory();
 
-        $result = $sql->setQuery('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' WHERE type = "browser" ORDER BY count DESC');
+        $result = $sql->setQuery('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' WHERE type = "model" ORDER BY count DESC');
 
         return $result;
     }
@@ -42,9 +43,9 @@ class stats_browser
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function get_data(): array
+    public function getData(): array
     {
-        $sql = $this->get_sql();
+        $sql = $this->getSql();
 
         $data = [];
 
@@ -66,11 +67,12 @@ class stats_browser
      * @throws InvalidArgumentException 
      * @throws rex_exception 
      */
-    public function get_list(): string
+    public function getList(): string
+
     {
         $addon = rex_addon::get('statistics');
 
-        $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "browser" ORDER BY count DESC', 10000);
+        $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "model" ORDER BY count DESC', 10000);
 
         $list->setColumnLabel('name', $addon->i18n('statistics_name'));
         $list->setColumnLabel('count', $addon->i18n('statistics_count'));
@@ -83,29 +85,5 @@ class stats_browser
         }
 
         return $table;
-    }
-
-
-    /**
-     * 
-     * 
-     * @return array 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
-     */
-    public function get_data_dashboard(): array
-    {
-        $sql = $this->get_sql();
-
-        $data = [];
-
-        foreach ($sql as $row) {
-            $data[] = [
-                'name' => $row->getValue('name'),
-                'value' => $row->getValue('count')
-            ];
-        }
-
-        return $data;
     }
 }

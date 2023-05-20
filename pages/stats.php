@@ -1,16 +1,16 @@
 <?php
 
 use AndiLeni\Statistics\chartData;
-use AndiLeni\Statistics\filterDateHelper;
+use AndiLeni\Statistics\DateFilter;
 use AndiLeni\Statistics\ListData;
-use AndiLeni\Statistics\stats_brand;
-use AndiLeni\Statistics\stats_browser;
-use AndiLeni\Statistics\stats_browsertype;
-use AndiLeni\Statistics\stats_hour;
-use AndiLeni\Statistics\stats_model;
-use AndiLeni\Statistics\stats_os;
-use AndiLeni\Statistics\stats_weekday;
-use AndiLeni\Statistics\StatsOverview;
+use AndiLeni\Statistics\Brand;
+use AndiLeni\Statistics\Browser;
+use AndiLeni\Statistics\Browsertype;
+use AndiLeni\Statistics\Hour;
+use AndiLeni\Statistics\Model;
+use AndiLeni\Statistics\OS;
+use AndiLeni\Statistics\Weekday;
+use AndiLeni\Statistics\Summary;
 
 $addon = rex_addon::get('statistics');
 
@@ -23,7 +23,7 @@ $request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''
 $sql = rex_sql::factory();
 // $sql->setDebug(true);
 
-$filter_date_helper = new filterDateHelper($request_date_start, $request_date_end, 'pagestats_visits_per_day');
+$filter_date_helper = new DateFilter($request_date_start, $request_date_end, 'pagestats_visits_per_day');
 
 
 
@@ -32,46 +32,46 @@ $chart_data = new chartData($filter_date_helper);
 
 
 // main chart data for visits and visitors
-$main_chart_data = $chart_data->get_main_chart_data();
+$main_chart_data = $chart_data->getMainChartData();
 
 // heatmap data for visits per day in this year
-$data_heatmap = $chart_data->get_heatmap_visits();
+$data_heatmap = $chart_data->getHeatmapVisits();
 
 // chart data monthly
-$chart_data_monthly = $chart_data->get_chart_data_monthly();
+$chart_data_monthly = $chart_data->getChartDataMonthly();
 
 // chart data yearly
-$chart_data_yearly = $chart_data->get_chart_data_yearly();
+$chart_data_yearly = $chart_data->getChartDataYearly();
 
 
 
 // device specific data
-$browser = new stats_browser();
-$browser_data = $browser->get_data();
+$browser = new Browser();
+$browser_data = $browser->getData();
 
-$browsertype = new stats_browsertype();
-$browsertype_data = $browsertype->get_data();
+$browsertype = new Browsertype();
+$browsertype_data = $browsertype->getData();
 
-$os = new stats_os();
-$os_data = $os->get_data();
+$os = new OS();
+$os_data = $os->getData();
 
-$brand = new stats_brand();
-$brand_data = $brand->get_data();
+$brand = new Brand();
+$brand_data = $brand->getData();
 
-$model = new stats_model();
-$model_data = $model->get_data();
+$model = new Model();
+$model_data = $model->getData();
 
-$weekday = new stats_weekday();
-$weekday_data = $weekday->get_data();
+$weekday = new Weekday();
+$weekday_data = $weekday->getData();
 
-$hour = new stats_hour();
-$hour_data = $hour->get_data();
+$hour = new Hour();
+$hour_data = $hour->getData();
 
 
 
 // overview of visits and visitors of today, total and filered by date
-$overview = new StatsOverview($filter_date_helper);
-$overview_data = $overview->get_overview_data();
+$overview = new Summary($filter_date_helper);
+$overview_data = $overview->getSummaryData();
 
 $fragment_overview = new rex_fragment();
 $fragment_overview->setVar('date_start', $filter_date_helper->date_start);
@@ -107,9 +107,9 @@ echo $fragment_overview->parse('overview.php');
 
 $lists_data = new ListData($filter_date_helper);
 
-$lists_daily = $lists_data->get_lists_daily();
-$lists_monthly = $lists_data->get_lists_monthly();
-$lists_yearly = $lists_data->get_lists_yearly();
+$lists_daily = $lists_data->getListsDaily();
+$lists_monthly = $lists_data->getListsMonthly();
+$lists_yearly = $lists_data->getListsYearly();
 
 
 
@@ -126,43 +126,43 @@ echo $fragment_main_chart->parse('main_chart.php');
 $fragment = new rex_fragment();
 $fragment->setVar('title', $addon->i18n('statistics_browser'));
 $fragment->setVar('chart', '<div id="chart_browser" style="width: 100%;height:500px"></div>', false);
-$fragment->setVar('table', $browser->get_list(), false);
+$fragment->setVar('table', $browser->getList(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $addon->i18n('statistics_devicetype'));
 $fragment->setVar('chart', '<div id="chart_browsertype" style="width: 100%;height:500px"></div>', false);
-$fragment->setVar('table', $browsertype->get_list(), false);
+$fragment->setVar('table', $browsertype->getList(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $addon->i18n('statistics_os'));
 $fragment->setVar('chart', '<div id="chart_os" style="width: 100%;height:500px"></div>', false);
-$fragment->setVar('table', $os->get_list(), false);
+$fragment->setVar('table', $os->getList(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $addon->i18n('statistics_brand'));
 $fragment->setVar('chart', '<div id="chart_brand" style="width: 100%;height:500px"></div>', false);
-$fragment->setVar('table', $brand->get_list(), false);
+$fragment->setVar('table', $brand->getList(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $addon->i18n('statistics_model'));
 $fragment->setVar('chart', '<div id="chart_model" style="width: 100%;height:500px"></div>', false);
-$fragment->setVar('table', $model->get_list(), false);
+$fragment->setVar('table', $model->getList(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $addon->i18n('statistics_days'));
 $fragment->setVar('chart', '<div id="chart_weekday" style="width: 100%;height:500px"></div>', false);
-$fragment->setVar('table', $weekday->get_list(), false);
+$fragment->setVar('table', $weekday->getList(), false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $addon->i18n('statistics_hours'));
 $fragment->setVar('chart', '<div id="chart_hour" style="width: 100%;height:500px"></div>', false);
-$fragment->setVar('table', $hour->get_list(), false);
+$fragment->setVar('table', $hour->getList(), false);
 echo $fragment->parse('data_vertical.php');
 
 
