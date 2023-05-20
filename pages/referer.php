@@ -175,50 +175,6 @@ echo $fragment->parse('core/page/section.php');
     ?>
 
     $(document).ready(function() {
-        $('.dt_order_second').DataTable({
-            "paging": true,
-            "pageLength": 20,
-            "lengthChange": true,
-            "lengthMenu": [
-                [10, 20, 50, 100, 200, -1],
-                [10, 20, 50, 100, 200, 'All']
-            ],
-            "order": [
-                [1, "desc"]
-            ],
-            "search": {
-                "caseInsensitive": true
-            },
-            <?php
-
-            if (trim(rex::getUser()->getLanguage()) == '' || trim(rex::getUser()->getLanguage()) == 'de_de') {
-                if (rex::getProperty('lang') == 'de_de') {
-                    echo '
-                    language: {
-                        "search": "_INPUT_",
-                        "searchPlaceholder": "Suchen",
-                        "decimal": ",",
-                        "info": "Einträge _START_-_END_ von _TOTAL_",
-                        "emptyTable": "Keine Daten",
-                        "infoEmpty": "0 von 0 Einträgen",
-                        "infoFiltered": "(von _MAX_ insgesamt)",
-                        "lengthMenu": "_MENU_ anzeigen",
-                        "loadingRecords": "Lade...",
-                        "zeroRecords": "Keine passenden Datensätze gefunden",
-                        "thousands": ".",
-                        "paginate": {
-                            "first": "<<",
-                            "last": ">>",
-                            "next": ">",
-                            "previous": "<"
-                        },
-                    },
-                    ';
-                }
-            }
-
-            ?>
-        });
 
         $('.dt_order_first').DataTable({
             "paging": true,
@@ -229,7 +185,7 @@ echo $fragment->parse('core/page/section.php');
                 [10, 20, 50, 100, 200, 'All']
             ],
             "order": [
-                [0, "desc"]
+                [1, "desc"]
             ],
             "search": {
                 "caseInsensitive": true
