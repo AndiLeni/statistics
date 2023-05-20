@@ -71,6 +71,8 @@ class Visit
 
     private string $domain = '';
 
+    private string $token = '';
+
 
     /**
      * 
@@ -79,10 +81,11 @@ class Visit
      * @param string $url 
      * @param string $userAgent 
      * @param string $domain 
+     * @param string $token
      * @return void 
      * @throws InvalidArgumentException 
      */
-    public function __construct(string $clientIPAddress, string $url, string $userAgent, string $domain)
+    public function __construct(string $clientIPAddress, string $url, string $userAgent, string $domain, string $token)
     {
         $this->addon = rex_addon::get('statistics');
         $this->clientIPAddress = $clientIPAddress;
@@ -90,6 +93,7 @@ class Visit
         $this->datetime_now = new DateTimeImmutable();
         $this->userAgent = $userAgent;
         $this->domain = $domain;
+        $this->token = $token;
     }
 
 
@@ -242,7 +246,7 @@ class Visit
     {
         $save_visit = true;
 
-        $hash_string = $this->userAgent . $this->browser . $this->os . " " . $this->osVer . $this->device_type . $this->brand . $this->model . $this->clientIPAddress . $this->url;
+        $hash_string = $this->token . $this->url;
         $hash = hash('sha1', $hash_string);
 
         $sql = rex_sql::factory();
@@ -289,7 +293,7 @@ class Visit
     {
         $save_visitor = true;
 
-        $hash_string = $this->userAgent . $this->browser . $this->os . " " . $this->osVer . $this->device_type . $this->brand . $this->model . $this->clientIPAddress;
+        $hash_string = $this->token;
         $hash = hash('sha1', $hash_string);
 
         $sql = rex_sql::factory();

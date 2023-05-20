@@ -127,7 +127,7 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
             // user agent
             $userAgent = rex_server('HTTP_USER_AGENT', 'string', '');
 
-            $visit = new Visit($clientAddress, $url, $userAgent, $domain);
+            $visit = new Visit($clientAddress, $url, $userAgent, $domain, $token);
 
 
             // Track only frontend requests if page url should not be ignored
