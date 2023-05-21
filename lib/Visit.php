@@ -73,6 +73,8 @@ class Visit
 
     private string $token = '';
 
+    private string $httpStatus = '';
+
 
     /**
      * 
@@ -85,7 +87,7 @@ class Visit
      * @return void 
      * @throws InvalidArgumentException 
      */
-    public function __construct(string $clientIPAddress, string $url, string $userAgent, string $domain, string $token)
+    public function __construct(string $clientIPAddress, string $url, string $userAgent, string $domain, string $token, string $httpStatus)
     {
         $this->addon = rex_addon::get('statistics');
         $this->clientIPAddress = $clientIPAddress;
@@ -94,6 +96,7 @@ class Visit
         $this->userAgent = $userAgent;
         $this->domain = $domain;
         $this->token = $token;
+        $this->httpStatus = $httpStatus;
     }
 
 
@@ -208,9 +211,9 @@ class Visit
         $sql->setQuery($sql_insert);
 
 
-        $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_visits_per_url') . ' (hash,date,url,count) VALUES 
-        ("' . md5($this->datetime_now->format('Y-m-d') . $this->url) . '","' . $this->datetime_now->format('Y-m-d') . '","' . addslashes($this->url) . '",1) 
-        ON DUPLICATE KEY UPDATE count = count + 1;';
+        $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_visits_per_url') . ' (hash,date,url,count,status) VALUES 
+        ("' . md5($this->datetime_now->format('Y-m-d') . $this->url) . '","' . $this->datetime_now->format('Y-m-d') . '","' . addslashes($this->url) . '",1, "' . $this->httpStatus . '") 
+        ON DUPLICATE KEY UPDATE count = count + 1, status = VALUES(status);';
 
         $sql->setQuery($sql_insert);
     }

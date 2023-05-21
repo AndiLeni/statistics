@@ -108,68 +108,63 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
         $response_code = rex_response::getStatus();
 
 
-        // check responsecode and if non-200 requests should be logged
-        if ($response_code == rex_response::HTTP_OK || $log_all) {
+        // get ip from visitor, set to 0.0.0.0 when ip can not be determined
+        $whip = new Whip();
+        $clientAddress = $whip->getValidIpAddress();
+        $clientAddress = $clientAddress ? $clientAddress : '0.0.0.0';
 
 
-            // get ip from visitor, set to 0.0.0.0 when ip can not be determined
-            $whip = new Whip();
-            $clientAddress = $whip->getValidIpAddress();
-            $clientAddress = $clientAddress ? $clientAddress : '0.0.0.0';
+        // optionally ignore url parameters
+        if ($addon->getConfig('statistics_ignore_url_params')) {
+            $url = Visit::removeUrlParameters($url);
+        }
+
+        // user agent
+        $userAgent = rex_server('HTTP_USER_AGENT', 'string', '');
+
+        $visit = new Visit($clientAddress, $url, $userAgent, $domain, $token, $response_code);
 
 
-            // optionally ignore url parameters
-            if ($addon->getConfig('statistics_ignore_url_params')) {
-                $url = Visit::removeUrlParameters($url);
-            }
+        // Track only frontend requests if page url should not be ignored
+        // ignore requests with empty user agent
+        if (!rex::isBackend() && $userAgent != '' && !$visit->shouldIgnore()) {
 
-            // user agent
-            $userAgent = rex_server('HTTP_USER_AGENT', 'string', '');
+            // visit is not a media request, hence either bot or human visitor
 
-            $visit = new Visit($clientAddress, $url, $userAgent, $domain, $token);
+            // parse useragent
+            $visit->parseUA();
 
+            if ($visit->isBot()) {
 
-            // Track only frontend requests if page url should not be ignored
-            // ignore requests with empty user agent
-            if (!rex::isBackend() && $userAgent != '' && !$visit->shouldIgnore()) {
+                // visitor is a bot
+                $visit->saveBot();
+            } else {
 
-                // visit is not a media request, hence either bot or human visitor
+                if ($visit->shouldSaveVisit()) {
 
-                // parse useragent
-                $visit->parseUA();
+                    // visitor is human
+                    // check hash with save_visit, if true then save visit
 
-                if ($visit->isBot()) {
+                    // check if referer exists, if yes safe it
+                    $referer = rex_server('HTTP_REFERER', 'string', '');
+                    if ($referer != '') {
+                        $referer = urldecode($referer);
 
-                    // visitor is a bot
-                    $visit->saveBot();
-                } else {
-
-                    if ($visit->shouldSaveVisit()) {
-
-                        // visitor is human
-                        // check hash with save_visit, if true then save visit
-
-                        // check if referer exists, if yes safe it
-                        $referer = rex_server('HTTP_REFERER', 'string', '');
-                        if ($referer != '') {
-                            $referer = urldecode($referer);
-
-                            if (!str_starts_with($referer, rex::getServer())) {
-                                $visit->saveReferer($referer);
-                            }
+                        if (!str_starts_with($referer, rex::getServer())) {
+                            $visit->saveReferer($referer);
                         }
-
-
-                        // check if unique visitor
-                        if ($visit->shouldSaveVisitor()) {
-
-                            // save visitor
-                            $visit->persistVisitor();
-                        }
-
-
-                        $visit->persist();
                     }
+
+
+                    // check if unique visitor
+                    if ($visit->shouldSaveVisitor()) {
+
+                        // save visitor
+                        $visit->persistVisitor();
+                    }
+
+
+                    $visit->persist();
                 }
             }
         }
