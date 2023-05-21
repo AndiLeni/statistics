@@ -90,9 +90,8 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
         // page url
         $url = $domain . rex::getRequest()->getRequestUri();
 
+        if (rex_config::get("statistics", "statistics_rec_session_stats", false) == true && rex::getRequest()->getRequestUri() != "/favicon.ico") {
 
-
-        if (rex_config::get("statistics", "statistics_rec_session_stats", false) === true && rex::getRequest()->getRequestUri() != "/favicon.ico") {
             $sql = rex_sql::factory();
             $sql->setQuery("INSERT INTO " . rex::getTable('pagestats_visitduration') . " (token, lastvisit, duration) VALUES (:token, NOW(), 0) ON DUPLICATE KEY UPDATE duration = duration + (NOW() - lastvisit), lastvisit = NOW();", [":token" => $token]);
 
