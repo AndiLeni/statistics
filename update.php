@@ -2,6 +2,9 @@
 
 $addon = rex_addon::get('statistics');
 
+// create tables
+$addon->includeFile(__DIR__ . '/install.php');
+
 
 // version 3 migrations
 
