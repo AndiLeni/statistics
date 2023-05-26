@@ -296,7 +296,7 @@ class Visit
     {
         $save_visitor = true;
 
-        $hash_string = $this->token;
+        $hash_string = $this->clientIPAddress . $this->userAgent;
         $hash = hash('sha1', $hash_string);
 
         $sql = rex_sql::factory();
