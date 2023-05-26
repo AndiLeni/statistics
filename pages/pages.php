@@ -101,6 +101,11 @@ echo $fragment->parse('core/page/section.php');
         title: {},
         tooltip: {
             trigger: 'axis',
+            formatter: function(params) {
+                return `${params[0].data.url}<br />
+                            Status: <b>${params[0].data.status}</b><br />
+                            Anzahl: <b>${params[0].data.count}</b>`;
+            },
         },
         dataZoom: [{
             id: 'dataZoomX',
@@ -130,16 +135,88 @@ echo $fragment->parse('core/page/section.php');
                 saveAsImage: {}
             }
         },
-        legend: {},
-        xAxis: {
-            data: <?php echo json_encode($sum_per_page['labels']) ?>,
-            type: 'category',
+        legend: {
+            show: true,
         },
-        yAxis: {},
+        xAxis: [{
+            type: 'category',
+        }],
+        yAxis: {
+            type: 'value'
+        },
         series: [{
-            data: <?php echo json_encode($sum_per_page['values']) ?>,
-            type: 'bar',
-        }]
+                datasetId: "ds0",
+                stack: "stack1",
+                type: "bar",
+                encode: {
+                    x: "url",
+                    y: "zero"
+                }
+            },
+            {
+                name: "200",
+                datasetId: "ds1",
+                type: "bar",
+                encode: {
+                    x: "url",
+                    y: "count"
+                },
+                stack: "stack1",
+                color: "#198754",
+            },
+            {
+                name: "nicht-200",
+                datasetId: "ds2",
+                type: "bar",
+                encode: {
+                    x: "url",
+                    y: "count"
+                },
+                stack: "stack1",
+                color: "#c12e34",
+            }
+        ],
+        dataset: [{
+                // Provide a set of data.
+                id: "dataset_raw",
+                dimensions: ["url", "count", "status", "zero"],
+                source: <?= json_encode($sum_per_page) ?>
+            },
+            {
+                id: "ds0",
+                fromDatasetId: "dataset_raw",
+                transform: [{
+                    type: "sort",
+                    config: {
+                        dimension: "count",
+                        order: "desc"
+                    }
+                }]
+            },
+            {
+                id: "ds1",
+                fromDatasetId: "ds0",
+                transform: [{
+                    type: "filter",
+                    config: {
+                        dimension: "status",
+                        "=": "200 OK"
+                    }
+                }]
+            },
+            {
+                id: "ds2",
+                fromDatasetId: "ds0",
+                transform: [{
+                    type: "filter",
+                    config: {
+                        dimension: "status",
+                        "!=": "200 OK"
+                    }
+                }]
+            }
+        ],
+
     };
     chart_visits_per_page.setOption(chart_visits_per_page_option);
 

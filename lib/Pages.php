@@ -47,32 +47,11 @@ class Pages
     {
         $sql = rex_sql::factory();
 
-        $sum_per_page = $sql->setQuery('SELECT url, ifnull(sum(count),0) as "count" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between :start and :end group by url ORDER BY count DESC, url ASC', ['start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
 
-        $sum_per_page_labels = [];
-        $sum_per_page_values = [];
+        $res = $sql->getArray('SELECT url, ifnull(sum(count),0) as "count", status from ' . rex::getTable('pagestats_visits_per_url') . ' where date between :start and :end group by url, status ORDER BY count DESC, url ASC', ['start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
 
 
-        foreach ($sum_per_page as $row) {
-            $sum_per_page_labels[] = $row->getValue('url');
-        }
-        if (array_keys($sum_per_page_labels) == []) {
-            echo rex_view::error($this->addon->i18n('statistics_no_data'));
-        }
-        $sum_per_page_labels = $sum_per_page_labels;
-
-
-        foreach ($sum_per_page as $row) {
-            $sum_per_page_values[] = $row->getValue('count');
-        }
-        $sum_per_page_values = $sum_per_page_values;
-
-
-
-        return [
-            'labels' => $sum_per_page_labels,
-            'values' => $sum_per_page_values,
-        ];
+        return $res;
     }
 
 
@@ -119,7 +98,7 @@ class Pages
      */
     public function getList(): string
     {
-        $list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between "' . $this->filter_date_helper->date_start->format('Y-m-d') . '" and "' . $this->filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC, url ASC', 10000);
+        $list = rex_list::factory('SELECT url, sum(count) as "count", status as "Status" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between "' . $this->filter_date_helper->date_start->format('Y-m-d') . '" and "' . $this->filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC, url ASC', 10000);
 
         $list->setColumnLabel('url', $this->addon->i18n('statistics_url'));
         $list->setColumnLabel('count', $this->addon->i18n('statistics_count'));
