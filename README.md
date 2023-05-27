@@ -14,17 +14,27 @@ Dabei werden folgende Metriken erfasst und optisch dargestellt:
 - Gerätemarke und Gerätemodell
 - Bots (Crawler etc.)
 - Referrer
+- Anzahl besuchter Seiten in einer Sitzung
+- Besuchsdauer in einer Sitzung
+- Ausstiegsseiten
 
-Dieses Addon arbeitet **OHNE** Cookies und kann somit Datenschutzkonform eingesetzt werden.
+Dieses Addon arbeitet **OHNE** clientseitige Cookies.
 
-Persönlichen Daten (z.B. die IP Adresse des Besuchers) werden nur gehasht gespeichert und können somit nicht ohne großen Aufwand dechiffriert werden.
+Die IP Adresse des Besuchers wird gehasht gespeichert.  
+Allerdings wird diese zu Datenschutzzwecken nicht roh gespeichert, sondern mit dem User-Agent des Besuchers gehasht.  
+`hash = sha1(ipAdresseClient + userAgentClient)`.  
+Der User Agent wird nicht auf dem Server gespeichert. Um an die IP zu kommen, muss dieser Hash also aufwendig per Brute Force geknackt werden. 
 
 Die IP Adresse des Besuchers wird genutzt, um ein wiederholtes Aufrufen von Seiten nicht in die Statistik einfließen zu lassen.
+
+Um den Datenschutz zu erhöhen kann der mitgelieferte Cronjob eingesetzt werden (benötigt das Cronjob Addon von Redaxo).
+Diesen am besten auf 00:05 täglich einstellen. 
+Dadurch werden alte, nicht länger benötigte Hashes automatisch gelöscht um Datensparsamkeit zu gewährleisten (löscht alle Hashes die älter sind als der aktuelle Tag).
 
 ## Plugins:
 
 ### Medien-Tracking:
-Um Aufrufe von Medien (Bilder, Dokumente, etc.) zu loggen muss das Plugin "Media" aktiviert werden.
+Um Aufrufe von Medien (Bilder, Dokumente, etc.) zu loggen.
 Dieses kann auf zwei Arten verwendet werden:
 1. Alle Medien tracken  
    Dabei werden alle Aufrufe zu Medien in der Statistik erfasst.
@@ -33,8 +43,8 @@ Dieses kann auf zwei Arten verwendet werden:
    Dieser wird einfach als weiterer Effekt hinzugefügt und erfasst dann nur die Medien die tatsächlich für die Statistik interessant sind.
 
 
-### API (Kampagnen):
-Dieses Plugin erlaubt es, einen API Request zu nutzen um im Frontend ein bestimmtes Ereigniss zu tracken (beispielsweise das Anklicken eines Links oder das Absenden eines Formulars).
+### Events:
+Dieses Plugin erlaubt es, einen API Request zu nutzen um im Frontend oder Backend ein bestimmtes Ereigniss zu tracken (beispielsweise das Anklicken eines Links oder das Absenden eines Formulars).
 
 
 
@@ -42,13 +52,7 @@ Dieses Plugin erlaubt es, einen API Request zu nutzen um im Frontend ein bestimm
 
 Das Repository herunterladen und im Ordner `redaxo > src > addons` entpacken.  
 Danach den Ordner in `statistics` umbenennen.  
-
-
-## Einstellungen:
-Es können folgende Einstellungen getroffen werden:
-- Besuchsdauer, bestimmt innerhalb welches Zeitraumes ein Benutzer nur einmal pro Url erfasst werden soll
-- Ignore-Liste für URLs, hier kann eine Reihe an Urls angegeben werden welche nicht in der Statistik erfasst werden sollen
-- Ignore-Liste für IPs, hier kann eine Reihe an IP Adressen angegeben werden von denen Besuche nicht erfasst werden sollen
+oder über den Installer in Redaxo
 
 
 ## Beispiele:
@@ -57,14 +61,24 @@ Es können folgende Einstellungen getroffen werden:
 Falls man im Frontend einen Besucher-Counter einfügen möchte klappt das mittles der folgenden Modul-Ausgabe:
 ```php
 <?php
-use AndiLeni\Statistics\stats_visitor_counter;
 
-$counter = new stats_visitor_counter();
+use AndiLeni\Statistics\VisitorCounter;
+
 ?>
 
-<p>Besucher: <code><?php echo $counter->get_text() ?></code><p>
+<p>Besucher: <code><?php echo VisitorCounter::getText() ?></code><p>
 ```
 Der Ausgegebene Text kann dann nach Belieben gestaltet werden.
+
+### Backend Event loggen:
+```php
+<?php
+
+use AndiLeni\Statistics\Event;
+
+Event::log("my_event_name");
+
+```
 
 
 ### Download-Counter:
