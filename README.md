@@ -31,7 +31,6 @@ Um den Datenschutz zu erhöhen kann der mitgelieferte Cronjob eingesetzt werden 
 Diesen am besten auf 00:05 täglich einstellen. 
 Dadurch werden alte, nicht länger benötigte Hashes automatisch gelöscht um Datensparsamkeit zu gewährleisten (löscht alle Hashes die älter sind als der aktuelle Tag).
 
-## Plugins:
 
 ### Medien-Tracking:
 Um Aufrufe von Medien (Bilder, Dokumente, etc.) zu loggen.
@@ -44,7 +43,7 @@ Dieses kann auf zwei Arten verwendet werden:
 
 
 ### Events:
-Dieses Plugin erlaubt es, einen API Request zu nutzen um im Frontend oder Backend ein bestimmtes Ereigniss zu tracken (beispielsweise das Anklicken eines Links oder das Absenden eines Formulars).
+Erlaubt es, einen API Request zu nutzen um im Frontend oder Backend ein bestimmtes Ereigniss zu tracken (beispielsweise das Anklicken eines Links oder das Absenden eines Formulars).
 
 
 
@@ -114,7 +113,7 @@ Event::log("my_event_name");
         </table>
     </div>
    ```
-4. In den Einstellungen des Media-Plugins das tracken aktivieren.
+4. In den Einstellungen das tracken aktivieren.
 5. Das Beipiel erzeugt dann eine solche Tabelle:  
    ![Beispiel1](./preview/6.png "Beispiel1")
    Klickt der Besucher auf den Link "Download" wird dieser Aufruf in der Statistik gespeichert.
