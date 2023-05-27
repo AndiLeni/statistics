@@ -211,9 +211,9 @@ class Visit
         $sql->setQuery($sql_insert);
 
 
-        $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_visits_per_url') . ' (hash,date,url,count,status) VALUES 
-        ("' . md5($this->datetime_now->format('Y-m-d') . $this->url) . '","' . $this->datetime_now->format('Y-m-d') . '","' . addslashes($this->url) . '",1, "' . $this->httpStatus . '") 
-        ON DUPLICATE KEY UPDATE count = count + 1, status = VALUES(status);';
+        $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_visits_per_url') . ' (hash,date,url,count) VALUES 
+        ("' . md5($this->datetime_now->format('Y-m-d') . $this->url) . '","' . $this->datetime_now->format('Y-m-d') . '","' . addslashes($this->url) . '",1) 
+        ON DUPLICATE KEY UPDATE count = count + 1;';
 
         $sql->setQuery($sql_insert);
     }
@@ -280,6 +280,12 @@ class Visit
             $sql->setValue('datetime', $this->datetime_now->format('Y-m-d H:i:s'));
             $sql->insertOrUpdate();
         }
+
+        // save url http status
+        $hash = md5($this->url);
+
+        $sql = rex_sql::factory();
+        $sql->setQuery("insert into " . rex::getTable("pagestats_urlstatus") . " (hash, url, status) values (:hash, :url, :status) on duplicate key update status = values(status);", [":hash" => $hash, ":url" => $this->url, ":status" => $this->httpStatus]);
 
         return $save_visit;
     }

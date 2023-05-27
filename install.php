@@ -27,6 +27,12 @@ rex_sql_table::get(rex::getTable('pagestats_visits_per_url'))
     ->ensureColumn(new rex_sql_column('date', 'date'))
     ->ensureColumn(new rex_sql_column('url', 'varchar(2048)'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
+    ->setPrimaryKey(['hash'])
+    ->ensure();
+
+rex_sql_table::get(rex::getTable('pagestats_urlstatus'))
+    ->ensureColumn(new rex_sql_column('hash', 'varchar(255)'))
+    ->ensureColumn(new rex_sql_column('url', 'varchar(2048)'))
     ->ensureColumn(new rex_sql_column('status', 'varchar(255)'))
     ->setPrimaryKey(['hash'])
     ->ensure();

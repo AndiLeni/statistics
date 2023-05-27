@@ -48,7 +48,9 @@ class Pages
         $sql = rex_sql::factory();
 
 
-        $res = $sql->getArray('SELECT url, ifnull(sum(count),0) as "count", status from ' . rex::getTable('pagestats_visits_per_url') . ' where date between :start and :end group by url, status ORDER BY count DESC, url ASC', ['start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
+        // $res = $sql->getArray('SELECT url, ifnull(sum(count),0) as "count" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between :start and :end group by url ORDER BY count DESC, url ASC', ['start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
+
+        $res = $sql->getArray("select agg.url, agg.count, IFNULL(us.status, '-') as 'status' from ( select url, IFNULL(SUM(count), 0) AS 'count' from " . rex::getTable("pagestats_visits_per_url") . " WHERE date BETWEEN :start AND :end group by url) agg left join " . rex::getTable("pagestats_urlstatus") . " us on agg.url = us.url order by agg.count desc", ['start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
 
 
         return $res;
@@ -98,7 +100,7 @@ class Pages
      */
     public function getList(): string
     {
-        $list = rex_list::factory('SELECT url, sum(count) as "count", status as "Status" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between "' . $this->filter_date_helper->date_start->format('Y-m-d') . '" and "' . $this->filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC, url ASC', 10000);
+        $list = rex_list::factory("select agg.url, agg.count, IFNULL(us.status, '-') as 'status' from ( select url, IFNULL(SUM(count), 0) AS 'count' from " . rex::getTable("pagestats_visits_per_url") . " WHERE date BETWEEN '" . $this->filter_date_helper->date_start->format('Y-m-d') . "' and '" . $this->filter_date_helper->date_end->format('Y-m-d') . "' group by url) agg left join " . rex::getTable("pagestats_urlstatus") . " us on agg.url = us.url order by agg.count desc", 10000);
 
         $list->setColumnLabel('url', $this->addon->i18n('statistics_url'));
         $list->setColumnLabel('count', $this->addon->i18n('statistics_count'));
