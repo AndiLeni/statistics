@@ -44,6 +44,10 @@ class Visit
         '.js.map',
     ];
 
+    const IGNORE_UA = [
+        'REDAXO',
+    ];
+
 
     private DateTimeImmutable $datetime_now;
 
@@ -161,6 +165,14 @@ class Visit
                 }
             }
         }
+
+        // check special user agents which should be ignored
+        foreach (self::IGNORE_UA as $el) {
+            if (str_starts_with($this->userAgent, $el)) {
+                return true;
+            }
+        }
+
 
         return false;
     }
