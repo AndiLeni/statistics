@@ -181,18 +181,24 @@ $fragment = new rex_fragment();
 $fragment->setVar('title', "Anzahl besuchter Seiten in einer Sitzung");
 $fragment->setVar('chart', '<div id="chart_pagecount" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $pagecount->getList(), false);
+$fragment->setVar('modalid', "pc_modal", false);
+$fragment->setVar('note', "<p>Zeigt an, wie viele Seiten in einer Sitzung besucht wurden.</p>", false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', "Besuchsdauer");
 $fragment->setVar('chart', '<div id="chart_visitduration" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $visitduration->getList(), false);
+$fragment->setVar('modalid', "bd_modal", false);
+$fragment->setVar('note', "<p>Zeigt an, wie viel Zeit auf der Webseite verbracht wurde.</p> Hinweis: <p>Die Besuchsdauer wird nur annähernd genau erfasst. D.h. konkret, die Besuchszeit der letzten vom Besucher aufgerufenen Seite kann nicht erfasst werden. Die Zeit berechnet sich somit aus der Dauer aller Aufrufe ausgenommen des letzten.</p>", false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', "Ausstiegsseiten");
 $fragment->setVar('chart', '<div id="chart_lastpage" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $lastpage->getList(), false);
+$fragment->setVar('modalid', "lp_modal", false);
+$fragment->setVar('note', "<p>Zeigt an, welche URLs als letztes aufgerufen worden sind bevor die Webseite verlassen wurde.</p>", false);
 echo $fragment->parse('data_vertical.php');
 
 
@@ -883,7 +889,7 @@ echo $fragment->parse('core/page/section.php');
         title: {},
         tooltip: {
             trigger: 'axis',
-            formatter: "{b} Seiten besucht: <b>{c} mal</b>",
+            formatter: "{b} <br> <b>{c} mal</b>",
             axisPointer: {
                 type: 'shadow'
             }
