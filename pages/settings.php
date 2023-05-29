@@ -133,6 +133,13 @@ $field->addOption($addon->i18n('statistics_no'), 0);
 $field->setNotice('Aktivieren, um die Statistiken "Besuchsdauer", "Ausstiegsseite" und "Anzahl besuchte Seiten" zu erfassen');
 
 
+$field = $form->addRadioField('statistics_rec_onlyok');
+$field->setLabel('Nur 200er Aufrufe erfassen');
+$field->addOption($addon->i18n('statistics_yes'), 1);
+$field->addOption($addon->i18n('statistics_no'), 0);
+$field->setNotice('Dadurch werden nur Aufrufe mit einem HTTP Status 200 erfasst. Folgende Statistiken loggen dennoch alle Aufrufe: Ausstiegsseiten, Aufrufe pro Seite');
+
+
 // media
 $form->addFieldset("Media");
 

@@ -78,7 +78,7 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
         $ignore_backend_loggedin = $addon->getConfig('statistics_ignore_backend_loggedin');
 
 
-        // return when visit is coming from a logged-in user
+        // return and do not save when visit is coming from a logged-in user
         if ($ignore_backend_loggedin && $statistics_has_backend_login) {
             return;
         }
@@ -94,22 +94,29 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
         // page url
         $url = $domain . rex::getRequest()->getRequestUri();
 
+        // request response code
+        $response_code = rex_response::getStatus();
+
+
         if (rex_config::get("statistics", "statistics_rec_session_stats", false) == true && rex::getRequest()->getRequestUri() != "/favicon.ico") {
 
-            $sql = rex_sql::factory();
-            $sql->setQuery("INSERT INTO " . rex::getTable('pagestats_visitduration') . " (token, lastvisit, duration) VALUES (:token, NOW(), 0) ON DUPLICATE KEY UPDATE duration = duration + (NOW() - lastvisit), lastvisit = NOW();", [":token" => $token]);
+            if ($response_code == rex_response::HTTP_OK || !$addon->getConfig("statistics_rec_onlyok", false)) {
+                // visitduration
+                $sql = rex_sql::factory();
+                $sql->setQuery("INSERT INTO " . rex::getTable('pagestats_visitduration') . " (token, lastvisit, duration) VALUES (:token, NOW(), 0) ON DUPLICATE KEY UPDATE duration = duration + (NOW() - lastvisit), lastvisit = NOW();", [":token" => $token]);
 
-            // last visited page
+                // number pages visited
+                $sql = rex_sql::factory();
+                $sql->setQuery("INSERT INTO " . rex::getTable('pagestats_pagecount') . " (token, count) VALUES (:token, 1) ON DUPLICATE KEY UPDATE count = count + 1;", [":token" => $token]);
+            }
+
+            // last visited page, is saved regardless of http status
             $sql = rex_sql::factory();
             $sql->setQuery("INSERT INTO " . rex::getTable('pagestats_lastpage') . " (token, url) VALUES (:token, :url) ON DUPLICATE KEY UPDATE url = VALUES(url);", [":token" => $token, ":url" => $url]);
-
-            // number pages visited
-            $sql = rex_sql::factory();
-            $sql->setQuery("INSERT INTO " . rex::getTable('pagestats_pagecount') . " (token, count) VALUES (:token, 1) ON DUPLICATE KEY UPDATE count = count + 1;", [":token" => $token]);
         }
 
 
-        $response_code = rex_response::getStatus();
+
 
 
         // get ip from visitor, set to 0.0.0.0 when ip can not be determined
@@ -144,7 +151,7 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
                 $visit->saveBot();
             } else {
 
-                if ($visit->shouldSaveVisit() && !$visit->DeviceDetector->isLibrary()) {
+                if ($visit->shouldSaveVisit() && !$visit->DeviceDetector->isLibrary() && ($response_code == rex_response::HTTP_OK || !$addon->getConfig("statistics_rec_onlyok", false))) {
 
                     // visitor is human
                     // check hash with save_visit, if true then save visit
