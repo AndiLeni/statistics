@@ -101,18 +101,10 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
         if (rex_config::get("statistics", "statistics_rec_session_stats", false) == true && rex::getRequest()->getRequestUri() != "/favicon.ico") {
 
             if ($response_code == rex_response::HTTP_OK || !$addon->getConfig("statistics_rec_onlyok", false)) {
-                // visitduration
+                // visitduration, number pages visited, last visited page
                 $sql = rex_sql::factory();
-                $sql->setQuery("INSERT INTO " . rex::getTable('pagestats_visitduration') . " (token, lastvisit, duration) VALUES (:token, NOW(), 0) ON DUPLICATE KEY UPDATE duration = duration + (NOW() - lastvisit), lastvisit = NOW();", [":token" => $token]);
-
-                // number pages visited
-                $sql = rex_sql::factory();
-                $sql->setQuery("INSERT INTO " . rex::getTable('pagestats_pagecount') . " (token, count) VALUES (:token, 1) ON DUPLICATE KEY UPDATE count = count + 1;", [":token" => $token]);
+                $sql->setQuery("INSERT INTO " . rex::getTable('pagestats_sessionstats') . " (token, lastpage, lastvisit, visitduration, pagecount) VALUES (:token, :lastpage, NOW(), 0, 1) ON DUPLICATE KEY UPDATE lastpage = VALUES(lastpage), visitduration = visitduration + (NOW() - lastvisit), lastvisit = NOW(), pagecount = pagecount + 1", [":token" => $token, ":lastpage" => $url]);
             }
-
-            // last visited page, is saved regardless of http status
-            $sql = rex_sql::factory();
-            $sql->setQuery("INSERT INTO " . rex::getTable('pagestats_lastpage') . " (token, url) VALUES (:token, :url) ON DUPLICATE KEY UPDATE url = VALUES(url);", [":token" => $token, ":url" => $url]);
         }
 
 

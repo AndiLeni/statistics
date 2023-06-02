@@ -15,10 +15,10 @@ class Pagecount
     public function getChartData()
     {
         $sql = rex_sql::factory();
-        $res = $sql->getArray("select count , count(*) as 'number' from " . rex::getTable("pagestats_pagecount") . " group by count order by count asc;");
+        $res = $sql->getArray("select pagecount , count(*) as 'count' from " . rex::getTable("pagestats_sessionstats") . " group by pagecount order by pagecount asc;");
 
-        $labels = array_column($res, "number");
-        $values = array_column($res, "count");
+        $labels = array_column($res, "count");
+        $values = array_column($res, "pagecount");
 
         return [
             "labels" => $labels,
@@ -38,10 +38,10 @@ class Pagecount
     {
         $addon = rex_addon::get('statistics');
 
-        $list = rex_list::factory("select count , count(*) as 'number' from " . rex::getTable("pagestats_pagecount") . " group by count order by count asc", 10000);
+        $list = rex_list::factory("select pagecount , count(*) as 'count' from " . rex::getTable("pagestats_sessionstats") . " group by pagecount order by pagecount asc", 10000);
 
-        $list->setColumnLabel('count', "Seitenaufrufe");
-        $list->setColumnLabel('number', "Anzahl");
+        $list->setColumnLabel('pagecount', "Seitenaufrufe");
+        $list->setColumnLabel('count', "Anzahl");
 
         $list->addTableAttribute('class', 'dt_order_second statistics_table');
 

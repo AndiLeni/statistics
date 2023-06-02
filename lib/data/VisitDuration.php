@@ -15,7 +15,7 @@ class VisitDuration
     public function getChartData()
     {
         $sql = rex_sql::factory();
-        $res = $sql->getArray("select concat(floor(duration / 30) * 30, '-', (floor(duration / 30) + 1) * 30, ' Sekunden (~', floor(duration / 60), 'min)') as timespan, count(*) as count, floor(duration / 30) as dur from " . rex::getTable("pagestats_visitduration") . " group by timespan, dur order by dur asc");
+        $res = $sql->getArray("select concat(floor(visitduration / 30) * 30, '-', (floor(visitduration / 30) + 1) * 30, ' Sekunden (~', floor(visitduration / 60) + 1, 'min)') as timespan, count(*) as count, floor(visitduration / 30) as dur from " . rex::getTable("pagestats_sessionstats") . " group by timespan, dur order by dur asc");
 
         $labels = array_column($res, "count");
         $values = array_column($res, "timespan");
@@ -38,7 +38,7 @@ class VisitDuration
     {
         $addon = rex_addon::get('statistics');
 
-        $list = rex_list::factory("select concat(floor(duration / 30) * 30, '-', (floor(duration / 30) + 1) * 30, ' (~', floor(duration / 60), 'min)') as timespan, count(*) as count, floor(duration / 30) as dur from " . rex::getTable("pagestats_visitduration") . " group by timespan, dur order by dur asc", 10000);
+        $list = rex_list::factory("select concat(floor(visitduration / 30) * 30, '-', (floor(visitduration / 30) + 1) * 30, ' (~', floor(visitduration / 60) + 1, 'min)') as timespan, count(*) as count, floor(visitduration / 30) as dur from " . rex::getTable("pagestats_sessionstats") . " group by timespan, dur order by dur asc", 10000);
 
         $list->setColumnLabel('count', "Anzahl");
         $list->setColumnLabel('timespan', "Dauer in Sekunden");

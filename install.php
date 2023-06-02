@@ -60,25 +60,14 @@ rex_sql_table::get(rex::getTable('pagestats_referer'))
     ->setPrimaryKey(['hash'])
     ->ensure();
 
-rex_sql_table::get(rex::getTable('pagestats_visitduration'))
+rex_sql_table::get(rex::getTable('pagestats_sessionstats'))
     ->ensureColumn(new rex_sql_column('token', 'varchar(255)'))
+    ->ensureColumn(new rex_sql_column('lastpage', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('lastvisit', 'datetime'))
-    ->ensureColumn(new rex_sql_column('duration', 'int'))
+    ->ensureColumn(new rex_sql_column('visitduration', 'int'))
+    ->ensureColumn(new rex_sql_column('pagecount', 'int'))
     ->setPrimaryKey(['token'])
     ->ensure();
-
-rex_sql_table::get(rex::getTable('pagestats_lastpage'))
-    ->ensureColumn(new rex_sql_column('token', 'varchar(255)'))
-    ->ensureColumn(new rex_sql_column('url', 'varchar(255)'))
-    ->setPrimaryKey(['token'])
-    ->ensure();
-
-rex_sql_table::get(rex::getTable('pagestats_pagecount'))
-    ->ensureColumn(new rex_sql_column('token', 'varchar(255)'))
-    ->ensureColumn(new rex_sql_column('count', 'int'))
-    ->setPrimaryKey(['token'])
-    ->ensure();
-
 
 // media
 rex_sql_table::get(rex::getTable('pagestats_media'))

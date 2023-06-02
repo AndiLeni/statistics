@@ -15,9 +15,9 @@ class Lastpage
     public function getChartData()
     {
         $sql = rex_sql::factory();
-        $res = $sql->getArray("select url , count(*) as 'count' from " . rex::getTable("pagestats_lastpage") . " group by url order by count desc;");
+        $res = $sql->getArray("select lastpage , count(*) as 'count' from " . rex::getTable("pagestats_sessionstats") . " group by lastpage order by count desc;");
 
-        $labels = array_column($res, "url");
+        $labels = array_column($res, "lastpage");
         $values = array_column($res, "count");
 
         return [
@@ -38,9 +38,9 @@ class Lastpage
     {
         $addon = rex_addon::get('statistics');
 
-        $list = rex_list::factory("select url , count(*) as 'count' from " . rex::getTable("pagestats_lastpage") . " group by url order by count desc", 10000);
+        $list = rex_list::factory("select lastpage , count(*) as 'count' from " . rex::getTable("pagestats_sessionstats") . " group by lastpage order by count desc", 10000);
 
-        $list->setColumnLabel('url', "Seite");
+        $list->setColumnLabel('lastpage', "Seite");
         $list->setColumnLabel('count', "Anzahl");
 
         $list->addTableAttribute('class', 'dt_order_second statistics_table');
