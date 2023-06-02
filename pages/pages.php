@@ -13,6 +13,8 @@ $ignore_page = rex_request('ignore_page', 'boolean', false);
 $search_string = htmlspecialchars_decode(rex_request('search_string', 'string', ''));
 $request_date_start = htmlspecialchars_decode(rex_request('date_start', 'string', ''));
 $request_date_end = htmlspecialchars_decode(rex_request('date_end', 'string', ''));
+$httpstatus = rex_request('httpstatus', 'string', 'any');
+
 
 $filter_date_helper = new DateFilter($request_date_start, $request_date_end, 'pagestats_visits_per_url');
 $pages_helper = new Pages($filter_date_helper);
@@ -39,7 +41,7 @@ $filter_fragment->setVar('wts', $filter_date_helper->whole_time_start->format("Y
 <?php
 
 // sum per page, bar chart
-$sum_per_page = $pages_helper->sumPerPage();
+$sum_per_page = $pages_helper->sumPerPage($httpstatus);
 
 
 // check if request is for ignoring a url
@@ -81,9 +83,21 @@ foreach ($domains as $domain) {
     $domain_select .= '<option value="' . $domain['domain'] . '">' . $domain['domain'] . '</option>';
 }
 $domain_select .= '</select>';
+
+
+// buttons to filter by http status
+$oa = rex_context::fromGet()->getUrl(["httpstatus" => "any"]);
+$o2 = rex_context::fromGet()->getUrl(["httpstatus" => "200"]);
+$on2 = rex_context::fromGet()->getUrl(["httpstatus" => "not200"]);
+
+$http_filter_buttons = '<a class="btn btn-primary" href="' . $oa . '">Alle</a>
+<a class="btn btn-primary" href="' . $o2 . '">Nur 200er</a>
+<a class="btn btn-primary" href="' . $on2 . '">Nur nicht 200er</a>';
+
+
 $fragment = new rex_fragment();
 $fragment->setVar('title', $addon->i18n('statistics_sum_per_page'));
-$fragment->setVar('body', '<div id="chart_visits_per_page" style="height:500px; width:auto"></div>' . $domain_select . $pages_helper->getList(), false);
+$fragment->setVar('body', $http_filter_buttons . '<div id="chart_visits_per_page" style="height:500px; width:auto"></div>' . $domain_select . $pages_helper->getList(), false);
 echo $fragment->parse('core/page/section.php');
 
 ?>

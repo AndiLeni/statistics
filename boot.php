@@ -108,9 +108,6 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
         }
 
 
-
-
-
         // get ip from visitor, set to 0.0.0.0 when ip can not be determined
         $whip = new Whip();
         $clientAddress = $whip->getValidIpAddress();

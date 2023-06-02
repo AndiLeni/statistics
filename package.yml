@@ -45,14 +45,12 @@ default_config:
     statistics_ignored_paths: ""
     statistics_ignored_ips: ""
     statistics_visit_duration: 30
-    statistics_log_all: true
     statistics_scroll_pagination: "none"
     statistics_ignore_url_params: false
     statistics_default_datefilter_range: "thisYear"
     statistics_combine_all_domains: true
     statistics_show_chart_toolbox: false
     statistics_ignore_backend_loggedin: true
-    statistics_rec_session_stats: true
     statistics_rec_onlyok: false
 
     statistics_media_log_all: false

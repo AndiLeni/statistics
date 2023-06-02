@@ -43,15 +43,17 @@ class Pages
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    public function sumPerPage(): array
+    public function sumPerPage(string $httpstatus): array
     {
         $sql = rex_sql::factory();
 
-
-        // $res = $sql->getArray('SELECT url, ifnull(sum(count),0) as "count" from ' . rex::getTable('pagestats_visits_per_url') . ' where date between :start and :end group by url ORDER BY count DESC, url ASC', ['start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
-
-        $res = $sql->getArray("select agg.url, agg.count, IFNULL(us.status, '-') as 'status' from ( select url, IFNULL(SUM(count), 0) AS 'count' from " . rex::getTable("pagestats_visits_per_url") . " WHERE date BETWEEN :start AND :end group by url) agg left join " . rex::getTable("pagestats_urlstatus") . " us on agg.url = us.url order by agg.count desc", ['start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
-
+        if ($httpstatus == "200") {
+            $res = $sql->getArray("select agg.url, agg.count, IFNULL(us.status, '-') as 'status' from ( select url, IFNULL(SUM(count), 0) AS 'count' from " . rex::getTable("pagestats_visits_per_url") . " WHERE date BETWEEN :start AND :end group by url) agg inner join " . rex::getTable("pagestats_urlstatus") . " us on agg.url = us.url and status = '200 OK' order by agg.count desc", ['start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
+        } elseif ($httpstatus == "not200") {
+            $res = $sql->getArray("select agg.url, agg.count, IFNULL(us.status, '-') as 'status' from ( select url, IFNULL(SUM(count), 0) AS 'count' from " . rex::getTable("pagestats_visits_per_url") . " WHERE date BETWEEN :start AND :end group by url) agg inner join " . rex::getTable("pagestats_urlstatus") . " us on agg.url = us.url and status != '200 OK' order by agg.count desc", ['start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
+        } else {
+            $res = $sql->getArray("select agg.url, agg.count, IFNULL(us.status, '-') as 'status' from ( select url, IFNULL(SUM(count), 0) AS 'count' from " . rex::getTable("pagestats_visits_per_url") . " WHERE date BETWEEN :start AND :end group by url) agg left join " . rex::getTable("pagestats_urlstatus") . " us on agg.url = us.url order by agg.count desc", ['start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
+        }
 
         return $res;
     }

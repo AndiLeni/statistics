@@ -77,13 +77,6 @@ $field3->setLabel($addon->i18n('pagestats_ignored_regex'));
 $field3->setNotice($addon->i18n('pagestats_ignored_regex_note'));
 
 
-$field4 = $form->addRadioField('statistics_log_all');
-$field4->setLabel($addon->i18n('statistics_log_404'));
-$field4->addOption($addon->i18n('statistics_yes'), 1);
-$field4->addOption($addon->i18n('statistics_no'), 0);
-$field4->setNotice($addon->i18n('statistics_log_404_note'));
-
-
 $field4 = $form->addRadioField('statistics_scroll_pagination');
 $field4->setLabel($addon->i18n('statistics_scroll_pagination'));
 $field4->addOption($addon->i18n('statistics_scroll_table'), 'table');
@@ -126,18 +119,11 @@ $field8->addOption($addon->i18n('statistics_no'), 0);
 $field8->setNotice('Aktivieren, um Seitenaufrufe durch eingeloggte User zu verwerfen.');
 
 
-$field = $form->addRadioField('statistics_rec_session_stats');
-$field->setLabel('Sitzungs Statistiken erfassen');
-$field->addOption($addon->i18n('statistics_yes'), 1);
-$field->addOption($addon->i18n('statistics_no'), 0);
-$field->setNotice('Aktivieren, um die Statistiken "Besuchsdauer", "Ausstiegsseite" und "Anzahl besuchte Seiten" zu erfassen');
-
-
 $field = $form->addRadioField('statistics_rec_onlyok');
 $field->setLabel('Nur 200er Aufrufe erfassen');
 $field->addOption($addon->i18n('statistics_yes'), 1);
 $field->addOption($addon->i18n('statistics_no'), 0);
-$field->setNotice('Dadurch werden nur Aufrufe mit einem HTTP Status 200 erfasst. Folgende Statistiken loggen dennoch alle Aufrufe: Ausstiegsseiten, Aufrufe pro Seite');
+$field->setNotice('Dadurch werden nur Aufrufe mit einem HTTP Status 200 OK erfasst. Die Statistik "Seitenaufrufe" loggt trotzdem auch Aufrufe ungleich 200.');
 
 
 // media

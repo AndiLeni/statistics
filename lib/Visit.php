@@ -228,6 +228,13 @@ class Visit
         ON DUPLICATE KEY UPDATE count = count + 1;';
 
         $sql->setQuery($sql_insert);
+
+
+        // save url http status
+        $hash = md5($this->url);
+
+        $sql = rex_sql::factory();
+        $sql->setQuery("insert into " . rex::getTable("pagestats_urlstatus") . " (hash, url, status) values (:hash, :url, :status) on duplicate key update status = values(status);", [":hash" => $hash, ":url" => $this->url, ":status" => $this->httpStatus]);
     }
 
 
@@ -293,11 +300,6 @@ class Visit
             $sql->insertOrUpdate();
         }
 
-        // save url http status
-        $hash = md5($this->url);
-
-        $sql = rex_sql::factory();
-        $sql->setQuery("insert into " . rex::getTable("pagestats_urlstatus") . " (hash, url, status) values (:hash, :url, :status) on duplicate key update status = values(status);", [":hash" => $hash, ":url" => $this->url, ":status" => $this->httpStatus]);
 
         return $save_visit;
     }
