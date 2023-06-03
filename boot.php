@@ -98,7 +98,7 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
         $response_code = rex_response::getStatus();
 
 
-        if (rex_config::get("statistics", "statistics_rec_session_stats", false) == true && rex::getRequest()->getRequestUri() != "/favicon.ico") {
+        if (rex::getRequest()->getRequestUri() != "/favicon.ico") {
 
             if ($response_code == rex_response::HTTP_OK || !$addon->getConfig("statistics_rec_onlyok", false)) {
                 // visitduration, number pages visited, last visited page
