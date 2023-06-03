@@ -190,7 +190,7 @@ $fragment->setVar('title', "Besuchsdauer");
 $fragment->setVar('chart', '<div id="chart_visitduration" style="width: 100%;height:500px"></div>', false);
 $fragment->setVar('table', $visitduration->getList(), false);
 $fragment->setVar('modalid', "bd_modal", false);
-$fragment->setVar('note', "<p>Zeigt an, wie viel Zeit auf der Webseite verbracht wurde.</p> Hinweis: <p>Die Besuchsdauer wird nur annähernd genau erfasst. D.h. konkret, die Besuchszeit der letzten vom Besucher aufgerufenen Seite kann nicht erfasst werden. Die Zeit berechnet sich somit aus der Dauer aller Aufrufe ausgenommen des letzten.</p>", false);
+$fragment->setVar('note', "<p>Zeigt an, wie viel Zeit auf der Webseite verbracht wurde. Ein Wert von genau '0 Sekunden' sagt aus, dass der Besucher nur eine einzige Seite besucht hat.</p> Hinweis: <p>Die Besuchsdauer wird nur annähernd genau erfasst. D.h. konkret, die Besuchszeit der letzten vom Besucher aufgerufenen Seite kann nicht erfasst werden. Die Zeit berechnet sich somit aus der Dauer aller Aufrufe ausgenommen des letzten.</p>", false);
 echo $fragment->parse('data_vertical.php');
 
 $fragment = new rex_fragment();
