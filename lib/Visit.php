@@ -221,7 +221,19 @@ class Visit
         ON DUPLICATE KEY UPDATE count = count + 1;';
 
         $sql->setQuery($sql_insert);
+    }
 
+
+    /**
+     * 
+     * 
+     * @return void 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     */
+    public function updateVisitsPerUrl(): void
+    {
+        $sql = rex_sql::factory();
 
         $sql_insert = 'INSERT INTO ' . rex::getTable('pagestats_visits_per_url') . ' (hash,date,url,count) VALUES 
         ("' . md5($this->datetime_now->format('Y-m-d') . $this->url) . '","' . $this->datetime_now->format('Y-m-d') . '","' . addslashes($this->url) . '",1) 
