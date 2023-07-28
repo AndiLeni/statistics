@@ -1,6 +1,10 @@
 # Changelog
 
 
+## [3.0.1] - 28.07.2023
+- fix in install.php for ip2geo database download
+
+
 ## [3.0.0] - 28.07.2023
 
 - the addon now uses namespaces, so you have to check for errors after an update, if methods of this addon are used in your own code
