@@ -1,5 +1,6 @@
 <?php
 
+use AndiLeni\Statistics\Ip2Geo;
 
 rex_sql_table::get(rex::getTable('pagestats_data'))
     ->ensureColumn(new rex_sql_column('type', 'varchar(255)'))
@@ -85,3 +86,6 @@ rex_sql_table::get(rex::getTable('pagestats_api'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->setPrimaryKey(['name', 'date'])
     ->ensure();
+
+// ip 2 geo database installation
+Ip2Geo::updateDatabase();

@@ -6,6 +6,7 @@ use AndiLeni\Statistics\ListData;
 use AndiLeni\Statistics\Brand;
 use AndiLeni\Statistics\Browser;
 use AndiLeni\Statistics\Browsertype;
+use AndiLeni\Statistics\Country;
 use AndiLeni\Statistics\Hour;
 use AndiLeni\Statistics\Lastpage;
 use AndiLeni\Statistics\Model;
@@ -79,6 +80,8 @@ $visitduration_data = $visitduration->getChartData();
 $lastpage = new Lastpage();
 $lastpage_data = $lastpage->getChartData();
 
+$country = new Country();
+$country_data = $country->getChartData();
 
 
 // overview of visits and visitors of today, total and filered by date
@@ -199,6 +202,12 @@ $fragment->setVar('chart', '<div id="chart_lastpage" style="width: 100%;height:5
 $fragment->setVar('table', $lastpage->getList(), false);
 $fragment->setVar('modalid', "lp_modal", false);
 $fragment->setVar('note', "<p>Zeigt an, welche URLs als letztes aufgerufen worden sind bevor die Webseite verlassen wurde.</p>", false);
+echo $fragment->parse('data_vertical.php');
+
+$fragment = new rex_fragment();
+$fragment->setVar('title', "Länder");
+$fragment->setVar('chart', '<div id="chart_country" style="width: 100%;height:500px"></div>', false);
+$fragment->setVar('table', $country->getList(), false);
 echo $fragment->parse('data_vertical.php');
 
 
@@ -1006,6 +1015,68 @@ echo $fragment->parse('core/page/section.php');
         }]
     };
     chart_lastpage.setOption(chart_lastpage_option);
+
+
+    var chart_country = echarts.init(document.getElementById('chart_country'), theme);
+    var chart_country_option = {
+        title: {},
+        tooltip: {
+            trigger: 'axis',
+            formatter: "{b} <br> Anzahl: <b>{c}</b>",
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            containLabel: true,
+            left: '3%',
+            right: '3%',
+            bottom: '3%',
+        },
+        xAxis: [{
+            type: 'category',
+            data: <?= json_encode($country_data['labels']) ?>,
+            axisTick: {
+                alignWithLabel: true
+            }
+        }],
+        yAxis: [{
+            type: 'value'
+        }],
+        toolbox: {
+            show: <?= rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false' ?>,
+            orient: 'vertical',
+            top: '10%',
+            feature: {
+                dataZoom: {
+                    yAxisIndex: "none"
+                },
+                dataView: {
+                    readOnly: false
+                },
+                magicType: {
+                    type: ["line", "bar"]
+                },
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        series: [{
+            type: 'bar',
+            data: <?php echo json_encode($country_data['values']) ?>,
+            label: {
+                show: false,
+            },
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }]
+    };
+    chart_country.setOption(chart_country_option);
 
 
     // resize visits chart when tabs change

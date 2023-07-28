@@ -1,5 +1,7 @@
 <?php
 
+use AndiLeni\Statistics\Ip2Geo;
+
 $addon = rex_addon::get('statistics');
 
 
@@ -48,6 +50,13 @@ if (rex_request_method() == 'post') {
         $sql = rex_sql::factory();
         $sql->setQuery('delete from ' . rex::getTable('pagestats_api'));
         echo rex_view::success('Es wurden ' . $sql->getRows() . ' Einträge aus der Tabelle api gelöscht.');
+    } elseif ($function == 'updateGeo2Ip') {
+        $updated = Ip2Geo::updateDatabase();
+        if ($updated) {
+            echo rex_view::success("Geo Datenbank geupdated.");
+        } else {
+            echo rex_view::success("Geo Datenbank konnte nicht aktualisiert werden.");
+        }
     }
 }
 
@@ -162,6 +171,26 @@ $fragment->setVar('class', 'edit', false);
 $fragment->setVar('title', $addon->i18n('statistics_settings'), false);
 $fragment->setVar('body', $form->get(), false);
 echo $fragment->parse('core/page/section.php');
+
+
+
+// ip2geo section
+$geoIpHtml = '
+<p>Geo-Datenbank updaten mit der IP-Adressen zu Ländern zugeordnet werden.</p>
+<form style="margin:5px" action="' . rex_url::currentBackendPage() . '" method="post">
+<input type="hidden" name="func" value="updateGeo2Ip">
+<button class="btn btn-primary" type="submit">Geo-Datenbank Updaten</button>
+</form>
+<p><a href="https://db-ip.com">IP Geolocation by DB-IP</a></p>
+';
+
+$fragment = new rex_fragment();
+$fragment->setVar('class', 'info', false);
+$fragment->setVar('title', "IP 2 Geo", false);
+$fragment->setVar('body', $geoIpHtml, false);
+echo $fragment->parse('core/page/section.php');
+
+
 
 
 // forms which should make a post request to this page to trigger deletion of stats data

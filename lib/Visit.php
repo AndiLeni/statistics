@@ -15,7 +15,8 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use InvalidArgumentException;
 use rex_sql_exception;
 use Exception;
-
+use GeoIp2\Database\Reader;
+use rex_logger;
 
 /**
  * Main class to handle saving of page visitors.
@@ -78,6 +79,8 @@ class Visit
     private string $token = '';
 
     private string $httpStatus = '';
+
+    private string $country = '';
 
 
     /**
@@ -187,6 +190,8 @@ class Visit
      */
     public function persist(): void
     {
+        $this->getCountry();
+
         $clientInfo = $this->DeviceDetector->getClient();
         $osInfo = $this->DeviceDetector->getOs();
         $deviceInfo = $this->DeviceDetector->getDeviceName();
@@ -210,7 +215,8 @@ class Visit
         ("brand","' . addslashes($this->brand) . '",1), 
         ("model","' . addslashes($this->brand) . ' - ' . addslashes($this->model) . '",1),  
         ("hour","' . $this->datetime_now->format('H') . '",1), 
-        ("weekday","' . $this->datetime_now->format('N') . '",1) 
+        ("weekday","' . $this->datetime_now->format('N') . '",1),
+        ("country","' . $this->country . '",1)
         ON DUPLICATE KEY UPDATE count = count + 1;';
 
         $sql->setQuery($sql_insert);
@@ -247,6 +253,20 @@ class Visit
 
         $sql = rex_sql::factory();
         $sql->setQuery("insert into " . rex::getTable("pagestats_urlstatus") . " (hash, url, status) values (:hash, :url, :status) on duplicate key update status = values(status);", [":hash" => $hash, ":url" => $this->url, ":status" => $this->httpStatus]);
+    }
+
+
+    public function getCountry(): void
+    {
+        $cityDbReader = new Reader($this->addon->getDataPath("ip2geo.mmdb"));
+        try {
+            $record = $cityDbReader->country($this->clientIPAddress);
+            $this->country = $record->country->name;
+        } catch (\GeoIp2\Exception\AddressNotFoundException $e) {
+            $this->country = "Unbekannt";
+        } catch (\MaxMind\Db\Reader\InvalidDatabaseException $e) {
+            rex_logger::logException($e);
+        }
     }
 
 
