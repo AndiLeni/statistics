@@ -88,4 +88,22 @@ rex_sql_table::get(rex::getTable('pagestats_api'))
     ->ensure();
 
 // ip 2 geo database installation
-Ip2Geo::updateDatabase();
+$today = new DateTimeImmutable();
+$dbUrl = "https://download.db-ip.com/free/dbip-country-lite-{$today->format('Y-m')}.mmdb.gz";
+
+try {
+    $socket = rex_socket::factoryUrl($dbUrl);
+
+    $response = $socket->doGet();
+    if ($response->isOk()) {
+        $body = $response->getBody();
+        $body = gzdecode($body);
+        rex_file::put(rex_path::addonData("statistics", "ip2geo.mmdb"), $body);
+        return true;
+    }
+
+    return false;
+} catch (rex_socket_exception $e) {
+    rex_logger::logException($e);
+    return false;
+}
