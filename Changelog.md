@@ -1,69 +1,23 @@
 # Changelog
 
 
-## [x.x.x] - xx.xx.xxxx
+## [3.0.0] - 28.07.2023
 
-
-## [3.0.0beta19] - 03.06.2023
-
-
-## [3.0.0beta18] - 03.06.2023
-
-
-## [3.0.0beta17] - 02.06.2023
-
-
-## [3.0.0beta16] - 02.06.2023
-
-
-## [3.0.0beta15] - 29.05.2023
-
-
-## [3.0.0beta14] - 28.05.2023
-
-
-## [3.0.0beta13] - 27.05.2023
-
-
-## [3.0.0beta12] - 26.05.2023
-
-
-## [3.0.0beta11] - 26.05.2023
-
-
-## [3.0.0beta10] - 20.05.2023
-
-
-## [3.0.0beta9] - 20.05.2023
-
-
-## [3.0.0beta8] - 19.05.2023
-
-
-## [3.0.0beta7] - 19.05.2023
-
-
-## [3.0.0beta6] - 19.05.2023
-
-
-## [3.0.0beta5] - 19.05.2023
-
-
-## [3.0.0beta4] - 19.05.2023
-
-
-## [3.0.0beta3] - 19.05.2023
-
-
-## [3.0.0beta2] - 19.05.2023
-
-
-## [3.0.0beta1] - 17.05.2023 
 - the addon now uses namespaces, so you have to check for errors after an update, if methods of this addon are used in your own code
-- darkmode for charts added
+- charts now have a darkmode
 - plugins are now directly integrated into the main addon
-- renamed "Kampagnen" to "API" to better express what this feature is doing
+- renamed "Kampagnen" to "Event" to better express what this feature is doing
 - removed yrewrite as a dependency
+- added statistics for visited pages per session
+- added statistics for visitduration
+- added statistics for visitors country 
+- "Seitenaufrufe" now shows http status code
+- filter settings are saved between page navigations
+- added setting to track only pages with a 200 response code which results in much more accurate statistics
+- added a cronjob to automatically remove unused user-hashes. Usefull to comply with the GDPR "Datensparsamkeit" rule 
+- some visits dont use the users ip any more and instead use a session token
+- removed integration for dashboard addon
+
 
 
 ## [2.7.0] - 10.05.2023
