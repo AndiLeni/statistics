@@ -74,7 +74,7 @@ $list->addColumn('edit', $addon->i18n('statistics_api_delete'));
 $list->setColumnLabel('edit', $addon->i18n('statistics_api_delete'));
 $list->addLinkAttribute('edit', 'data-confirm', '###name###' . PHP_EOL . $addon->i18n('statistics_api_delete_confirm'));
 $list->setColumnParams('edit', ['name' => '###name###', 'delete_entry' => true]);
-$list->addTableAttribute('class', 'table-bordered statistics_table');
+$list->addTableAttribute('class', 'table-bordered statistics_table table-striped table-hover');
 
 if ($list->getRows() == 0) {
     $table = rex_view::info($addon->i18n('statistics_no_data'));
