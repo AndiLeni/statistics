@@ -125,3 +125,12 @@ statistics_api_delete_api = Alle API Aufrufe löschen
 statistics_api_delete_api_confirm = Möchten Sie wirklich alle API Aufrufe und Kampagnen löschen?
 statistics_api_delete = Löschen
 statistics_api_delete_confirm = Wirklich alle Einträge für diese Kampagne löschen?
+
+statistics_chart_views = Aufrufe
+statistics_chart_daily = Täglich
+statistics_chart_monthly = Monatlich
+statistics_chart_yearly = Jährlich
+statistics_chart_visitors = Besucher
+statistics_chart_visits = Aufrufe
+statistics_chart_visits_total = Aufrufe gesamt
+statistics_chart_visitors_total = Besucher gesamt
