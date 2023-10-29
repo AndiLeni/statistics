@@ -13,7 +13,6 @@ $replacement = 'src="'.$assetsUrl.'/\2"';
 $body = preg_replace($pattern, $replacement, $body);
 
 $fragment = new rex_fragment();
-$fragment->setVar('class', 'rex-readme', false);
 $fragment->setVar('title', $addon->i18n('statistics_help'));
 $fragment->setVar('body', $body, false);
 echo $fragment->parse('core/page/section.php');
