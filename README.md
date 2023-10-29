@@ -115,7 +115,7 @@ Event::log("my_event_name");
    ```
 4. In den Einstellungen das tracken aktivieren.
 5. Das Beipiel erzeugt dann eine solche Tabelle:  
-   ![Beispiel1](./preview/6.png "Beispiel1")
+   ![Beispiel1](./assets/preview/6.png "Beispiel1")
    Klickt der Besucher auf den Link "Download" wird dieser Aufruf in der Statistik gespeichert.
 
 
@@ -144,21 +144,21 @@ Ziel: Das Klicken eines Links im Frontend soll erfasst werden.
 ## Preview:
 
 ### Startseite des Addons mit den wichtigsten Metriken:
-![Preview](./preview/1.png "Preview")
+![Preview](./assets/preview/1.png "Preview")
 
 ### Seite mit Details über eine URL:
-![Preview](./preview/2.png "Preview")
+![Preview](./assets/preview/2.png "Preview")
 
 ### Statistiken über Medien Aufrufe:
-![Preview](./preview/5.png "Preview")
-![Preview](./preview/7.png "Preview")
+![Preview](./assets/preview/5.png "Preview")
+![Preview](./assets/preview/7.png "Preview")
 
 ### Verweise:
-![Preview](./preview/8.png "Preview")
+![Preview](./assets/preview/8.png "Preview")
 
 ### API / Kampagnen:
-![Preview](./preview/9.png "Preview")
+![Preview](./assets/preview/9.png "Preview")
 
 
 ### Integration in das Addon https://github.com/yakamara/dashboard
-![Preview](./preview/4.png "Preview")
+![Preview](./assets/preview/4.png "Preview")
