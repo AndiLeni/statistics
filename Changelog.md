@@ -1,7 +1,7 @@
 # Changelog
 
 ## [3.1.0] - 13.01.2024
-- update device detector to newest version
+- update vendors
 - remove vectorface/whip as dependency und use symfony shipped alternative
 - add CrawlerDetect library to detect more crawlers
 - check ip adress of visitor for bot
