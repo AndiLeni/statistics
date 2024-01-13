@@ -217,7 +217,7 @@ $list->setColumnLabel('name', $addon->i18n('statistics_name'));
 $list->setColumnLabel('count', $addon->i18n('statistics_count'));
 $list->setColumnLabel('category', $addon->i18n('statistics_category'));
 $list->setColumnLabel('producer', $addon->i18n('statistics_producer'));
-$list->addTableAttribute('class', 'dt_bots statistics_table');
+$list->addTableAttribute('class', 'dt_bots statistics_table table-striped table-hover');
 
 if ($list->getRows() == 0) {
     $table = rex_view::info($addon->i18n('statistics_no_data'));

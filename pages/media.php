@@ -68,7 +68,7 @@ $list->setColumnLabel('count', $addon->i18n('statistics_media_count'));
 // $list->setColumnSortable('url', $direction = 'asc');
 // $list->setColumnSortable('count', $direction = 'asc');
 $list->setColumnParams('url', ['url' => '###url###', 'date_start' => $filter_date_helper->date_start->format('Y-m-d'), 'date_end' => $filter_date_helper->date_end->format('Y-m-d')]);
-$list->addTableAttribute('class', 'table-bordered statistics_table');
+$list->addTableAttribute('class', 'table-bordered statistics_table table-striped table-hover');
 
 if ($list->getRows() == 0) {
     $table = rex_view::info($addon->i18n('statistics_no_data'));

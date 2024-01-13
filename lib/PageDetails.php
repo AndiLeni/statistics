@@ -50,7 +50,7 @@ class PageDetails
         $list->setColumnLabel('date', 'Datum');
         $list->setColumnLabel('count', 'Anzahl');
         $list->setColumnParams('url', ['url' => '###url###']);
-        $list->addTableAttribute('class', 'table-bordered dt_order_first statistics_table');
+        $list->addTableAttribute('class', 'table-bordered dt_order_first statistics_table table-striped table-hover');
         $list->setColumnFormat('date', 'date', 'd.m.Y');
         $list->setColumnLayout('date', ['<th>###VALUE###</th>', '<td data-sort="###date###">###VALUE###</td>']);
 
