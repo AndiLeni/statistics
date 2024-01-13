@@ -2,7 +2,8 @@
     "require": {
         "vectorface/whip": "^0.4.0",
         "symfony/cache": "^5.4",
-        "geoip2/geoip2": "~2.0"
+        "geoip2/geoip2": "~2.0",
+        "matomo/device-detector": "^6.2"
     },
     "replace": {
         "psr/log": "*",

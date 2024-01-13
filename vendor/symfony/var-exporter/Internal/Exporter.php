@@ -38,7 +38,7 @@ class Exporter
         $refs = $values;
         foreach ($values as $k => $value) {
             if (\is_resource($value)) {
-                throw new NotInstantiableTypeException(get_resource_type($value) . ' resource');
+                throw new NotInstantiableTypeException(get_resource_type($value).' resource');
             }
             $refs[$k] = $objectsPool;
 
@@ -80,7 +80,7 @@ class Exporter
                 }
 
                 if (!\is_array($properties = $value->__serialize())) {
-                    throw new \TypeError($class . '::__serialize() must return an array');
+                    throw new \TypeError($class.'::__serialize() must return an array');
                 }
 
                 goto prepare_value;
@@ -106,10 +106,9 @@ class Exporter
                 }
                 $properties = ['SplObjectStorage' => ["\0" => $properties]];
                 $arrayValue = (array) $value;
-            } elseif (
-                $value instanceof \Serializable
+            } elseif ($value instanceof \Serializable
                 || $value instanceof \__PHP_Incomplete_Class
-                || \PHP_VERSION_ID < 80200 && $value instanceof DatePeriod
+                || \PHP_VERSION_ID < 80200 && $value instanceof \DatePeriod
             ) {
                 ++$objectsCount;
                 $objectsPool[$value] = [$id = \count($objectsPool), serialize($value), [], 0];
@@ -193,34 +192,27 @@ class Exporter
     public static function export($value, string $indent = '')
     {
         switch (true) {
-            case \is_int($value) || \is_float($value):
-                return var_export($value, true);
-            case [] === $value:
-                return '[]';
-            case false === $value:
-                return 'false';
-            case true === $value:
-                return 'true';
-            case null === $value:
-                return 'null';
-            case '' === $value:
-                return "''";
-            case $value instanceof \UnitEnum:
-                return '\\' . ltrim(var_export($value, true), '\\');
+            case \is_int($value) || \is_float($value): return var_export($value, true);
+            case [] === $value: return '[]';
+            case false === $value: return 'false';
+            case true === $value: return 'true';
+            case null === $value: return 'null';
+            case '' === $value: return "''";
+            case $value instanceof \UnitEnum: return '\\'.ltrim(var_export($value, true), '\\');
         }
 
         if ($value instanceof Reference) {
             if (0 <= $value->id) {
-                return '$o[' . $value->id . ']';
+                return '$o['.$value->id.']';
             }
             if (!$value->count) {
                 return self::export($value->value, $indent);
             }
             $value = -$value->id;
 
-            return '&$r[' . $value . ']';
+            return '&$r['.$value.']';
         }
-        $subIndent = $indent . '    ';
+        $subIndent = $indent.'    ';
 
         if (\is_string($value)) {
             $code = sprintf("'%s'", addcslashes($value, "'\\"));
@@ -228,7 +220,7 @@ class Exporter
             $code = preg_replace_callback("/((?:[\\0\\r\\n]|\u{202A}|\u{202B}|\u{202D}|\u{202E}|\u{2066}|\u{2067}|\u{2068}|\u{202C}|\u{2069})++)(.)/", function ($m) use ($subIndent) {
                 $m[1] = sprintf('\'."%s".\'', str_replace(
                     ["\0", "\r", "\n", "\u{202A}", "\u{202B}", "\u{202D}", "\u{202E}", "\u{2066}", "\u{2067}", "\u{2068}", "\u{202C}", "\u{2069}", '\n\\'],
-                    ['\0', '\r', '\n', '\u{202A}', '\u{202B}', '\u{202D}', '\u{202E}', '\u{2066}', '\u{2067}', '\u{2068}', '\u{202C}', '\u{2069}', '\n"' . "\n" . $subIndent . '."\\'],
+                    ['\0', '\r', '\n', '\u{202A}', '\u{202B}', '\u{202D}', '\u{202E}', '\u{2066}', '\u{2067}', '\u{2068}', '\u{202C}', '\u{2069}', '\n"'."\n".$subIndent.'."\\'],
                     $m[1]
                 ));
 
@@ -237,10 +229,10 @@ class Exporter
                 }
 
                 if ('n".\'' === substr($m[1], -4)) {
-                    return substr_replace($m[1], "\n" . $subIndent . ".'" . $m[2], -2);
+                    return substr_replace($m[1], "\n".$subIndent.".'".$m[2], -2);
                 }
 
-                return $m[1] . $m[2];
+                return $m[1].$m[2];
             }, $code, -1, $count);
 
             if ($count && str_starts_with($code, "''.")) {
@@ -256,24 +248,24 @@ class Exporter
             foreach ($value as $k => $v) {
                 $code .= $subIndent;
                 if (!\is_int($k) || 1 !== $k - $j) {
-                    $code .= self::export($k, $subIndent) . ' => ';
+                    $code .= self::export($k, $subIndent).' => ';
                 }
                 if (\is_int($k) && $k > $j) {
                     $j = $k;
                 }
-                $code .= self::export($v, $subIndent) . ",\n";
+                $code .= self::export($v, $subIndent).",\n";
             }
 
-            return "[\n" . $code . $indent . ']';
+            return "[\n".$code.$indent.']';
         }
 
         if ($value instanceof Values) {
-            $code = $subIndent . "\$r = [],\n";
+            $code = $subIndent."\$r = [],\n";
             foreach ($value->values as $k => $v) {
-                $code .= $subIndent . '$r[' . $k . '] = ' . self::export($v, $subIndent) . ",\n";
+                $code .= $subIndent.'$r['.$k.'] = '.self::export($v, $subIndent).",\n";
             }
 
-            return "[\n" . $code . $indent . ']';
+            return "[\n".$code.$indent.']';
         }
 
         if ($value instanceof Registry) {
@@ -294,7 +286,7 @@ class Exporter
         $seen = [];
         $prototypesAccess = 0;
         $factoriesAccess = 0;
-        $r = '\\' . Registry::class;
+        $r = '\\'.Registry::class;
         $j = -1;
 
         foreach ($value->classes as $k => $class) {
@@ -304,77 +296,77 @@ class Exporter
             }
             if (!Registry::$instantiableWithoutConstructor[$class]) {
                 if (is_subclass_of($class, 'Serializable') && !method_exists($class, '__unserialize')) {
-                    $serializables[$k] = 'C:' . \strlen($class) . ':"' . $class . '":0:{}';
+                    $serializables[$k] = 'C:'.\strlen($class).':"'.$class.'":0:{}';
                 } else {
-                    $serializables[$k] = 'O:' . \strlen($class) . ':"' . $class . '":0:{}';
+                    $serializables[$k] = 'O:'.\strlen($class).':"'.$class.'":0:{}';
                 }
                 if (is_subclass_of($class, 'Throwable')) {
                     $eol = is_subclass_of($class, 'Error') ? "\0Error\0" : "\0Exception\0";
-                    $serializables[$k] = substr_replace($serializables[$k], '1:{s:' . (5 + \strlen($eol)) . ':"' . $eol . 'trace";a:0:{}}', -4);
+                    $serializables[$k] = substr_replace($serializables[$k], '1:{s:'.(5 + \strlen($eol)).':"'.$eol.'trace";a:0:{}}', -4);
                 }
                 continue;
             }
-            $code .= $subIndent . (1 !== $k - $j ? $k . ' => ' : '');
+            $code .= $subIndent.(1 !== $k - $j ? $k.' => ' : '');
             $j = $k;
             $eol = ",\n";
-            $c = '[' . self::export($class) . ']';
+            $c = '['.self::export($class).']';
 
             if ($seen[$class] ?? false) {
                 if (Registry::$cloneable[$class]) {
                     ++$prototypesAccess;
-                    $code .= 'clone $p' . $c;
+                    $code .= 'clone $p'.$c;
                 } else {
                     ++$factoriesAccess;
-                    $code .= '$f' . $c . '()';
+                    $code .= '$f'.$c.'()';
                 }
             } else {
                 $seen[$class] = true;
                 if (Registry::$cloneable[$class]) {
-                    $code .= 'clone (' . ($prototypesAccess++ ? '$p' : '($p = &' . $r . '::$prototypes)') . $c . ' ?? ' . $r . '::p';
+                    $code .= 'clone ('.($prototypesAccess++ ? '$p' : '($p = &'.$r.'::$prototypes)').$c.' ?? '.$r.'::p';
                 } else {
-                    $code .= '(' . ($factoriesAccess++ ? '$f' : '($f = &' . $r . '::$factories)') . $c . ' ?? ' . $r . '::f';
-                    $eol = '()' . $eol;
+                    $code .= '('.($factoriesAccess++ ? '$f' : '($f = &'.$r.'::$factories)').$c.' ?? '.$r.'::f';
+                    $eol = '()'.$eol;
                 }
-                $code .= '(' . substr($c, 1, -1) . '))';
+                $code .= '('.substr($c, 1, -1).'))';
             }
             $code .= $eol;
         }
 
         if (1 === $prototypesAccess) {
-            $code = str_replace('($p = &' . $r . '::$prototypes)', $r . '::$prototypes', $code);
+            $code = str_replace('($p = &'.$r.'::$prototypes)', $r.'::$prototypes', $code);
         }
         if (1 === $factoriesAccess) {
-            $code = str_replace('($f = &' . $r . '::$factories)', $r . '::$factories', $code);
+            $code = str_replace('($f = &'.$r.'::$factories)', $r.'::$factories', $code);
         }
         if ('' !== $code) {
-            $code = "\n" . $code . $indent;
+            $code = "\n".$code.$indent;
         }
 
         if ($serializables) {
-            $code = $r . '::unserialize([' . $code . '], ' . self::export($serializables, $indent) . ')';
+            $code = $r.'::unserialize(['.$code.'], '.self::export($serializables, $indent).')';
         } else {
-            $code = '[' . $code . ']';
+            $code = '['.$code.']';
         }
 
-        return '$o = ' . $code;
+        return '$o = '.$code;
     }
 
     private static function exportHydrator(Hydrator $value, string $indent, string $subIndent): string
     {
         $code = '';
         foreach ($value->properties as $class => $properties) {
-            $code .= $subIndent . '    ' . self::export($class) . ' => ' . self::export($properties, $subIndent . '    ') . ",\n";
+            $code .= $subIndent.'    '.self::export($class).' => '.self::export($properties, $subIndent.'    ').",\n";
         }
 
         $code = [
             self::export($value->registry, $subIndent),
             self::export($value->values, $subIndent),
-            '' !== $code ? "[\n" . $code . $subIndent . ']' : '[]',
+            '' !== $code ? "[\n".$code.$subIndent.']' : '[]',
             self::export($value->value, $subIndent),
             self::export($value->wakeups, $subIndent),
         ];
 
-        return '\\' . \get_class($value) . "::hydrate(\n" . $subIndent . implode(",\n" . $subIndent, $code) . "\n" . $indent . ')';
+        return '\\'.\get_class($value)."::hydrate(\n".$subIndent.implode(",\n".$subIndent, $code)."\n".$indent.')';
     }
 
     /**

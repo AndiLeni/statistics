@@ -4,10 +4,11 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitcb80cde65b6ab27e14cdc690bc448569
+class ComposerStaticInit504e59637100e71d31cd34710346be85
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -35,6 +36,10 @@ class ComposerStaticInitcb80cde65b6ab27e14cdc690bc448569
         'G' => 
         array (
             'GeoIp2\\' => 7,
+        ),
+        'D' => 
+        array (
+            'DeviceDetector\\' => 15,
         ),
         'C' => 
         array (
@@ -83,6 +88,10 @@ class ComposerStaticInitcb80cde65b6ab27e14cdc690bc448569
         array (
             0 => __DIR__ . '/..' . '/geoip2/geoip2/src',
         ),
+        'DeviceDetector\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/matomo/device-detector',
+        ),
         'Composer\\CaBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/ca-bundle/src',
@@ -96,9 +105,9 @@ class ComposerStaticInitcb80cde65b6ab27e14cdc690bc448569
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitcb80cde65b6ab27e14cdc690bc448569::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitcb80cde65b6ab27e14cdc690bc448569::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitcb80cde65b6ab27e14cdc690bc448569::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit504e59637100e71d31cd34710346be85::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit504e59637100e71d31cd34710346be85::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit504e59637100e71d31cd34710346be85::$classMap;
 
         }, null, ClassLoader::class);
     }

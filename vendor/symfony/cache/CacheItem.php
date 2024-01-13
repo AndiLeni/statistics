@@ -80,7 +80,7 @@ final class CacheItem implements ItemInterface
     {
         if (null === $expiration) {
             $this->expiry = null;
-        } elseif ($expiration instanceof DateTimeInterface) {
+        } elseif ($expiration instanceof \DateTimeInterface) {
             $this->expiry = (float) $expiration->format('U.u');
         } else {
             throw new InvalidArgumentException(sprintf('Expiration date must implement DateTimeInterface or be null, "%s" given.', get_debug_type($expiration)));
@@ -98,8 +98,8 @@ final class CacheItem implements ItemInterface
     {
         if (null === $time) {
             $this->expiry = null;
-        } elseif ($time instanceof DateInterval) {
-            $this->expiry = microtime(true) + DateTime::createFromFormat('U', 0)->add($time)->format('U.u');
+        } elseif ($time instanceof \DateInterval) {
+            $this->expiry = microtime(true) + \DateTime::createFromFormat('U', 0)->add($time)->format('U.u');
         } elseif (\is_int($time)) {
             $this->expiry = $time + microtime(true);
         } else {
@@ -183,7 +183,7 @@ final class CacheItem implements ItemInterface
             $replace = [];
             foreach ($context as $k => $v) {
                 if (\is_scalar($v)) {
-                    $replace['{' . $k . '}'] = $v;
+                    $replace['{'.$k.'}'] = $v;
                 }
             }
             @trigger_error(strtr($message, $replace), \E_USER_WARNING);

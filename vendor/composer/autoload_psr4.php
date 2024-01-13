@@ -16,5 +16,6 @@ return array(
     'MaxMind\\Exception\\' => array($vendorDir . '/maxmind/web-service-common/src/Exception'),
     'MaxMind\\Db\\' => array($vendorDir . '/maxmind-db/reader/src/MaxMind/Db'),
     'GeoIp2\\' => array($vendorDir . '/geoip2/geoip2/src'),
+    'DeviceDetector\\' => array($vendorDir . '/matomo/device-detector'),
     'Composer\\CaBundle\\' => array($vendorDir . '/composer/ca-bundle/src'),
 );
