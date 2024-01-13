@@ -3,7 +3,6 @@
 use AndiLeni\Statistics\MediaRequest;
 use AndiLeni\Statistics\Visit;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
-use Vectorface\Whip\Whip;
 
 
 
@@ -109,8 +108,7 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
 
 
         // get ip from visitor, set to 0.0.0.0 when ip can not be determined
-        $whip = new Whip();
-        $clientAddress = $whip->getValidIpAddress();
+        $clientAddress = rex::getRequest()->getClientIp();
         $clientAddress = $clientAddress ? $clientAddress : '0.0.0.0';
 
 

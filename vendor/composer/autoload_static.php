@@ -12,10 +12,6 @@ class ComposerStaticInit504e59637100e71d31cd34710346be85
     );
 
     public static $prefixLengthsPsr4 = array (
-        'V' => 
-        array (
-            'Vectorface\\Whip\\' => 16,
-        ),
         'S' => 
         array (
             'Symfony\\Contracts\\Service\\' => 26,
@@ -48,10 +44,6 @@ class ComposerStaticInit504e59637100e71d31cd34710346be85
     );
 
     public static $prefixDirsPsr4 = array (
-        'Vectorface\\Whip\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/vectorface/whip/src',
-        ),
         'Symfony\\Contracts\\Service\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/service-contracts',
