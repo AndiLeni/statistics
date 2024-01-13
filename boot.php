@@ -3,6 +3,7 @@
 use AndiLeni\Statistics\MediaRequest;
 use AndiLeni\Statistics\Visit;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
 
 
 
@@ -138,35 +139,46 @@ rex_extension::register('RESPONSE_SHUTDOWN', function () use ($statistics_has_ba
                 $visit->saveBot();
             } else {
 
-                if ($visit->shouldSaveVisit() && !$visit->DeviceDetector->isLibrary()) {
+                // if matomo was not able to detect a bot try CrawlerDetect
+                $CrawlerDetect = new CrawlerDetect;
 
-                    // visits_per_url and pagestats_urlstatus must also be updated if response_code is != 200
-                    $visit->updateVisitsPerUrl();
+                if ($CrawlerDetect->isCrawler($userAgent)) {
+                    // true if crawler user agent detected
 
-                    if ($response_code == rex_response::HTTP_OK || !$addon->getConfig("statistics_rec_onlyok", false)) {
-                        // visitor is human
-                        // check hash with save_visit, if true then save visit
+                    $crawlerName = $CrawlerDetect->getMatches() ?? "unknown crawler";
+                    $visit->saveCrawlerDetect($crawlerName);
+                } else {
 
-                        // check if referer exists, if yes safe it
-                        $referer = rex_server('HTTP_REFERER', 'string', '');
-                        if ($referer != '') {
-                            $referer = urldecode($referer);
+                    if ($visit->shouldSaveVisit() && !$visit->DeviceDetector->isLibrary()) {
 
-                            if (!str_starts_with($referer, rex::getServer())) {
-                                $visit->saveReferer($referer);
+                        // visits_per_url and pagestats_urlstatus must also be updated if response_code is != 200
+                        $visit->updateVisitsPerUrl();
+
+                        if ($response_code == rex_response::HTTP_OK || !$addon->getConfig("statistics_rec_onlyok", false)) {
+                            // visitor is human
+                            // check hash with save_visit, if true then save visit
+
+                            // check if referer exists, if yes safe it
+                            $referer = rex_server('HTTP_REFERER', 'string', '');
+                            if ($referer != '') {
+                                $referer = urldecode($referer);
+
+                                if (!str_starts_with($referer, rex::getServer())) {
+                                    $visit->saveReferer($referer);
+                                }
                             }
+
+
+                            // check if unique visitor
+                            if ($visit->shouldSaveVisitor()) {
+
+                                // save visitor
+                                $visit->persistVisitor();
+                            }
+
+
+                            $visit->persist();
                         }
-
-
-                        // check if unique visitor
-                        if ($visit->shouldSaveVisitor()) {
-
-                            // save visitor
-                            $visit->persistVisitor();
-                        }
-
-
-                        $visit->persist();
                     }
                 }
             }

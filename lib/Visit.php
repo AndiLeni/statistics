@@ -425,6 +425,24 @@ class Visit
     /**
      *
      *
+     * @return void
+     * @throws InvalidArgumentException
+     * @throws rex_sql_exception
+     */
+    public function saveCrawlerDetect($name): void
+    {
+        $sql = rex_sql::factory();
+
+        $sql->setQuery('
+        INSERT INTO ' . rex::getTable('pagestats_bot') . ' (name,category,producer,count) VALUES 
+        (:botname,:botcategory,:botproducer,1) 
+        ON DUPLICATE KEY UPDATE count = count + 1;', ['botname' => $name, 'botcategory' => "Crawler", 'botproducer' => "-"]);
+    }
+
+
+    /**
+     *
+     *
      * @param string $referer
      * @return void
      * @throws InvalidArgumentException

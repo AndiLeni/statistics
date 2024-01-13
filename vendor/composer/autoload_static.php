@@ -29,6 +29,10 @@ class ComposerStaticInit504e59637100e71d31cd34710346be85
             'MaxMind\\Exception\\' => 18,
             'MaxMind\\Db\\' => 11,
         ),
+        'J' => 
+        array (
+            'Jaybizzle\\CrawlerDetect\\' => 24,
+        ),
         'G' => 
         array (
             'GeoIp2\\' => 7,
@@ -75,6 +79,10 @@ class ComposerStaticInit504e59637100e71d31cd34710346be85
         'MaxMind\\Db\\' => 
         array (
             0 => __DIR__ . '/..' . '/maxmind-db/reader/src/MaxMind/Db',
+        ),
+        'Jaybizzle\\CrawlerDetect\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jaybizzle/crawler-detect/src',
         ),
         'GeoIp2\\' => 
         array (
