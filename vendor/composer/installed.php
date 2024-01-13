@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'b98e47d3ee112c4cbf01f36742c7e2d63a9be8b0',
+        'reference' => '40356c37349bad990a5d68dd13efcd20bdc5dac4',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'b98e47d3ee112c4cbf01f36742c7e2d63a9be8b0',
+            'reference' => '40356c37349bad990a5d68dd13efcd20bdc5dac4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -61,6 +61,24 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'matomo/network' => array(
+            'pretty_version' => '2.0.1',
+            'version' => '2.0.1.0',
+            'reference' => 'ff654b8fc7778b80279815d06a368f7b41249501',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../matomo/network',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'matomo/referrer-spam-blacklist' => array(
+            'pretty_version' => '4.0.0',
+            'version' => '4.0.0.0',
+            'reference' => 'afe4c1ea107ee7a8915a0d5eb0031cf0366608a8',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../matomo/referrer-spam-blacklist',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'maxmind-db/reader' => array(
             'pretty_version' => 'v1.11.0',
             'version' => '1.11.0.0',
@@ -92,6 +110,12 @@
             'dev_requirement' => false,
             'replaced' => array(
                 0 => '6.2.1',
+            ),
+        ),
+        'piwik/referrer-spam-blacklist' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '*',
             ),
         ),
         'psr/cache' => array(

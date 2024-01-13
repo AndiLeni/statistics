@@ -17,6 +17,7 @@ use rex_sql_exception;
 use Exception;
 use GeoIp2\Database\Reader;
 use rex_logger;
+use Matomo\Network\IP;
 
 /**
  * Main class to handle saving of page visitors.
@@ -47,6 +48,37 @@ class Visit
 
     const IGNORE_UA = [
         'REDAXO',
+    ];
+
+    const BOTIPS = [
+        // Live/Bing/MSN
+        '64.4.0.0/18',
+        '65.52.0.0/14',
+        '157.54.0.0/15',
+        '157.56.0.0/14',
+        '157.60.0.0/16',
+        '207.46.0.0/16',
+        '207.68.128.0/18',
+        '207.68.192.0/20',
+        '131.253.26.0/20',
+        '131.253.24.0/20',
+        // Yahoo
+        '72.30.198.0/20',
+        '72.30.196.0/20',
+        '98.137.207.0/20',
+        // Chinese bot hammering websites
+        '1.202.218.8',
+        // google
+        '216.239.32.0/19',
+        '64.233.160.0/19',
+        '66.249.80.0/20',
+        '72.14.192.0/18',
+        '209.85.128.0/17',
+        '66.102.0.0/20',
+        '74.125.0.0/16',
+        '64.18.0.0/20',
+        '207.126.144.0/20',
+        '173.194.0.0/16',
     ];
 
 
@@ -121,11 +153,28 @@ class Visit
         $ignored_ips = $this->addon->getConfig('statistics_ignored_ips');
         $ignored_regex = $this->addon->getConfig('pagestats_ignored_regex');
 
+        /**
+         * check bot ips
+         * adapted from: https://github.com/matomo-org/matomo/blob/5.x-dev/core/Tracker/VisitExcluded.php
+         */
+        $ip = IP::fromStringIP($this->clientIPAddress);
+
+        if ($this->isChromeDataSaverUsed($ip)) {
+            $isInRanges = false;
+        } else {
+            $isInRanges = $ip->isInRanges(self::BOTIPS);
+        }
+
+        if ($isInRanges) {
+            return true;
+        }
+
+        // check own ignored ips
         if (trim($ignored_ips != '')) {
             $ignored_ips = explode("\n", str_replace("\r", "", $ignored_ips));
 
-            foreach ($ignored_ips as $path) {
-                if (str_starts_with($this->clientIPAddress, $path)) {
+            foreach ($ignored_ips as $ip) {
+                if (str_starts_with($this->clientIPAddress, $ip)) {
                     return true;
                 }
             }
@@ -178,6 +227,14 @@ class Visit
 
 
         return false;
+    }
+
+    public function isChromeDataSaverUsed(IP $ip)
+    {
+        // see https://github.com/piwik/piwik/issues/7733
+        return !empty($_SERVER['HTTP_VIA'])
+            && false !== strpos(strtolower($_SERVER['HTTP_VIA']), 'chrome-compression-proxy')
+            && $ip->isInRanges(self::BOTIPS);
     }
 
 

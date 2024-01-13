@@ -28,6 +28,7 @@ class ComposerStaticInit504e59637100e71d31cd34710346be85
             'MaxMind\\WebService\\' => 19,
             'MaxMind\\Exception\\' => 18,
             'MaxMind\\Db\\' => 11,
+            'Matomo\\Network\\' => 15,
         ),
         'J' => 
         array (
@@ -79,6 +80,10 @@ class ComposerStaticInit504e59637100e71d31cd34710346be85
         'MaxMind\\Db\\' => 
         array (
             0 => __DIR__ . '/..' . '/maxmind-db/reader/src/MaxMind/Db',
+        ),
+        'Matomo\\Network\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/matomo/network/src',
         ),
         'Jaybizzle\\CrawlerDetect\\' => 
         array (

@@ -14,6 +14,7 @@ return array(
     'MaxMind\\WebService\\' => array($vendorDir . '/maxmind/web-service-common/src/WebService'),
     'MaxMind\\Exception\\' => array($vendorDir . '/maxmind/web-service-common/src/Exception'),
     'MaxMind\\Db\\' => array($vendorDir . '/maxmind-db/reader/src/MaxMind/Db'),
+    'Matomo\\Network\\' => array($vendorDir . '/matomo/network/src'),
     'Jaybizzle\\CrawlerDetect\\' => array($vendorDir . '/jaybizzle/crawler-detect/src'),
     'GeoIp2\\' => array($vendorDir . '/geoip2/geoip2/src'),
     'DeviceDetector\\' => array($vendorDir . '/matomo/device-detector'),

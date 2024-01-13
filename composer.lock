@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "49c9a18c9420bc1461f3791b6c243038",
+    "content-hash": "621c6fea5cc8098f46adc636ce82d464",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -256,6 +256,71 @@
                 "wiki": "https://dev.matomo.org/"
             },
             "time": "2024-01-05T09:03:21+00:00"
+        },
+        {
+            "name": "matomo/network",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/matomo-org/component-network.git",
+                "reference": "ff654b8fc7778b80279815d06a368f7b41249501"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/matomo-org/component-network/zipball/ff654b8fc7778b80279815d06a368f7b41249501",
+                "reference": "ff654b8fc7778b80279815d06a368f7b41249501",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.36"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Matomo\\Network\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "support": {
+                "issues": "https://github.com/matomo-org/component-network/issues",
+                "source": "https://github.com/matomo-org/component-network/tree/2.0.1"
+            },
+            "time": "2020-10-05T06:09:39+00:00"
+        },
+        {
+            "name": "matomo/referrer-spam-blacklist",
+            "version": "4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/matomo-org/referrer-spam-list.git",
+                "reference": "afe4c1ea107ee7a8915a0d5eb0031cf0366608a8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/matomo-org/referrer-spam-list/zipball/afe4c1ea107ee7a8915a0d5eb0031cf0366608a8",
+                "reference": "afe4c1ea107ee7a8915a0d5eb0031cf0366608a8",
+                "shasum": ""
+            },
+            "replace": {
+                "piwik/referrer-spam-blacklist": "*"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "CC0-1.0"
+            ],
+            "description": "Community-contributed list of referrer spammers",
+            "support": {
+                "issues": "https://github.com/matomo-org/referrer-spam-list/issues",
+                "source": "https://github.com/matomo-org/referrer-spam-list/tree/4.0.0"
+            },
+            "time": "2020-08-10T19:54:07+00:00"
         },
         {
             "name": "maxmind-db/reader",
