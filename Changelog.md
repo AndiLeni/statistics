@@ -1,5 +1,11 @@
 # Changelog
 
+## [3.1.0] - 13.01.2024
+- update device detector to newest version
+- remove vectorface/whip as dependency und use symfony shipped alternative
+- add CrawlerDetect library to detect more crawlers
+- check ip adress of visitor for bot
+
 
 ## [3.0.1] - 28.07.2023
 - fix in install.php for ip2geo database download
