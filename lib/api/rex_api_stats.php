@@ -1,7 +1,7 @@
 <?php
 
 use AndiLeni\Statistics\EventRequest;
-use Vectorface\Whip\Whip;
+
 
 /**
  * API class
@@ -31,8 +31,7 @@ class rex_api_stats extends rex_api_function
             require_once __DIR__ . '/../../vendor/autoload.php';
 
             // get ip from visitor, set to 0.0.0.0 when ip can not be determined
-            $whip = new Whip();
-            $clientAddress = $whip->getValidIpAddress();
+            $clientAddress = rex::getRequest()->getClientIp();
             $clientAddress = $clientAddress ? $clientAddress : '0.0.0.0';
 
             // campaign url
