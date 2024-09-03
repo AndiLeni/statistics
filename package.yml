@@ -37,7 +37,7 @@ page:
         
 
 requires:
-    redaxo: "^5.11"
+    redaxo: "^5.12"
     php:
         version: ">=7.4"
 
