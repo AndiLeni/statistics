@@ -40,4 +40,89 @@ $(document).on("rex:ready", function (event, container) {
 
         return str;
     }
+    
+    // -------------------------------------------------------------------------------------
+    // START - attach filtered date to addon tab links
+    // -------------------------------------------------------------------------------------
+    var header = $('.rex-page-nav').find('ul').find('a');
+    
+    var linkStatsElem	= '';
+    var linkStatsVal	= '';
+	
+    var linkPagesElem	= '';
+    var linkPagesVal	= '';
+	
+    var linkRefererElem	= '';
+    var linkRefererVal	= '';
+	
+    var linkApiElem	= '';
+    var linkApiVal	= '';
+	
+    var linkMediaElem	= '';
+    var linkMediaVal	= '';
+	
+    header.each(function(){
+        var thisLink = $(this).attr('href');
+        
+        var inStrStats	= thisLink.includes('statistics/stats');
+        var inStrPages	= thisLink.includes('statistics/pages');
+        var inStrReferer = thisLink.includes('statistics/referer');
+        var inStrApi 	= thisLink.includes('statistics/api');
+        var inStrMedia	= thisLink.includes('statistics/media');
+		
+        if(inStrStats) {
+            linkStatsElem = $(this);
+            linkStatsVal = thisLink;
+        }
+        if(inStrPages) {
+            linkPagesElem = $(this);
+            linkPagesVal = thisLink;
+        }
+        if(inStrReferer) {
+            linkRefererElem = $(this);
+            linkRefererVal = thisLink;
+        }
+        if(inStrApi) {
+            linkApiElem = $(this);
+            linkApiVal = thisLink;
+        }
+        if(inStrMedia) {
+            linkMediaElem = $(this);
+            linkMediaVal = thisLink;
+        }
+    });
+    
+    var filterStartDateElem	= $('#statistics_datefilter_start');
+    var filterEndDateElem	= $('#statistics_datefilter_end');
+	
+    // get current values
+    function getStatFilterDates(){
+    	var filterStartDate	= filterStartDateElem.val();
+        var filterEndDate	= filterEndDateElem.val();
+	
+        if(filterStartDate && filterEndDate) {
+            
+            var attachDateVal = '&date_start='+filterStartDate+'&date_end='+filterEndDate;
+            	
+            linkStatsElem.attr('href',linkStatsVal+attachDateVal);
+            linkPagesElem.attr('href',linkPagesVal+attachDateVal);
+            linkRefererElem.attr('href',linkRefererVal+attachDateVal);
+            linkApiElem.attr('href',linkApiVal+attachDateVal);
+            linkMediaElem.attr('href',linkMediaVal+attachDateVal);
+        }
+    }
+	
+    // run on pageload
+    getStatFilterDates();
+	
+    // run on change
+    filterStartDateElem.change(function(){
+        getStatFilterDates();
+    });
+    filterEndDateElem.change(function(){
+        getStatFilterDates();
+    });
+    // -------------------------------------------------------------------------------------
+    // END attach filtered date to addon tab links
+    // -------------------------------------------------------------------------------------
 });
