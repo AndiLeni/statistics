@@ -6,7 +6,6 @@ rex_sql_table::get(rex::getTable('pagestats_data'))
     ->ensureColumn(new rex_sql_column('name', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->setPrimaryKey(['type', 'name'])
-    ->ensureIndex(new rex_sql_index('type', ['type']))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_visits_per_day'))
@@ -14,7 +13,7 @@ rex_sql_table::get(rex::getTable('pagestats_visits_per_day'))
     ->ensureColumn(new rex_sql_column('domain', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->setPrimaryKey(['date', 'domain'])
-    ->ensureIndex(new rex_sql_index('date', ['date']))
+    ->ensureIndex(new rex_sql_index('domain', ['domain']))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_visitors_per_day'))
@@ -22,7 +21,6 @@ rex_sql_table::get(rex::getTable('pagestats_visitors_per_day'))
     ->ensureColumn(new rex_sql_column('domain', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->setPrimaryKey(['date', 'domain'])
-    ->ensureIndex(new rex_sql_index('date', ['date']))
     ->ensureIndex(new rex_sql_index('domain', ['domain']))
     ->ensure();
 
@@ -41,6 +39,7 @@ rex_sql_table::get(rex::getTable('pagestats_urlstatus'))
     ->ensureColumn(new rex_sql_column('url', 'varchar(2048)'))
     ->ensureColumn(new rex_sql_column('status', 'varchar(255)'))
     ->setPrimaryKey(['hash'])
+    ->ensureIndex(new rex_sql_index('url', ['url']))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_bot'))
@@ -86,7 +85,6 @@ rex_sql_table::get(rex::getTable('pagestats_media'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->setPrimaryKey(['url', 'date'])
     ->ensureIndex(new rex_sql_index('date', ['date']))
-    ->ensureIndex(new rex_sql_index('url', ['url']))
     ->ensure();
 
 
@@ -96,7 +94,6 @@ rex_sql_table::get(rex::getTable('pagestats_api'))
     ->ensureColumn(new rex_sql_column('date', 'date'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->setPrimaryKey(['name', 'date'])
-    ->ensureIndex(new rex_sql_index('name', ['name']))
     ->ensureIndex(new rex_sql_index('date', ['date']))
     ->ensure();
 
