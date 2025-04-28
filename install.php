@@ -6,6 +6,7 @@ rex_sql_table::get(rex::getTable('pagestats_data'))
     ->ensureColumn(new rex_sql_column('name', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->setPrimaryKey(['type', 'name'])
+    ->ensureIndex(new rex_sql_index('type', ['type']))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_visits_per_day'))
@@ -13,6 +14,7 @@ rex_sql_table::get(rex::getTable('pagestats_visits_per_day'))
     ->ensureColumn(new rex_sql_column('domain', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->setPrimaryKey(['date', 'domain'])
+    ->ensureIndex(new rex_sql_index('date', ['date']))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_visitors_per_day'))
@@ -20,6 +22,8 @@ rex_sql_table::get(rex::getTable('pagestats_visitors_per_day'))
     ->ensureColumn(new rex_sql_column('domain', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->setPrimaryKey(['date', 'domain'])
+    ->ensureIndex(new rex_sql_index('date', ['date']))
+    ->ensureIndex(new rex_sql_index('domain', ['domain']))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_visits_per_url'))
@@ -28,6 +32,8 @@ rex_sql_table::get(rex::getTable('pagestats_visits_per_url'))
     ->ensureColumn(new rex_sql_column('url', 'varchar(2048)'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->setPrimaryKey(['hash'])
+    ->ensureIndex(new rex_sql_index('date', ['date']))
+    ->ensureIndex(new rex_sql_index('url', ['url']))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_urlstatus'))
@@ -49,6 +55,7 @@ rex_sql_table::get(rex::getTable('pagestats_hash'))
     ->ensureColumn(new rex_sql_column('hash', 'varchar(255)'))
     ->ensureColumn(new rex_sql_column('datetime', 'datetime'))
     ->setPrimaryKey(['hash'])
+    ->ensureIndex(new rex_sql_index('datetime', ['datetime']))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_referer'))
@@ -58,6 +65,8 @@ rex_sql_table::get(rex::getTable('pagestats_referer'))
     ->ensureColumn(new rex_sql_column('date', 'date'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->setPrimaryKey(['hash'])
+    ->ensureIndex(new rex_sql_index('referer', ['referer']))
+    ->ensureIndex(new rex_sql_index('date', ['date']))
     ->ensure();
 
 rex_sql_table::get(rex::getTable('pagestats_sessionstats'))
@@ -67,6 +76,7 @@ rex_sql_table::get(rex::getTable('pagestats_sessionstats'))
     ->ensureColumn(new rex_sql_column('visitduration', 'int'))
     ->ensureColumn(new rex_sql_column('pagecount', 'int'))
     ->setPrimaryKey(['token'])
+    ->ensureIndex(new rex_sql_index('visitduration', ['visitduration']))
     ->ensure();
 
 // media
@@ -75,6 +85,8 @@ rex_sql_table::get(rex::getTable('pagestats_media'))
     ->ensureColumn(new rex_sql_column('date', 'date'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->setPrimaryKey(['url', 'date'])
+    ->ensureIndex(new rex_sql_index('date', ['date']))
+    ->ensureIndex(new rex_sql_index('url', ['url']))
     ->ensure();
 
 
@@ -84,6 +96,8 @@ rex_sql_table::get(rex::getTable('pagestats_api'))
     ->ensureColumn(new rex_sql_column('date', 'date'))
     ->ensureColumn(new rex_sql_column('count', 'int'))
     ->setPrimaryKey(['name', 'date'])
+    ->ensureIndex(new rex_sql_index('name', ['name']))
+    ->ensureIndex(new rex_sql_index('date', ['date']))
     ->ensure();
 
 // ip 2 geo database installation
