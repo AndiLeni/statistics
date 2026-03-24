@@ -39,6 +39,49 @@ class ListData
      */
     public function getListsDaily(): rex_fragment
     {
+        $fragment_collapse = new rex_fragment();
+        $fragment_collapse->setVar('title', $this->addon->i18n('statistics_views_per_day'));
+        $fragment_collapse->setVar('content', $this->getDailyContent(), false);
+
+        return $fragment_collapse;
+    }
+
+
+    /**
+     * 
+     * 
+     * @return rex_fragment 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     */
+    public function getListsMonthly(): rex_fragment
+    {
+        $fragment_collapse = new rex_fragment();
+        $fragment_collapse->setVar('title', $this->addon->i18n('statistics_views_per_day'));
+        $fragment_collapse->setVar('content', $this->getMonthlyContent(), false);
+
+        return $fragment_collapse;
+    }
+
+
+    /**
+     * 
+     * 
+     * @return rex_fragment 
+     * @throws InvalidArgumentException 
+     * @throws rex_sql_exception 
+     */
+    public function getListsYearly(): rex_fragment
+    {
+        $fragment_collapse = new rex_fragment();
+        $fragment_collapse->setVar('title', $this->addon->i18n('statistics_views_per_day'));
+        $fragment_collapse->setVar('content', $this->getYearlyContent(), false);
+
+        return $fragment_collapse;
+    }
+
+    public function getDailyContent(): string
+    {
         $table = '<h3>Besuche:</h3>' . $this->renderTimeTable(
             $this->getDailyRows('pagestats_visits_per_day'),
             'date',
@@ -53,22 +96,10 @@ class ListData
             'Datum'
         );
 
-        $fragment_collapse = new rex_fragment();
-        $fragment_collapse->setVar('title', $this->addon->i18n('statistics_views_per_day'));
-        $fragment_collapse->setVar('content', $table, false);
-
-        return $fragment_collapse;
+        return $table;
     }
 
-
-    /**
-     * 
-     * 
-     * @return rex_fragment 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
-     */
-    public function getListsMonthly(): rex_fragment
+    public function getMonthlyContent(): string
     {
         $table = '<h3>Besuche:</h3>' . $this->renderTimeTable(
             $this->getMonthlyRows('pagestats_visits_per_day'),
@@ -84,22 +115,10 @@ class ListData
             'Monat'
         );
 
-        $fragment_collapse = new rex_fragment();
-        $fragment_collapse->setVar('title', $this->addon->i18n('statistics_views_per_day'));
-        $fragment_collapse->setVar('content', $table, false);
-
-        return $fragment_collapse;
+        return $table;
     }
 
-
-    /**
-     * 
-     * 
-     * @return rex_fragment 
-     * @throws InvalidArgumentException 
-     * @throws rex_sql_exception 
-     */
-    public function getListsYearly(): rex_fragment
+    public function getYearlyContent(): string
     {
         $table = '<h3>Besuche:</h3>' . $this->renderTimeTable(
             $this->getYearlyRows('pagestats_visits_per_day'),
@@ -115,11 +134,7 @@ class ListData
             'Jahr'
         );
 
-        $fragment_collapse = new rex_fragment();
-        $fragment_collapse->setVar('title', $this->addon->i18n('statistics_views_per_day'));
-        $fragment_collapse->setVar('content', $table, false);
-
-        return $fragment_collapse;
+        return $table;
     }
 
     /**

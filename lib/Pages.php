@@ -96,7 +96,7 @@ class Pages
         if ([] === $rows) {
             $table = rex_view::info($this->addon->i18n('statistics_no_data'));
         } else {
-            $table = '<table class="table-bordered dt_order_second statistics_table table-striped table-hover table">';
+            $table = '<table class="table-bordered dt_order_second statistics_table table-striped table-hover table" data-page-length="30">';
             $table .= '<thead><tr>';
             $table .= '<th>' . htmlspecialchars($this->addon->i18n('statistics_url'), ENT_QUOTES) . '</th>';
             $table .= '<th>' . htmlspecialchars($this->addon->i18n('statistics_count'), ENT_QUOTES) . '</th>';
@@ -124,7 +124,7 @@ class Pages
                 $table .= '<td><a href="' . htmlspecialchars($detailUrl, ENT_QUOTES) . '">' . htmlspecialchars($url, ENT_QUOTES) . '</a></td>';
                 $table .= '<td data-sort="' . htmlspecialchars($count, ENT_QUOTES) . '">' . htmlspecialchars($count, ENT_QUOTES) . '</td>';
                 $table .= '<td>' . htmlspecialchars($status, ENT_QUOTES) . '</td>';
-                $table .= '<td><a href="' . htmlspecialchars($ignoreUrl, ENT_QUOTES) . '" data-confirm="' . $confirm . '">' . htmlspecialchars($this->addon->i18n('statistics_ignore_and_delete'), ENT_QUOTES) . '</a></td>';
+                $table .= '<td><a href="' . htmlspecialchars($ignoreUrl, ENT_QUOTES) . '" data-confirm="' . $confirm . '">' . $this->addon->i18n('statistics_ignore_and_delete') . '</a></td>';
                 $table .= '</tr>';
             }
 

@@ -41,3 +41,571 @@ $(document).on("rex:ready", function (event, container) {
         return str;
     }
 });
+
+(function () {
+    var statisticsCharts = [];
+    var statisticsPageConfigCache = null;
+    var statisticsDashboardInitialized = false;
+
+    function getPageConfig() {
+        if (statisticsPageConfigCache !== null) {
+            return statisticsPageConfigCache;
+        }
+
+        var configElement = document.getElementById('statistics-page-config');
+        if (!configElement) {
+            statisticsPageConfigCache = null;
+            return statisticsPageConfigCache;
+        }
+
+        try {
+            statisticsPageConfigCache = JSON.parse(configElement.textContent || '{}');
+        } catch (error) {
+            statisticsPageConfigCache = null;
+        }
+
+        return statisticsPageConfigCache;
+    }
+
+    function getTheme() {
+        if (typeof rex !== "undefined" && (rex.theme == "dark" || (window.matchMedia('(prefers-color-scheme: dark)').matches && rex.theme == "auto"))) {
+            return "dark";
+        }
+
+        return "shine";
+    }
+
+    function getLanguageOptions() {
+        var pageConfig = getPageConfig();
+        if (pageConfig && pageConfig.tableLanguage) {
+            return { language: pageConfig.tableLanguage };
+        }
+
+        return {};
+    }
+
+    function buildToolbox(showToolbox, includeMagicType) {
+        var feature = {
+            dataZoom: {
+                yAxisIndex: 'none'
+            },
+            dataView: {
+                readOnly: false
+            },
+            restore: {},
+            saveAsImage: {}
+        };
+
+        if (includeMagicType) {
+            feature.magicType = {
+                type: ['line', 'bar', 'stack']
+            };
+        }
+
+        return {
+            show: !!showToolbox,
+            orient: 'vertical',
+            top: '10%',
+            feature: feature
+        };
+    }
+
+    function rememberChart(chart) {
+        statisticsCharts.push(chart);
+        return chart;
+    }
+
+    function createOrReplaceChart(elementId, option) {
+        if (typeof echarts === 'undefined') {
+            return null;
+        }
+
+        var element = document.getElementById(elementId);
+        if (!element) {
+            return null;
+        }
+
+        var existing = echarts.getInstanceByDom(element);
+        if (existing) {
+            existing.dispose();
+        }
+
+        var chart = echarts.init(element, getTheme());
+        chart.setOption(option);
+        return rememberChart(chart);
+    }
+
+    function scheduleChartResize(elementId) {
+        window.requestAnimationFrame(function () {
+            window.statisticsResizeChartById(elementId);
+
+            window.setTimeout(function () {
+                window.statisticsResizeChartById(elementId);
+            }, 50);
+        });
+    }
+
+    function buildDailyChartOption(pageConfig) {
+        return {
+            title: {},
+            tooltip: {
+                trigger: 'axis'
+            },
+            dataZoom: [{
+                id: 'dataZoomX',
+                type: 'slider',
+                xAxisIndex: [0],
+                filterMode: 'filter'
+            }],
+            grid: {
+                left: '5%',
+                right: '5%'
+            },
+            toolbox: buildToolbox(pageConfig.showToolbox, true),
+            legend: {
+                data: pageConfig.mainChartData.legend,
+                type: 'scroll',
+                right: '5%',
+                align: 'left'
+            },
+            xAxis: {
+                data: pageConfig.mainChartData.xaxis,
+                type: 'category'
+            },
+            yAxis: {},
+            series: pageConfig.mainChartData.series
+        };
+    }
+
+    function buildHeatmapOption(pageConfig) {
+        return {
+            title: {},
+            tooltip: {
+                show: true,
+                formatter: function (p) {
+                    var format = echarts.format.formatTime('dd.MM.yyyy', p.data[0]);
+                    return format + '<br><b>' + p.data[1] + ' Aufrufe</b>';
+                }
+            },
+            toolbox: {
+                show: !!pageConfig.showToolbox,
+                orient: 'vertical',
+                top: '10%',
+                feature: {
+                    dataView: {
+                        readOnly: false
+                    },
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            calendar: {
+                top: '90',
+                left: '5%',
+                right: '5%',
+                cellSize: ['auto', 15],
+                range: pageConfig.heatmap.year,
+                itemStyle: {
+                    borderWidth: 0.5
+                },
+                yearLabel: {
+                    show: false
+                },
+                monthLabel: {
+                    nameMap: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']
+                },
+                dayLabel: {
+                    nameMap: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
+                }
+            },
+            series: {
+                data: pageConfig.heatmap.data,
+                type: 'heatmap',
+                coordinateSystem: 'calendar'
+            },
+            visualMap: {
+                type: 'continuous',
+                itemWidth: 20,
+                itemHeight: 250,
+                min: 0,
+                max: pageConfig.heatmap.max,
+                calculable: true,
+                orient: 'horizontal',
+                left: 'center',
+                top: 'top'
+            }
+        };
+    }
+
+    function initStatisticsPageCharts() {
+        var pageConfig = getPageConfig();
+        if (!pageConfig || !pageConfig.mainChartData || !pageConfig.heatmap) {
+            return;
+        }
+
+        if (createOrReplaceChart('chart_visits_daily', buildDailyChartOption(pageConfig))) {
+            scheduleChartResize('chart_visits_daily');
+        }
+
+        if (createOrReplaceChart('chart_visits_heatmap', buildHeatmapOption(pageConfig))) {
+            scheduleChartResize('chart_visits_heatmap');
+        }
+    }
+
+    function initConfiguredCharts(root) {
+        var container = root || document;
+        var scripts = container.querySelectorAll('[data-statistics-chart-config]');
+
+        scripts.forEach(function (script) {
+            var targetId = script.getAttribute('data-target-id');
+            if (!targetId) {
+                return;
+            }
+
+            try {
+                var option = JSON.parse(script.textContent || '{}');
+                if (createOrReplaceChart(targetId, option)) {
+                    scheduleChartResize(targetId);
+                }
+            } catch (error) {
+            }
+        });
+    }
+
+    function initPagesDomainFilter() {
+        if (typeof $ === 'undefined' || !$.fn || !$.fn.DataTable) {
+            return;
+        }
+
+        var statsTableAllPagesElement = document.querySelector('.dt_order_second');
+        var statsDomainSelect = document.getElementById('stats_domain_select');
+
+        if (!statsTableAllPagesElement || !statsDomainSelect) {
+            return;
+        }
+
+        if (!$.fn.dataTable.isDataTable(statsTableAllPagesElement)) {
+            return;
+        }
+
+        if (statsDomainSelect.dataset.statisticsBound === 'true') {
+            return;
+        }
+
+        statsDomainSelect.dataset.statisticsBound = 'true';
+        var statsTableAllPages = $(statsTableAllPagesElement).DataTable();
+
+        statsDomainSelect.addEventListener('change', function () {
+            statsTableAllPages.search(this.value).draw();
+        });
+    }
+
+    function bootstrapStatisticsDashboard() {
+        if (statisticsDashboardInitialized) {
+            initStatisticsPageCharts();
+            return;
+        }
+
+        statisticsDashboardInitialized = true;
+        initStatisticsPageCharts();
+        initConfiguredCharts(document);
+        initStatsTabHandling();
+        window.statisticsInitTables(document);
+        initPagesDomainFilter();
+        initLazyBlocks();
+        initLazyCollapses();
+    }
+
+    function initStatsTabHandling() {
+        if (typeof $ === 'undefined') {
+            return;
+        }
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            window.statisticsResizeChartById('chart_visits_daily');
+            window.statisticsResizeChartById('chart_visits_monthly');
+            window.statisticsResizeChartById('chart_visits_yearly');
+            window.statisticsEnsureTabChartLoaded(e.target);
+        });
+
+        var activeTab = document.querySelector('.nav.nav-pills li.active [data-toggle="tab"]');
+        if (activeTab) {
+            window.statisticsEnsureTabChartLoaded(activeTab);
+        }
+    }
+
+    function buildTableOptions(orderIndex, caseInsensitive, element) {
+        var pageLength = 10;
+        if (element && element.dataset && element.dataset.pageLength) {
+            var parsedPageLength = parseInt(element.dataset.pageLength, 10);
+            if (!isNaN(parsedPageLength) && parsedPageLength > 0) {
+                pageLength = parsedPageLength;
+            }
+        }
+
+        var options = {
+            paging: true,
+            pageLength: pageLength,
+            lengthChange: true,
+            lengthMenu: [5, 10, 50, 100],
+            search: {
+                caseInsensitive: caseInsensitive
+            }
+        };
+
+        if (orderIndex !== null) {
+            options.order = [[orderIndex, "desc"]];
+        }
+
+        return Object.assign(options, getLanguageOptions());
+    }
+
+    window.statisticsInitTables = function (container) {
+        var root = container || document;
+
+        if (typeof $ === "undefined" || !$.fn || !$.fn.DataTable) {
+            return;
+        }
+
+        $(root).find('.dt_order_second').each(function () {
+            if (!$.fn.dataTable.isDataTable(this)) {
+                $(this).DataTable(buildTableOptions(1, true, this));
+            }
+        });
+
+        $(root).find('.dt_order_first').each(function () {
+            if (!$.fn.dataTable.isDataTable(this)) {
+                $(this).DataTable(buildTableOptions(0, true, this));
+            }
+        });
+
+        $(root).find('.dt_order_default').each(function () {
+            if (!$.fn.dataTable.isDataTable(this)) {
+                $(this).DataTable(buildTableOptions(null, true, this));
+            }
+        });
+
+        $(root).find('.dt_bots').each(function () {
+            if (!$.fn.dataTable.isDataTable(this)) {
+                $(this).DataTable(buildTableOptions(1, true, this));
+            }
+        });
+    };
+
+    function initCharts(charts) {
+        if (typeof echarts === "undefined") {
+            return;
+        }
+
+        var theme = getTheme();
+
+        charts.forEach(function (chartConfig) {
+            var element = document.getElementById(chartConfig.id);
+            if (!element) {
+                return;
+            }
+
+            var existing = echarts.getInstanceByDom(element);
+            if (existing) {
+                existing.dispose();
+            }
+
+            var chart = echarts.init(element, theme);
+            chart.setOption(chartConfig.option);
+            rememberChart(chart);
+        });
+    }
+
+    function fetchLazyPayload(blockId, dateStart, dateEnd) {
+        var url = new URL(window.location.href);
+        url.searchParams.set('rex-api-call', 'statistics_lazy_block');
+        url.searchParams.set('block_id', blockId);
+        url.searchParams.set('date_start', dateStart || '');
+        url.searchParams.set('date_end', dateEnd || '');
+
+        return fetch(url.toString(), { credentials: 'same-origin' })
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+
+                return response.json();
+            });
+    }
+
+    function renderLoading(container) {
+        container.innerHTML = '<div class="panel panel-default"><div class="panel-body"><p><i class="fa fa-spinner fa-spin"></i> Statistikblock wird geladen...</p></div></div>';
+    }
+
+    function renderError(container) {
+        container.innerHTML = '<div class="alert alert-danger">Der Statistikblock konnte nicht geladen werden. Bitte Seite neu laden.</div>';
+    }
+
+    function renderInlineLoading(container) {
+        container.innerHTML = '<p><i class="fa fa-spinner fa-spin"></i> Tabelle wird geladen...</p>';
+    }
+
+    function renderInlineError(container) {
+        container.innerHTML = '<div class="alert alert-danger">Die Tabelle konnte nicht geladen werden.</div>';
+    }
+
+    function loadLazyBlock(container) {
+        if (!container || container.dataset.state === 'loading' || container.dataset.state === 'loaded') {
+            return;
+        }
+
+        container.dataset.state = 'loading';
+        renderLoading(container);
+
+        fetchLazyPayload(container.dataset.blockId, container.dataset.dateStart, container.dataset.dateEnd)
+            .then(function (payload) {
+                container.innerHTML = payload.html || '';
+                window.statisticsInitTables(container);
+                initCharts(payload.charts || []);
+                container.dataset.state = 'loaded';
+            })
+            .catch(function () {
+                container.dataset.state = 'error';
+                renderError(container);
+            });
+    }
+
+    function initLazyBlocks() {
+        var blocks = document.querySelectorAll('[data-statistics-lazy-block]');
+        if (!blocks.length) {
+            return;
+        }
+
+        if (!('IntersectionObserver' in window)) {
+            blocks.forEach(loadLazyBlock);
+            return;
+        }
+
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    observer.unobserve(entry.target);
+                    loadLazyBlock(entry.target);
+                }
+            });
+        }, {
+            rootMargin: '200px 0px'
+        });
+
+        blocks.forEach(function (block) {
+            observer.observe(block);
+        });
+    }
+
+    function loadLazyCollapse(container) {
+        if (!container || container.dataset.state === 'loading' || container.dataset.state === 'loaded') {
+            return;
+        }
+
+        container.dataset.state = 'loading';
+        renderInlineLoading(container);
+
+        fetchLazyPayload(container.dataset.blockId, container.dataset.dateStart, container.dataset.dateEnd)
+            .then(function (payload) {
+                container.innerHTML = payload.html || '';
+                window.statisticsInitTables(container);
+                container.dataset.state = 'loaded';
+            })
+            .catch(function () {
+                container.dataset.state = 'error';
+                renderInlineError(container);
+            });
+    }
+
+    function initLazyCollapses() {
+        if (typeof $ === 'undefined') {
+            return;
+        }
+
+        $('[data-statistics-lazy-collapse]').each(function () {
+            var lazyContainer = this;
+            var collapse = $(lazyContainer).closest('.collapse');
+
+            collapse.on('show.bs.collapse', function () {
+                loadLazyCollapse(lazyContainer);
+            });
+        });
+    }
+
+    function loadLazyChart(element) {
+        if (!element || element.dataset.state === 'loading' || element.dataset.state === 'loaded') {
+            return;
+        }
+
+        element.dataset.state = 'loading';
+
+        fetchLazyPayload(element.dataset.blockId, element.dataset.dateStart, element.dataset.dateEnd)
+            .then(function (payload) {
+                initCharts(payload.charts || []);
+                element.dataset.state = 'loaded';
+            })
+            .catch(function () {
+                element.dataset.state = 'error';
+            });
+    }
+
+    window.statisticsEnsureTabChartLoaded = function (tabLink) {
+        if (!tabLink) {
+            return;
+        }
+
+        var targetSelector = tabLink.getAttribute('href');
+        if (!targetSelector) {
+            return;
+        }
+
+        var pane = document.querySelector(targetSelector);
+        if (!pane) {
+            return;
+        }
+
+        var lazyChart = pane.querySelector('[data-statistics-lazy-chart]');
+        if (lazyChart) {
+            loadLazyChart(lazyChart);
+        }
+    };
+
+    window.statisticsResizeChartById = function (id) {
+        if (typeof echarts === 'undefined') {
+            return;
+        }
+
+        var element = document.getElementById(id);
+        if (!element) {
+            return;
+        }
+
+        var chart = echarts.getInstanceByDom(element);
+        if (chart) {
+            chart.resize();
+        }
+    };
+
+    window.addEventListener('resize', function () {
+        statisticsCharts.forEach(function (chart) {
+            if (chart && !chart.isDisposed()) {
+                chart.resize();
+            }
+        });
+    });
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootstrapStatisticsDashboard);
+    } else {
+        bootstrapStatisticsDashboard();
+    }
+
+    window.addEventListener('load', initStatisticsPageCharts);
+    window.addEventListener('load', function () {
+        initConfiguredCharts(document);
+    });
+
+    $(document).on('rex:ready', function () {
+        bootstrapStatisticsDashboard();
+    });
+})();

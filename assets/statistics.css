@@ -12,6 +12,14 @@
     margin-bottom: 10px;
 }
 
+#stats_domain_select {
+    margin-bottom: 15px;
+}
+
+#chart_visits_per_page {
+    margin-bottom: 15px;
+}
+
 #rex-page-statistics-stats.modal-open {
     overflow: visible;
 }

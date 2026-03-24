@@ -1,6 +1,9 @@
 <?php
 
 $rnd = rand(0, 100);
+$lazyBlockId = (string) $this->getVar('lazy_block_id', '');
+$dateStart = (string) $this->getVar('date_start', '');
+$dateEnd = (string) $this->getVar('date_end', '');
 
 ?>
 
@@ -12,6 +15,16 @@ $rnd = rand(0, 100);
 
 <div class="collapse" id="collapseTable<?php echo $rnd ?>">
     <div class="well">
-        <?php echo $this->content ?>
+        <?php if ('' !== $lazyBlockId) { ?>
+            <div
+                data-statistics-lazy-collapse
+                data-block-id="<?php echo htmlspecialchars($lazyBlockId, ENT_QUOTES) ?>"
+                data-date-start="<?php echo htmlspecialchars($dateStart, ENT_QUOTES) ?>"
+                data-date-end="<?php echo htmlspecialchars($dateEnd, ENT_QUOTES) ?>"
+                data-state="idle"
+            ></div>
+        <?php } else { ?>
+            <?php echo $this->content ?>
+        <?php } ?>
     </div>
 </div>
