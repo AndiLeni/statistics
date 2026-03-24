@@ -4,9 +4,9 @@ namespace AndiLeni\Statistics;
 
 use rex;
 use rex_addon;
-use rex_exception;
 use rex_fragment;
-use rex_list;
+use rex_sql;
+use rex_sql_exception;
 use rex_view;
 use InvalidArgumentException;
 
@@ -35,38 +35,23 @@ class ListData
      * 
      * @return rex_fragment 
      * @throws InvalidArgumentException 
-     * @throws rex_exception 
+     * @throws rex_sql_exception 
      */
     public function getListsDaily(): rex_fragment
     {
-        $list_dates = rex_list::factory('SELECT date, sum(count) as "count" FROM ' . rex::getTable('pagestats_visits_per_day') . ' where date between "' . $this->filter_date_helper->date_start->format('Y-m-d') . '" and "' . $this->filter_date_helper->date_end->format('Y-m-d') . '" group by date ORDER BY count DESC', 10000);
-        $list_dates->setColumnLabel('date', 'Datum');
-        $list_dates->setColumnLabel('count', 'Anzahl');
-        $list_dates->setColumnParams('url', ['url' => '###url###']);
-        $list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistics_table table-striped table-hover');
-        $list_dates->setColumnLayout('date', ['<th>###VALUE###</th>', '<td data-sort="###date###">###VALUE###</td>']);
-        $list_dates->setColumnFormat('date', 'date', 'd.m.Y');
-
-        if ($list_dates->getRows() == 0) {
-            $table = '<h3>Besuche:</h3>' . rex_view::info($this->addon->i18n('statistics_no_data'));
-        } else {
-            $table = '<h3>Besuche:</h3>' . $list_dates->get();
-        }
+        $table = '<h3>Besuche:</h3>' . $this->renderTimeTable(
+            $this->getDailyRows('pagestats_visits_per_day'),
+            'date',
+            'Datum'
+        );
 
         $table .= '<hr>';
 
-        $list_dates = rex_list::factory('SELECT date, sum(count) as "count" FROM ' . rex::getTable('pagestats_visitors_per_day') . ' where date between "' . $this->filter_date_helper->date_start->format('Y-m-d') . '" and "' . $this->filter_date_helper->date_end->format('Y-m-d') . '" group by date ORDER BY count DESC', 10000);
-        $list_dates->setColumnLabel('date', 'Datum');
-        $list_dates->setColumnLabel('count', 'Anzahl');
-        $list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistics_table table-striped table-hover');
-        $list_dates->setColumnLayout('date', ['<th>###VALUE###</th>', '<td data-sort="###date###">###VALUE###</td>']);
-        $list_dates->setColumnFormat('date', 'date', 'd.m.Y');
-
-        if ($list_dates->getRows() == 0) {
-            $table .= '<h3>Besucher:</h3>' . rex_view::info($this->addon->i18n('statistics_no_data'));
-        } else {
-            $table .= '<h3>Besucher:</h3>' . $list_dates->get();
-        }
+        $table .= '<h3>Besucher:</h3>' . $this->renderTimeTable(
+            $this->getDailyRows('pagestats_visitors_per_day'),
+            'date',
+            'Datum'
+        );
 
         $fragment_collapse = new rex_fragment();
         $fragment_collapse->setVar('title', $this->addon->i18n('statistics_views_per_day'));
@@ -81,38 +66,23 @@ class ListData
      * 
      * @return rex_fragment 
      * @throws InvalidArgumentException 
-     * @throws rex_exception 
+     * @throws rex_sql_exception 
      */
     public function getListsMonthly(): rex_fragment
     {
-        $list_dates = rex_list::factory('SELECT DATE_FORMAT(date,"%m.%Y") as "month", IFNULL(sum(count),0) as "count" FROM ' . rex::getTable('pagestats_visits_per_day') . ' GROUP BY month ORDER BY date DESC', 10000);
-        $list_dates->setColumnLabel('month', 'Monat');
-        $list_dates->setColumnLabel('count', 'Anzahl');
-        $list_dates->setColumnParams('url', ['url' => '###url###']);
-        $list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistics_table table-striped table-hover');
-        // $list_dates->setColumnLayout('date', ['<th>###VALUE###</th>', '<td data-sort="###date###">###VALUE###</td>']);
-        $list_dates->setColumnFormat('date', 'date', 'M Y');
-
-        if ($list_dates->getRows() == 0) {
-            $table = '<h3>Besuche:</h3>' . rex_view::info($this->addon->i18n('statistics_no_data'));
-        } else {
-            $table = '<h3>Besuche:</h3>' . $list_dates->get();
-        }
+        $table = '<h3>Besuche:</h3>' . $this->renderTimeTable(
+            $this->getMonthlyRows('pagestats_visits_per_day'),
+            'month',
+            'Monat'
+        );
 
         $table .= '<hr>';
 
-        $list_dates = rex_list::factory('SELECT DATE_FORMAT(date,"%m.%Y") as "month", IFNULL(sum(count),0) as "count" FROM ' . rex::getTable('pagestats_visitors_per_day') . ' GROUP BY month ORDER BY count DESC', 10000);
-        $list_dates->setColumnLabel('month', 'Monat');
-        $list_dates->setColumnLabel('count', 'Anzahl');
-        $list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistics_table table-striped table-hover');
-        // $list_dates->setColumnLayout('date', ['<th>###VALUE###</th>', '<td data-sort="###date###">###VALUE###</td>']);
-        $list_dates->setColumnFormat('date', 'date', 'M Y');
-
-        if ($list_dates->getRows() == 0) {
-            $table .= '<h3>Besucher:</h3>' . rex_view::info($this->addon->i18n('statistics_no_data'));
-        } else {
-            $table .= '<h3>Besucher:</h3>' . $list_dates->get();
-        }
+        $table .= '<h3>Besucher:</h3>' . $this->renderTimeTable(
+            $this->getMonthlyRows('pagestats_visitors_per_day'),
+            'month',
+            'Monat'
+        );
 
         $fragment_collapse = new rex_fragment();
         $fragment_collapse->setVar('title', $this->addon->i18n('statistics_views_per_day'));
@@ -127,43 +97,130 @@ class ListData
      * 
      * @return rex_fragment 
      * @throws InvalidArgumentException 
-     * @throws rex_exception 
+     * @throws rex_sql_exception 
      */
     public function getListsYearly(): rex_fragment
     {
-        $list_dates = rex_list::factory('SELECT DATE_FORMAT(date,"%Y") as "year", IFNULL(sum(count),0) as "count" FROM ' . rex::getTable('pagestats_visits_per_day') . ' GROUP BY year ORDER BY count DESC', 10000);
-        $list_dates->setColumnLabel('year', 'Jahr');
-        $list_dates->setColumnLabel('count', 'Anzahl');
-        $list_dates->setColumnParams('url', ['url' => '###url###']);
-        $list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistics_table table-striped table-hover');
-        $list_dates->setColumnLayout('date', ['<th>###VALUE###</th>', '<td data-sort="###date###">###VALUE###</td>']);
-        $list_dates->setColumnFormat('date', 'date', 'd.m.Y');
-
-        if ($list_dates->getRows() == 0) {
-            $table = '<h3>Besuche:</h3>' . rex_view::info($this->addon->i18n('statistics_no_data'));
-        } else {
-            $table = '<h3>Besuche:</h3>' . $list_dates->get();
-        }
+        $table = '<h3>Besuche:</h3>' . $this->renderTimeTable(
+            $this->getYearlyRows('pagestats_visits_per_day'),
+            'year',
+            'Jahr'
+        );
 
         $table .= '<hr>';
 
-        $list_dates = rex_list::factory('SELECT DATE_FORMAT(date,"%Y") as "year", IFNULL(sum(count),0) as "count" FROM ' . rex::getTable('pagestats_visitors_per_day') . ' GROUP BY year ORDER BY count DESC', 10000);
-        $list_dates->setColumnLabel('year', 'Jahr');
-        $list_dates->setColumnLabel('count', 'Anzahl');
-        $list_dates->addTableAttribute('class', 'table-bordered dt_order_first statistics_table table-striped table-hover');
-        $list_dates->setColumnLayout('date', ['<th>###VALUE###</th>', '<td data-sort="###date###">###VALUE###</td>']);
-        $list_dates->setColumnFormat('date', 'date', 'd.m.Y');
-
-        if ($list_dates->getRows() == 0) {
-            $table .= '<h3>Besucher:</h3>' . rex_view::info($this->addon->i18n('statistics_no_data'));
-        } else {
-            $table .= '<h3>Besucher:</h3>' . $list_dates->get();
-        }
+        $table .= '<h3>Besucher:</h3>' . $this->renderTimeTable(
+            $this->getYearlyRows('pagestats_visitors_per_day'),
+            'year',
+            'Jahr'
+        );
 
         $fragment_collapse = new rex_fragment();
         $fragment_collapse->setVar('title', $this->addon->i18n('statistics_views_per_day'));
         $fragment_collapse->setVar('content', $table, false);
 
         return $fragment_collapse;
+    }
+
+    /**
+     * @return array<int, array{date: string, count: int}>
+     * @throws rex_sql_exception
+     */
+    private function getDailyRows(string $table): array
+    {
+        $sql = rex_sql::factory();
+
+        return array_map(
+            static fn(array $row): array => [
+                'date' => (string) $row['date'],
+                'count' => (int) $row['count'],
+            ],
+            $sql->getArray(
+                'SELECT date, SUM(count) AS count FROM ' . rex::getTable($table)
+                . ' WHERE date BETWEEN :start AND :end GROUP BY date ORDER BY count DESC',
+                [
+                    'start' => $this->filter_date_helper->date_start->format('Y-m-d'),
+                    'end' => $this->filter_date_helper->date_end->format('Y-m-d'),
+                ]
+            )
+        );
+    }
+
+    /**
+     * @return array<int, array{month: string, count: int, sort_value: string}>
+     * @throws rex_sql_exception
+     */
+    private function getMonthlyRows(string $table): array
+    {
+        $sql = rex_sql::factory();
+
+        return array_map(
+            static fn(array $row): array => [
+                'month' => (string) $row['month'],
+                'count' => (int) $row['count'],
+                'sort_value' => (string) $row['sort_value'],
+            ],
+            $sql->getArray(
+                'SELECT DATE_FORMAT(date, "%m.%Y") AS month, SUM(count) AS count, DATE_FORMAT(date, "%Y-%m") AS sort_value '
+                . 'FROM ' . rex::getTable($table)
+                . ' GROUP BY YEAR(date), MONTH(date) ORDER BY YEAR(date) DESC, MONTH(date) DESC'
+            )
+        );
+    }
+
+    /**
+     * @return array<int, array{year: string, count: int}>
+     * @throws rex_sql_exception
+     */
+    private function getYearlyRows(string $table): array
+    {
+        $sql = rex_sql::factory();
+
+        return array_map(
+            static fn(array $row): array => [
+                'year' => (string) $row['year'],
+                'count' => (int) $row['count'],
+            ],
+            $sql->getArray(
+                'SELECT DATE_FORMAT(date, "%Y") AS year, SUM(count) AS count '
+                . 'FROM ' . rex::getTable($table)
+                . ' GROUP BY YEAR(date) ORDER BY YEAR(date) DESC'
+            )
+        );
+    }
+
+    /**
+     * @param array<int, array<string, int|string>> $rows
+     */
+    private function renderTimeTable(array $rows, string $labelKey, string $labelTitle): string
+    {
+        if ([] === $rows) {
+            return rex_view::info($this->addon->i18n('statistics_no_data'));
+        }
+
+        $table = '<table class="table-bordered dt_order_first statistics_table table-striped table-hover table">';
+        $table .= '<thead><tr>';
+        $table .= '<th>' . htmlspecialchars($labelTitle, ENT_QUOTES) . '</th>';
+        $table .= '<th>Anzahl</th>';
+        $table .= '</tr></thead><tbody>';
+
+        foreach ($rows as $row) {
+            $label = (string) $row[$labelKey];
+            $count = (string) $row['count'];
+            $sortValue = isset($row['sort_value']) ? (string) $row['sort_value'] : $label;
+
+            if ('date' === $labelKey) {
+                $label = date('d.m.Y', strtotime($label));
+            }
+
+            $table .= '<tr>';
+            $table .= '<td data-sort="' . htmlspecialchars($sortValue, ENT_QUOTES) . '">' . htmlspecialchars($label, ENT_QUOTES) . '</td>';
+            $table .= '<td data-sort="' . htmlspecialchars($count, ENT_QUOTES) . '">' . htmlspecialchars($count, ENT_QUOTES) . '</td>';
+            $table .= '</tr>';
+        }
+
+        $table .= '</tbody></table>';
+
+        return $table;
     }
 }

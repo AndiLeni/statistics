@@ -58,28 +58,48 @@ if ($request_name != '' && !$delete_entry) {
     $fragment->setVar('body', $content, false);
     echo $fragment->parse('core/page/section.php');
 }
+$sql = rex_sql::factory();
+$eventRows = $sql->getArray(
+    'SELECT name, SUM(count) AS count FROM ' . rex::getTable('pagestats_api')
+    . ' WHERE date BETWEEN :start AND :end GROUP BY name ORDER BY count DESC',
+    [
+        'start' => $filter_date_helper->date_start->format('Y-m-d'),
+        'end' => $filter_date_helper->date_end->format('Y-m-d'),
+    ]
+);
 
-
-$list = rex_list::factory('SELECT name, sum(count) as "count" from ' . rex::getTable('pagestats_api') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY name ORDER BY count DESC', 10000);
-
-
-
-$list->setColumnLabel('name', $addon->i18n('statistics_api_name'));
-$list->setColumnLabel('count', $addon->i18n('statistics_api_count'));
-// $list->setColumnSortable('name', $direction = 'asc');
-// $list->setColumnSortable('count', $direction = 'asc');
-$list->setColumnParams('name', ['name' => '###name###', 'date_start' => $filter_date_helper->date_start->format('Y-m-d'), 'date_end' => $filter_date_helper->date_end->format('Y-m-d')]);
-
-$list->addColumn('edit', $addon->i18n('statistics_api_delete'));
-$list->setColumnLabel('edit', $addon->i18n('statistics_api_delete'));
-$list->addLinkAttribute('edit', 'data-confirm', '###name###' . PHP_EOL . $addon->i18n('statistics_api_delete_confirm'));
-$list->setColumnParams('edit', ['name' => '###name###', 'delete_entry' => true]);
-$list->addTableAttribute('class', 'table-bordered statistics_table table-striped table-hover');
-
-if ($list->getRows() == 0) {
+if ([] === $eventRows) {
     $table = rex_view::info($addon->i18n('statistics_no_data'));
 } else {
-    $table = $list->get();
+    $table = '<table class="table-bordered statistics_table table-striped table-hover table">';
+    $table .= '<thead><tr>';
+    $table .= '<th>' . htmlspecialchars($addon->i18n('statistics_api_name'), ENT_QUOTES) . '</th>';
+    $table .= '<th>' . htmlspecialchars($addon->i18n('statistics_api_count'), ENT_QUOTES) . '</th>';
+    $table .= '<th>' . htmlspecialchars($addon->i18n('statistics_api_delete'), ENT_QUOTES) . '</th>';
+    $table .= '</tr></thead><tbody>';
+
+    foreach ($eventRows as $row) {
+        $name = (string) $row['name'];
+        $count = (string) $row['count'];
+        $detailUrl = rex_context::fromGet()->getUrl([
+            'name' => $name,
+            'date_start' => $filter_date_helper->date_start->format('Y-m-d'),
+            'date_end' => $filter_date_helper->date_end->format('Y-m-d'),
+        ]);
+        $deleteUrl = rex_context::fromGet()->getUrl([
+            'name' => $name,
+            'delete_entry' => true,
+        ]);
+        $confirm = htmlspecialchars($name . PHP_EOL . $addon->i18n('statistics_api_delete_confirm'), ENT_QUOTES);
+
+        $table .= '<tr>';
+        $table .= '<td><a href="' . htmlspecialchars($detailUrl, ENT_QUOTES) . '">' . htmlspecialchars($name, ENT_QUOTES) . '</a></td>';
+        $table .= '<td data-sort="' . htmlspecialchars($count, ENT_QUOTES) . '">' . htmlspecialchars($count, ENT_QUOTES) . '</td>';
+        $table .= '<td><a href="' . htmlspecialchars($deleteUrl, ENT_QUOTES) . '" data-confirm="' . $confirm . '">' . htmlspecialchars($addon->i18n('statistics_api_delete'), ENT_QUOTES) . '</a></td>';
+        $table .= '</tr>';
+    }
+
+    $table .= '</tbody></table>';
 }
 
 $fragment2 = new rex_fragment();

@@ -97,7 +97,7 @@ $http_filter_buttons = '<a class="btn btn-primary" href="' . $oa . '">Alle</a>
 
 $fragment = new rex_fragment();
 $fragment->setVar('title', $addon->i18n('statistics_sum_per_page'));
-$fragment->setVar('body', $http_filter_buttons . '<div id="chart_visits_per_page" style="height:500px; width:auto"></div>' . $domain_select . $pages_helper->getList(), false);
+$fragment->setVar('body', $http_filter_buttons . '<div id="chart_visits_per_page" style="height:500px; width:auto"></div>' . $domain_select . $pages_helper->getList($httpstatus), false);
 echo $fragment->parse('core/page/section.php');
 
 ?>

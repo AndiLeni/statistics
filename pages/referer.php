@@ -1,6 +1,7 @@
 <?php
 
 use AndiLeni\Statistics\DateFilter;
+use AndiLeni\Statistics\RefererDetails;
 
 $addon = rex_addon::get('statistics');
 
@@ -34,36 +35,49 @@ $filter_fragment->setVar('wts', $filter_date_helper->whole_time_start->format("Y
 if ($request_ref != '') {
     // details section for single page
 
-    $list = rex_list::factory('SELECT date, count FROM ' . rex::getTable('pagestats_referer') . ' WHERE referer = "' . $request_ref . '" and date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY date ORDER BY count DESC', 10000);
-    $list->addTableAttribute('class', 'table-bordered dt_order_first statistics_table table-striped table-hover');
-    $list->setColumnLabel('date', 'Datum');
-    $list->setColumnLabel('count', 'Anzahl');
-    $list->setColumnFormat('date', 'date', 'd.m.Y');
-    $list->setColumnLayout('date', ['<th>###VALUE###</th>', '<td data-sort="###date###">###VALUE###</td>']);
-
+    $refererDetails = new RefererDetails($request_ref, $filter_date_helper);
+    $sum_data = $refererDetails->getSumPerDay();
 
     $fragment = new rex_fragment();
     $fragment->setVar('class', 'info', false);
     $fragment->setVar('title', 'Details für:');
     $fragment->setVar('heading', $request_ref);
-    $fragment->setVar('body', '<a target="_blank" href="' . $request_ref . '">' . $request_ref . '</a><div id="chart_details" style="height:500px; width:auto"></div>' . $list->get(), false);
+    $fragment->setVar('body', '<a target="_blank" href="' . htmlspecialchars($request_ref, ENT_QUOTES) . '">' . htmlspecialchars($request_ref, ENT_QUOTES) . '</a><div id="chart_details" style="height:500px; width:auto"></div>' . $refererDetails->getList(), false);
     echo $fragment->parse('core/page/section.php');
 }
 
+$sql = rex_sql::factory();
+$refererRows = $sql->getArray(
+    'SELECT referer, SUM(count) AS count FROM ' . rex::getTable('pagestats_referer')
+    . ' WHERE date BETWEEN :start AND :end GROUP BY referer ORDER BY count DESC, referer ASC',
+    [
+        'start' => $filter_date_helper->date_start->format('Y-m-d'),
+        'end' => $filter_date_helper->date_end->format('Y-m-d'),
+    ]
+);
 
-
-
-$list = rex_list::factory('SELECT referer, SUM(count) as "count" from ' . rex::getTable('pagestats_referer') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY referer ORDER BY count DESC, referer ASC', 10000);
-
-$list->setColumnLabel('referer', 'Referer');
-$list->setColumnLabel('count', $addon->i18n('statistics_count'));
-$list->setColumnParams('referer', ['referer' => '###referer###', 'date_start' => $filter_date_helper->date_start->format('Y-m-d'), 'date_end' => $filter_date_helper->date_end->format('Y-m-d')]);
-$list->addTableAttribute('class', 'table-bordered dt_order_first statistics_table table-striped table-hover');
-
-if ($list->getRows() == 0) {
+if ([] === $refererRows) {
     $table = rex_view::info($addon->i18n('statistics_no_data'));
 } else {
-    $table = $list->get();
+    $table = '<table class="table-bordered dt_order_first statistics_table table-striped table-hover table">';
+    $table .= '<thead><tr><th>Referer</th><th>' . htmlspecialchars($addon->i18n('statistics_count'), ENT_QUOTES) . '</th></tr></thead><tbody>';
+
+    foreach ($refererRows as $row) {
+        $referer = (string) $row['referer'];
+        $count = (string) $row['count'];
+        $detailUrl = rex_context::fromGet()->getUrl([
+            'referer' => $referer,
+            'date_start' => $filter_date_helper->date_start->format('Y-m-d'),
+            'date_end' => $filter_date_helper->date_end->format('Y-m-d'),
+        ]);
+
+        $table .= '<tr>';
+        $table .= '<td><a href="' . htmlspecialchars($detailUrl, ENT_QUOTES) . '">' . htmlspecialchars($referer, ENT_QUOTES) . '</a></td>';
+        $table .= '<td data-sort="' . htmlspecialchars($count, ENT_QUOTES) . '">' . htmlspecialchars($count, ENT_QUOTES) . '</td>';
+        $table .= '</tr>';
+    }
+
+    $table .= '</tbody></table>';
 }
 
 $fragment = new rex_fragment();
@@ -85,44 +99,6 @@ echo $fragment->parse('core/page/section.php');
     <?php
 
     if ($request_ref != '') {
-
-        $sql = rex_sql::factory();
-
-        // modify to include end date in period because SQL BETWEEN includes start and end date, but DatePeriod excludes end date
-        // without modification an additional day would be fetched from database
-        $end = $filter_date_helper->date_end;
-        $end = $end->modify('+1 day');
-
-        $period = new DatePeriod(
-            $filter_date_helper->date_start,
-            new DateInterval('P1D'),
-            $end
-        );
-
-        $array = [];
-        foreach ($period as $value) {
-            $array[$value->format("d.m.Y")] = "0";
-        }
-
-        $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_referer') . ' WHERE referer = :referer and date between :start and :end GROUP BY date ORDER BY date ASC', ['referer' => $request_ref, 'start' => $filter_date_helper->date_start->format('Y-m-d'), 'end' => $filter_date_helper->date_end->format('Y-m-d')]);
-
-        $data = [];
-        $arr2 = [];
-
-        if ($sum_per_day->getRows() != 0) {
-            foreach ($sum_per_day as $row) {
-                $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
-                $arr2[$date] = $row->getValue('count');
-            }
-
-            $data = array_merge($array, $arr2);
-        }
-
-        $sum_data = [
-            'labels' => array_keys($data),
-            'values' => array_values($data),
-        ];
-
         $show_toolbox = rex_config::get('statistics', 'statistics_show_chart_toolbox') ? 'true' : 'false';
         echo "var chart_details = echarts.init(document.getElementById('chart_details'), theme);
         var chart_details_option = {

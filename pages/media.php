@@ -57,23 +57,38 @@ if ($request_url != '' && !$delete_entry) {
     $fragment->setVar('body', $content, false);
     echo $fragment->parse('core/page/section.php');
 }
+$sql = rex_sql::factory();
+$mediaRows = $sql->getArray(
+    'SELECT url, SUM(count) AS count FROM ' . rex::getTable('pagestats_media')
+    . ' WHERE date BETWEEN :start AND :end GROUP BY url ORDER BY count DESC',
+    [
+        'start' => $filter_date_helper->date_start->format('Y-m-d'),
+        'end' => $filter_date_helper->date_end->format('Y-m-d'),
+    ]
+);
 
-
-
-$list = rex_list::factory('SELECT url, sum(count) as "count" from ' . rex::getTable('pagestats_media') . ' where date between "' . $filter_date_helper->date_start->format('Y-m-d') . '" and "' . $filter_date_helper->date_end->format('Y-m-d') . '" GROUP BY url ORDER BY count DESC', 10000);
-
-
-$list->setColumnLabel('url', $addon->i18n('statistics_media_url'));
-$list->setColumnLabel('count', $addon->i18n('statistics_media_count'));
-// $list->setColumnSortable('url', $direction = 'asc');
-// $list->setColumnSortable('count', $direction = 'asc');
-$list->setColumnParams('url', ['url' => '###url###', 'date_start' => $filter_date_helper->date_start->format('Y-m-d'), 'date_end' => $filter_date_helper->date_end->format('Y-m-d')]);
-$list->addTableAttribute('class', 'table-bordered statistics_table table-striped table-hover');
-
-if ($list->getRows() == 0) {
+if ([] === $mediaRows) {
     $table = rex_view::info($addon->i18n('statistics_no_data'));
 } else {
-    $table = $list->get();
+    $table = '<table class="table-bordered statistics_table table-striped table-hover table">';
+    $table .= '<thead><tr><th>' . htmlspecialchars($addon->i18n('statistics_media_url'), ENT_QUOTES) . '</th><th>' . htmlspecialchars($addon->i18n('statistics_media_count'), ENT_QUOTES) . '</th></tr></thead><tbody>';
+
+    foreach ($mediaRows as $row) {
+        $url = (string) $row['url'];
+        $count = (string) $row['count'];
+        $detailUrl = rex_context::fromGet()->getUrl([
+            'url' => $url,
+            'date_start' => $filter_date_helper->date_start->format('Y-m-d'),
+            'date_end' => $filter_date_helper->date_end->format('Y-m-d'),
+        ]);
+
+        $table .= '<tr>';
+        $table .= '<td><a href="' . htmlspecialchars($detailUrl, ENT_QUOTES) . '">' . htmlspecialchars($url, ENT_QUOTES) . '</a></td>';
+        $table .= '<td data-sort="' . htmlspecialchars($count, ENT_QUOTES) . '">' . htmlspecialchars($count, ENT_QUOTES) . '</td>';
+        $table .= '</tr>';
+    }
+
+    $table .= '</tbody></table>';
 }
 
 $fragment2 = new rex_fragment();

@@ -135,9 +135,6 @@ $fragment_main_chart->setVar('monthly', '<div id="chart_visits_monthly" style="w
 $fragment_main_chart->setVar('yearly', '<div id="chart_visits_yearly" style="width: 100%;height:500px;"></div>' . $lists_yearly->parse('collapse.php'), false);
 echo $fragment_main_chart->parse('main_chart.php');
 
-
-
-
 $fragment = new rex_fragment();
 $fragment->setVar('title', $addon->i18n('statistics_browser'));
 $fragment->setVar('chart', '<div id="chart_browser" style="width: 100%;height:500px"></div>', false);
