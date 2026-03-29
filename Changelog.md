@@ -1,9 +1,8 @@
 # Changelog
 
-## [3.x.x] - xx.xx.xxxx
+## [3.2.0] - 29.03.2026
 
--   set minimum Redaxo version to 5.12 / [[#124](https://github.com/AndiLeni/statistics/issues/124)]
--   fix dependency to Whip in rex_api_stats.php / [[#122](https://github.com/AndiLeni/statistics/issues/122)]
+-   Performance improvements with lazy loading
 
 ## [3.1.0] - 13.01.2024
 
