@@ -4,12 +4,10 @@ namespace AndiLeni\Statistics;
 
 use rex;
 use rex_addon;
-use rex_list;
 use rex_sql;
 use rex_view;
 use InvalidArgumentException;
 use rex_sql_exception;
-use rex_exception;
 
 /**
  * Handles the device-"model" data for statistics
@@ -17,22 +15,30 @@ use rex_exception;
  */
 class Model
 {
+    /** @var null|array<int, array{name: string, count: int}> */
+    private ?array $rows = null;
 
 
     /**
      * 
      * 
-     * @return rex_sql 
+     * @return array<int, array{name: string, count: int}>
      * @throws InvalidArgumentException 
      * @throws rex_sql_exception 
      */
-    private function getSql(): rex_sql
+    private function getRows(): array
     {
+        if (null !== $this->rows) {
+            return $this->rows;
+        }
+
         $sql = rex_sql::factory();
+        $this->rows = array_map(
+            static fn(array $row): array => ['name' => (string) $row['name'], 'count' => (int) $row['count']],
+            $sql->getArray('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' WHERE type = "model" ORDER BY count DESC')
+        );
 
-        $result = $sql->setQuery('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' WHERE type = "model" ORDER BY count DESC');
-
-        return $result;
+        return $this->rows;
     }
 
 
@@ -45,14 +51,12 @@ class Model
      */
     public function getData(): array
     {
-        $sql = $this->getSql();
-
         $data = [];
 
-        foreach ($sql as $row) {
+        foreach ($this->getRows() as $row) {
             $data[] = [
-                'name' => $row->getValue('name'),
-                'value' => $row->getValue('count')
+                'name' => $row['name'],
+                'value' => $row['count']
             ];
         }
 
@@ -65,23 +69,22 @@ class Model
      * 
      * @return string 
      * @throws InvalidArgumentException 
-     * @throws rex_exception 
      */
     public function getList(): string
 
     {
         $addon = rex_addon::get('statistics');
+        $rows = $this->getRows();
 
-        $list = rex_list::factory('SELECT name, count FROM ' . rex::getTable('pagestats_data') . ' where type = "model" ORDER BY count DESC', 10000);
-
-        $list->setColumnLabel('name', $addon->i18n('statistics_name'));
-        $list->setColumnLabel('count', $addon->i18n('statistics_count'));
-        $list->addTableAttribute('class', 'dt_order_second statistics_table');
-
-        if ($list->getRows() == 0) {
+        if ([] === $rows) {
             $table = rex_view::info($addon->i18n('statistics_no_data'));
         } else {
-            $table = $list->get();
+            $table = '<table class="dt_order_second statistics_table table table-striped table-hover">';
+            $table .= '<thead><tr><th>' . htmlspecialchars($addon->i18n('statistics_name'), ENT_QUOTES) . '</th><th>' . htmlspecialchars($addon->i18n('statistics_count'), ENT_QUOTES) . '</th></tr></thead><tbody>';
+            foreach ($rows as $row) {
+                $table .= '<tr><td>' . htmlspecialchars($row['name'], ENT_QUOTES) . '</td><td data-sort="' . htmlspecialchars((string) $row['count'], ENT_QUOTES) . '">' . htmlspecialchars((string) $row['count'], ENT_QUOTES) . '</td></tr>';
+            }
+            $table .= '</tbody></table>';
         }
 
         return $table;

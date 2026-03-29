@@ -19,6 +19,8 @@ class MediaDetails
 {
     private string $url;
     private DateFilter $filter_date_helper;
+    /** @var null|array<int, array{date: string, count: int}> */
+    private ?array $detailRows = null;
 
 
     /**
@@ -45,8 +47,6 @@ class MediaDetails
      */
     public function getSumPerDay(): array
     {
-        $sql = rex_sql::factory();
-
         // modify to include end date in period because SQL BETWEEN includes start and end date, but DatePeriod excludes end date
         // without modification an additional day would be fetched from database
         $period = new DatePeriod(
@@ -60,17 +60,15 @@ class MediaDetails
             $array[$value->format("d.m.Y")] = "0";
         }
 
-        $sum_per_day = $sql->setQuery('SELECT date, count from ' . rex::getTable('pagestats_media') . ' WHERE url = :url and date between :start and :end GROUP BY date ORDER BY date ASC', ['url' => $this->url, 'start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
-
         $data = [];
         $arr2 = [];
 
-        if ($sum_per_day->getRows() != 0) {
-            foreach ($sum_per_day as $row) {
-                $date = DateTime::createFromFormat('Y-m-d', $row->getValue('date'))->format('d.m.Y');
-                $arr2[$date] = $row->getValue('count');
-            }
+        foreach ($this->getDetailRows() as $row) {
+            $date = DateTime::createFromFormat('Y-m-d', $row['date'])?->format('d.m.Y') ?? $row['date'];
+            $arr2[$date] = (string) $row['count'];
+        }
 
+        if ([] !== $arr2) {
             $data = array_merge($array, $arr2);
         }
 
@@ -78,5 +76,38 @@ class MediaDetails
             'labels' => array_keys($data),
             'values' => array_values($data),
         ];
+    }
+
+    /**
+     * @return array<int, array{date: string, count: int}>
+     * @throws rex_sql_exception
+     */
+    private function getDetailRows(): array
+    {
+        if (null !== $this->detailRows) {
+            return $this->detailRows;
+        }
+
+        $sql = rex_sql::factory();
+        $rows = $sql->getArray(
+            'SELECT date, count FROM ' . rex::getTable('pagestats_media')
+            . ' WHERE url = :url AND date BETWEEN :start AND :end'
+            . ' GROUP BY date ORDER BY date ASC',
+            [
+                'url' => $this->url,
+                'start' => $this->filter_date_helper->date_start->format('Y-m-d'),
+                'end' => $this->filter_date_helper->date_end->format('Y-m-d'),
+            ]
+        );
+
+        $this->detailRows = array_map(
+            static fn(array $row): array => [
+                'date' => (string) $row['date'],
+                'count' => (int) $row['count'],
+            ],
+            $rows
+        );
+
+        return $this->detailRows;
     }
 }

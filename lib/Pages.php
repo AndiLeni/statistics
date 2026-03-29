@@ -4,12 +4,11 @@ namespace AndiLeni\Statistics;
 
 use rex;
 use rex_addon;
-use rex_list;
+use rex_context;
 use rex_sql;
 use rex_view;
 use InvalidArgumentException;
 use rex_sql_exception;
-use rex_exception;
 
 /**
  * Helper class for the backend page "pages"
@@ -45,17 +44,7 @@ class Pages
      */
     public function sumPerPage(string $httpstatus): array
     {
-        $sql = rex_sql::factory();
-
-        if ($httpstatus == "200") {
-            $res = $sql->getArray("select agg.url, agg.count, IFNULL(us.status, '-') as 'status' from ( select url, IFNULL(SUM(count), 0) AS 'count' from " . rex::getTable("pagestats_visits_per_url") . " WHERE date BETWEEN :start AND :end group by url) agg inner join " . rex::getTable("pagestats_urlstatus") . " us on agg.url = us.url and status = '200 OK' order by agg.count desc", ['start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
-        } elseif ($httpstatus == "not200") {
-            $res = $sql->getArray("select agg.url, agg.count, IFNULL(us.status, '-') as 'status' from ( select url, IFNULL(SUM(count), 0) AS 'count' from " . rex::getTable("pagestats_visits_per_url") . " WHERE date BETWEEN :start AND :end group by url) agg inner join " . rex::getTable("pagestats_urlstatus") . " us on agg.url = us.url and status != '200 OK' order by agg.count desc", ['start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
-        } else {
-            $res = $sql->getArray("select agg.url, agg.count, IFNULL(us.status, '-') as 'status' from ( select url, IFNULL(SUM(count), 0) AS 'count' from " . rex::getTable("pagestats_visits_per_url") . " WHERE date BETWEEN :start AND :end group by url) agg left join " . rex::getTable("pagestats_urlstatus") . " us on agg.url = us.url order by agg.count desc", ['start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
-        }
-
-        return $res;
+        return $this->getPageRows($httpstatus);
     }
 
 
@@ -98,29 +87,82 @@ class Pages
      * 
      * @return string 
      * @throws InvalidArgumentException 
-     * @throws rex_exception 
+     * @throws rex_sql_exception 
      */
-    public function getList(): string
+    public function getList(string $httpstatus): string
     {
-        $list = rex_list::factory("select agg.url, agg.count, IFNULL(us.status, '-') as 'status' from ( select url, IFNULL(SUM(count), 0) AS 'count' from " . rex::getTable("pagestats_visits_per_url") . " WHERE date BETWEEN '" . $this->filter_date_helper->date_start->format('Y-m-d') . "' and '" . $this->filter_date_helper->date_end->format('Y-m-d') . "' group by url) agg left join " . rex::getTable("pagestats_urlstatus") . " us on agg.url = us.url order by agg.count desc", 10000);
+        $rows = $this->getPageRows($httpstatus);
 
-        $list->setColumnLabel('url', $this->addon->i18n('statistics_url'));
-        $list->setColumnLabel('count', $this->addon->i18n('statistics_count'));
-        $list->setColumnParams('url', ['url' => '###url###', 'date_start' => $this->filter_date_helper->date_start->format('Y-m-d'), 'date_end' => $this->filter_date_helper->date_end->format('Y-m-d')]);
-
-        $list->addColumn('edit', $this->addon->i18n('statistics_ignore_and_delete'));
-        $list->setColumnLabel('edit', $this->addon->i18n('statistics_ignore'));
-        $list->addLinkAttribute('edit', 'data-confirm', '###url###:' . PHP_EOL . $this->addon->i18n('statistics_confirm_ignore_delete'));
-        $list->setColumnParams('edit', ['url' => '###url###', 'ignore_page' => true]);
-        $list->addFormAttribute('style', 'margin-top: 3rem');
-        $list->addTableAttribute('class', 'table-bordered dt_order_second statistics_table table-striped table-hover');
-
-        if ($list->getRows() == 0) {
+        if ([] === $rows) {
             $table = rex_view::info($this->addon->i18n('statistics_no_data'));
         } else {
-            $table = $list->get();
+            $table = '<table class="table-bordered dt_order_second statistics_table table-striped table-hover table" data-page-length="30">';
+            $table .= '<thead><tr>';
+            $table .= '<th>' . htmlspecialchars($this->addon->i18n('statistics_url'), ENT_QUOTES) . '</th>';
+            $table .= '<th>' . htmlspecialchars($this->addon->i18n('statistics_count'), ENT_QUOTES) . '</th>';
+            $table .= '<th>Status</th>';
+            $table .= '<th>' . htmlspecialchars($this->addon->i18n('statistics_ignore'), ENT_QUOTES) . '</th>';
+            $table .= '</tr></thead><tbody>';
+
+            foreach ($rows as $row) {
+                $url = (string) $row['url'];
+                $count = (string) $row['count'];
+                $status = (string) $row['status'];
+
+                $detailUrl = rex_context::fromGet()->getUrl([
+                    'url' => $url,
+                    'date_start' => $this->filter_date_helper->date_start->format('Y-m-d'),
+                    'date_end' => $this->filter_date_helper->date_end->format('Y-m-d'),
+                ]);
+                $ignoreUrl = rex_context::fromGet()->getUrl([
+                    'url' => $url,
+                    'ignore_page' => true,
+                ]);
+                $confirm = htmlspecialchars($url . ':' . PHP_EOL . $this->addon->i18n('statistics_confirm_ignore_delete'), ENT_QUOTES);
+
+                $table .= '<tr>';
+                $table .= '<td><a href="' . htmlspecialchars($detailUrl, ENT_QUOTES) . '">' . htmlspecialchars($url, ENT_QUOTES) . '</a></td>';
+                $table .= '<td data-sort="' . htmlspecialchars($count, ENT_QUOTES) . '">' . htmlspecialchars($count, ENT_QUOTES) . '</td>';
+                $table .= '<td>' . htmlspecialchars($status, ENT_QUOTES) . '</td>';
+                $table .= '<td><a href="' . htmlspecialchars($ignoreUrl, ENT_QUOTES) . '" data-confirm="' . $confirm . '">' . $this->addon->i18n('statistics_ignore_and_delete') . '</a></td>';
+                $table .= '</tr>';
+            }
+
+            $table .= '</tbody></table>';
         }
 
         return $table;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     * @throws rex_sql_exception
+     */
+    private function getPageRows(string $httpstatus): array
+    {
+        $sql = rex_sql::factory();
+
+        $query = 'SELECT agg.url, agg.count, IFNULL(us.status, "-") AS status '
+            . 'FROM ('
+            . ' SELECT url, IFNULL(SUM(count), 0) AS count'
+            . ' FROM ' . rex::getTable('pagestats_visits_per_url')
+            . ' WHERE date BETWEEN :start AND :end'
+            . ' GROUP BY url'
+            . ') agg ';
+
+        if ('200' === $httpstatus) {
+            $query .= 'INNER JOIN ' . rex::getTable('pagestats_urlstatus') . ' us ON agg.url = us.url AND us.status = "200 OK" ';
+        } elseif ('not200' === $httpstatus) {
+            $query .= 'INNER JOIN ' . rex::getTable('pagestats_urlstatus') . ' us ON agg.url = us.url AND us.status != "200 OK" ';
+        } else {
+            $query .= 'LEFT JOIN ' . rex::getTable('pagestats_urlstatus') . ' us ON agg.url = us.url ';
+        }
+
+        $query .= 'ORDER BY agg.count DESC';
+
+        return $sql->getArray($query, [
+            'start' => $this->filter_date_helper->date_start->format('Y-m-d'),
+            'end' => $this->filter_date_helper->date_end->format('Y-m-d'),
+        ]);
     }
 }
